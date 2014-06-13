@@ -1,12 +1,20 @@
+# Engine stuff #
+*.conf
+/data/
+
+# Java stuff #
 *.class
 
-# Mobile Tools for Java (J2ME)
-.mtj.tmp/
+# Eclipse stuff #
+.metadata/
+.recommenders/
 
-# Package Files #
-*.jar
-*.war
-*.ear
-
-# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
-hs_err_pid*
+# OS stuff #
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+Icon?
+ehthumbs.db
+Thumbs.db
