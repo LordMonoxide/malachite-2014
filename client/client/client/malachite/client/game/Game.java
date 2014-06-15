@@ -12,7 +12,7 @@ public final class Game {
   }
   
   public void start() {
-    //Manager.registerContext(malachite.gfx.gl32.Context.class);
+    Manager.registerContext(malachite.gfx.gl32.Context.class);
     Manager.registerContext(malachite.gfx.gl14.Context.class);
     
     Context context = Manager.create(ctx -> {

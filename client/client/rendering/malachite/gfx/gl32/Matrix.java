@@ -32,7 +32,7 @@ public class Matrix extends malachite.gfx.Matrix {
   }
   
   public Matrix4f getWorld() {
-    return _matrix.peek();
+    return _top;
   }
   
   public Matrix4f getIdentity() {

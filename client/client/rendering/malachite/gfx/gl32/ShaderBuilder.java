@@ -33,7 +33,7 @@ public class ShaderBuilder {
     if(GL20.glGetShaderi(shaderID, GL20.GL_COMPILE_STATUS) == GL11.GL_FALSE) {
       int size = GL20.glGetShaderi(shaderID, GL20.GL_INFO_LOG_LENGTH);
       String error = GL20.glGetShaderInfoLog(shaderID, size);
-      System.err.println("Error compiling shader:\n" + shader + "\n" + error);
+      System.err.println("Error compiling shader:\n" + shader + '\n' + error);
       return 0;
     }
     

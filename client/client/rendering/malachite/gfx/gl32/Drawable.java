@@ -21,7 +21,7 @@ public class Drawable extends malachite.gfx.Drawable {
   private Shader _shader;
   
   public Drawable() {
-    Context.getContext().addLoadCallback(Loader.LoaderThread.GRAPHICS, () -> {
+    malachite.gfx.Context.getContext().addLoadCallback(Loader.LoaderThread.GRAPHICS, () -> {
       // Generate vertex array and buffers
       _vaID = GL30.glGenVertexArrays();
       _vbID = GL15.glGenBuffers();
@@ -97,7 +97,7 @@ public class Drawable extends malachite.gfx.Drawable {
     
     buffer.flip();
     
-    Context.getContext().addLoadCallback(Loader.LoaderThread.GRAPHICS, () -> {
+    malachite.gfx.Context.getContext().addLoadCallback(Loader.LoaderThread.GRAPHICS, () -> {
       _shader = _texture == null ? ShaderBuilder.getBox() : ShaderBuilder.getDefault();
       
       GL30.glBindVertexArray(_vaID);
