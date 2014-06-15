@@ -4,6 +4,7 @@ import malachite.gfx.Context;
 import malachite.gfx.ContextListenerAdapter;
 import malachite.gfx.Drawable;
 import malachite.gfx.Manager;import malachite.gfx.gui.GUI;
+import malachite.net.http.Request;
 
 
 public final class Game {
@@ -12,6 +13,8 @@ public final class Game {
   }
   
   public void start() {
+    Request.init();
+    
     Manager.registerContext(malachite.gfx.gl32.Context.class);
     Manager.registerContext(malachite.gfx.gl14.Context.class);
     
@@ -54,6 +57,11 @@ public final class Game {
           
           A g = new A();
           g.push();
+        }
+        
+        @Override
+        public void onClosed() {
+          Request.destroy();
         }
       });
     });
