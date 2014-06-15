@@ -64,8 +64,10 @@ public abstract class Context {
   private int _mouseButton = -1;
 
   private int _fpsTarget;
-  private double _lastSPF;
-  private double _spf;
+  private double   _lastSPF;
+  private double[] _spf = new double[10];
+  private double   _spfAvg;
+  private int      _spfs;
 
   private boolean _running;
 
@@ -75,7 +77,8 @@ public abstract class Context {
   public int     getW()         { return _w; }
   public int     getH()         { return _h; }
   public int     getFPSTarget() { return _fpsTarget; }
-  public double  getSPF      () { return _spf; }
+  public double  getSPF      () { return _spfAvg; }
+  public double  getFPS      () { return 1000 / _spfAvg; }
   
   public int getMouseX() { return Mouse.getX(); }
   public int getMouseY() { return _h - Mouse.getY(); }
@@ -250,7 +253,22 @@ public abstract class Context {
   }
 
   private void updateFrameRate() {
-    _spf = Sys.getTime() - _lastSPF;
+    _spfAvg = 0;
+    
+    for(int i = _spfs - 1; i > 0; i--) {
+      _spf[i] = _spf[i - 1];
+      _spfAvg += _spf[i - i];
+    }
+    
+    _spf[0] = Sys.getTime() - _lastSPF;
+    
+    _spfAvg += _spf[0];
+    _spfAvg = _spfAvg / _spfs;
+    
+    if(_spfs < _spf.length) {
+      _spfs++;
+    }
+    
     _lastSPF = Sys.getTime();
   }
 
