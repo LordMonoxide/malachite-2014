@@ -3,6 +3,7 @@
 	<classpathentry kind="src" path="client"/>
 	<classpathentry kind="src" path="engine"/>
 	<classpathentry kind="src" path="rendering"/>
+	<classpathentry kind="src" path="networking"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
 	<classpathentry kind="lib" path="lib/lwjgl-2.9.1/jar/lwjgl_util.jar" sourcepath="lib/lwjgl-2.9.1/lwjgl-source-2.9.1.zip">
 		<attributes>
@@ -17,5 +18,10 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="lib" path="lib/PNGDecoder/PNGDecoder.jar"/>
+	<classpathentry kind="lib" path="lib/netty-5.0.0.Alpha1/jar/all-in-one/netty-all-5.0.0.Alpha1.jar" sourcepath="lib/netty-5.0.0.Alpha1/jar/all-in-one/netty-all-5.0.0.Alpha1-sources.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="jar:platform:/resource/client/lib/netty-5.0.0.Alpha1/javadoc/netty-all-5.0.0.Alpha1-javadoc.jar!/"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
