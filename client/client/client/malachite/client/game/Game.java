@@ -1,6 +1,10 @@
 package malachite.client.game;
 
 import malachite.api.Lang;
+import malachite.api.Settings;
+import malachite.client.gui.GameGUI;
+import malachite.engine.world.Entity;
+import malachite.engine.world.World;
 import malachite.gfx.Context;
 import malachite.gfx.ContextListenerAdapter;
 import malachite.gfx.Manager;
@@ -11,11 +15,14 @@ public final class Game {
     new Game().start();
   }
   
+  private World  _world;
+  private Entity _me;
+  
   public void start() {
     Request.init();
     Lang.load();
     
-    Manager.registerContext(malachite.gfx.gl32.Context.class);
+    //Manager.registerContext(malachite.gfx.gl32.Context.class);
     Manager.registerContext(malachite.gfx.gl14.Context.class);
     
     Context context = Manager.create(ctx -> {
@@ -25,7 +32,12 @@ public final class Game {
       ctx.setFPSTarget(60);
       ctx.setContextListener(new ContextListenerAdapter() {
         @Override public void onRun() {
+          _world = new World("Test");
           
+          _me = new Entity(0, _world);
+          _me.setXYZ(Settings.Map.Size / 2, Settings.Map.Size / 2, Settings.Map.Depth / 2);
+          
+          new GameGUI(new GameInterface()).push();
         }
         
         @Override
@@ -36,5 +48,11 @@ public final class Game {
     });
     
     context.run();
+  }
+  
+  public class GameInterface {
+    public Entity me() {
+      return _me;
+    }
   }
 }
