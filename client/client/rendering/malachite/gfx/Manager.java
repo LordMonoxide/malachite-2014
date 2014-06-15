@@ -25,7 +25,10 @@ public final class Manager {
           initializer.initialize(_context);
         }
         
-        _context.create();
+        if(!_context.create()) {
+          continue;
+        }
+        
         return _context;
       } catch(InstantiationException | IllegalAccessException e) {
         e.printStackTrace();
