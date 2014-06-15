@@ -15,8 +15,8 @@ public class Matrix extends malachite.gfx.Matrix {
     _top = getIdentity();
   }
   
-  public void setProjection(int w, int h) { setProjection(w, h, false); }
-  public void setProjection(int w, int h, boolean flip) {
+  @Override public void setProjection(int w, int h) { setProjection(w, h, false); }
+  @Override public void setProjection(int w, int h, boolean flip) {
     _proj = new Matrix4f();
     _proj.m00 =  2f / w;
     _proj.m11 =  (flip ? 2f : -2f) / h;
