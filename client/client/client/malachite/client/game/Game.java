@@ -1,5 +1,6 @@
 package malachite.client.game;
 
+import malachite.api.Lang;
 import malachite.gfx.Context;
 import malachite.gfx.ContextListenerAdapter;
 import malachite.gfx.Drawable;
@@ -14,12 +15,13 @@ public final class Game {
   
   public void start() {
     Request.init();
+    Lang.load();
     
     Manager.registerContext(malachite.gfx.gl32.Context.class);
     Manager.registerContext(malachite.gfx.gl14.Context.class);
     
     Context context = Manager.create(ctx -> {
-      ctx.setTitle("Corina is Cute");
+      ctx.setTitle(Lang.App.get(Lang.AppKeys.TITLE));
       ctx.setResizable(true);
       ctx.setWH(1280, 720);
       ctx.setFPSTarget(60);
