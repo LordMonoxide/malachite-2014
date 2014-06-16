@@ -1,4 +1,4 @@
-package malachite.gfx.gl14;
+package malachite.gfx.gl21;
 
 import org.lwjgl.LWJGLException;
 import org.lwjgl.opengl.ContextAttribs;
@@ -8,7 +8,7 @@ import org.lwjgl.opengl.PixelFormat;
 
 public class Context extends malachite.gfx.Context {
   @Override protected void createDisplay() throws LWJGLException {
-    ContextAttribs attribs = new ContextAttribs(1, 4);
+    ContextAttribs attribs = new ContextAttribs(2, 1);
     PixelFormat format = new PixelFormat();
     Display.create(format, attribs);
   }
@@ -17,6 +17,8 @@ public class Context extends malachite.gfx.Context {
     _matrix = new Matrix();
     _vertex = Vertex.class;
     _drawable = Drawable.class;
+    _shader = Shader.class;
+    _program = Program.class;
   }
 
   @Override protected void updateSize() {

@@ -1,4 +1,4 @@
-package malachite.gfx.gl14;
+package malachite.gfx.gl21;
 
 import org.lwjgl.opengl.GL11;
 

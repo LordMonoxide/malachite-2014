@@ -23,7 +23,7 @@ public final class Game {
     Lang.load();
     
     //Manager.registerContext(malachite.gfx.gl32.Context.class);
-    Manager.registerContext(malachite.gfx.gl14.Context.class);
+    Manager.registerContext(malachite.gfx.gl21.Context.class);
     
     Context context = Manager.create(ctx -> {
       ctx.setTitle(Lang.App.get(Lang.AppKeys.TITLE));

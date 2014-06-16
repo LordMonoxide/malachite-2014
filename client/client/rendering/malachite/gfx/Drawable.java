@@ -6,6 +6,7 @@ public abstract class Drawable {
   protected Matrix _matrix = Context.getMatrix();
 
   protected Texture _texture;
+  protected Program _program;
 
   protected float[] _loc = {0, 0, 0, 0};
   protected float[] _tex = {0, 0, 1, 1};
@@ -120,6 +121,14 @@ public abstract class Drawable {
       setWH(texture.getW(), texture.getH());
       setTWH(texture.getW(), texture.getH());
     }
+  }
+  
+  public Program getProgram() {
+    return _program;
+  }
+  
+  public void setProgram(Program program) {
+    _program = program;
   }
 
   public int getRenderMode() {

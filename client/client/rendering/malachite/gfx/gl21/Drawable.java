@@ -1,4 +1,4 @@
-package malachite.gfx.gl14;
+package malachite.gfx.gl21;
 
 import malachite.gfx.Vertex;
 import org.lwjgl.opengl.GL11;
@@ -32,6 +32,12 @@ public class Drawable extends malachite.gfx.Drawable {
       GL11.glDisable(GL11.GL_TEXTURE_2D);
     }
 
+    if(_program != null) {
+      _program.use();
+    } else {
+      Program.clear();
+    }
+    
     GL11.glBegin(_renderMode);
 
     for(Vertex vertex : _vertex) {
