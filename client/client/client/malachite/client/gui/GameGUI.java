@@ -31,7 +31,7 @@ public class GameGUI extends GUI {
   
   @Override protected void load() {
     test = Context.newDrawable();
-    //test.setTexture(TextureBuilder.getInstance().getTexture("tiles/0.png"));
+    test.setTexture(TextureBuilder.getInstance().getTexture("tiles/0.png"));
     test.setXYWH(100, 100, 256, 256);
     test.setProgram(ShaderBuilder.getInstance().getProgram("default.vsh", "default.fsh"));
     test.createQuad();
