@@ -4,11 +4,10 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL20;
 
 public abstract class Program {
-  private static Program _current;
-  public static Program current() { return _current; }
+  private static int _current;
   public static void clear() {
-    if(_current != null) {
-      _current = null;
+    if(_current != 0) {
+      _current = 0;
       GL20.glUseProgram(0);
     }
   }
@@ -20,8 +19,8 @@ public abstract class Program {
   public abstract boolean load(Shader vsh, Shader fsh);
   
   public void use() {
-    if(_current != this) {
-      _current = this;
+    if(_current != _id) {
+      _current = _id;
       GL20.glUseProgram(_id);
       
       int error = GL11.glGetError();
