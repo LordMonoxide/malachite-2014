@@ -60,7 +60,7 @@ public class Canvas {
   
   public void bind() {
     EXTFramebufferObject.glBindFramebufferEXT(EXTFramebufferObject.GL_FRAMEBUFFER_EXT, _id);
-    GL11.glPushAttrib(GL11.GL_VIEWPORT_BIT);
+    //GL11.glPushAttrib(GL11.GL_VIEWPORT_BIT);
     GL11.glViewport(0, 0, _texture.getW(), _texture.getH());
     _matrix.setProjection(_texture.getW(), _texture.getH(), true);
     _matrix.push();
@@ -69,9 +69,10 @@ public class Canvas {
   }
   
   public void unbind() {
-    GL11.glPopAttrib();
+    //GL11.glPopAttrib();
     _matrix.pop();
     _matrix.setProjection(_context.getW(), _context.getH(), false);
+    GL11.glViewport(0, 0, _context.getW(), _context.getH());
     EXTFramebufferObject.glBindFramebufferEXT(EXTFramebufferObject.GL_FRAMEBUFFER_EXT, 0);
   }
   
