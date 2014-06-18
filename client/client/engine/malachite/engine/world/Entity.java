@@ -7,7 +7,7 @@ import malachite.engine.physics.Movable;
 
 public class Entity extends Movable {
   @Override public String toString() {
-    return "Entity '" + _name + "' on " + world + " at (" + _x + ", " + _y + ", " + _z + ')'; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
+    return "Entity '" + _name + "' on " + world + " at " + loc; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
   }
   
   private Events _events;
@@ -45,17 +45,16 @@ public class Entity extends Movable {
   }
   
   public void setXY(float x, float y) {
-    _x = x;
-    _y = y;
-    _rx = (_x % Settings.Map.Size);
-    _ry = (_y % Settings.Map.Size);
+    loc.set(x, y);
+    _rx = (x % Settings.Map.Size);
+    _ry = (y % Settings.Map.Size);
     if(_rx < 0) _rx += Settings.Map.Size;
     if(_ry < 0) _ry += Settings.Map.Size;
     
-    int mx = (int)_x / Settings.Map.Size;
-    int my = (int)_y / Settings.Map.Size;
-    if(_x < 0) mx -= 1;
-    if(_y < 0) my -= 1;
+    int mx = (int)x / Settings.Map.Size;
+    int my = (int)y / Settings.Map.Size;
+    if(x < 0) mx -= 1;
+    if(y < 0) my -= 1;
     
     if(_mx != mx || _my != my) {
       _mx = mx;
@@ -68,12 +67,12 @@ public class Entity extends Movable {
   }
   
   @Override public void setX(float x) {
-    _x = x;
-    _rx = (_x % Settings.Map.Size);
+    loc.setX(x);
+    _rx = (x % Settings.Map.Size);
     if(_rx < 0) _rx += Settings.Map.Size;
     
-    int mx = (int)_x / Settings.Map.Size;
-    if(_x < 0) mx -= 1;
+    int mx = (int)x / Settings.Map.Size;
+    if(x < 0) mx -= 1;
     if(mx != _mx) {
       _mx = mx;
       setRegion(world.getRegion(_mx, _my));
@@ -83,12 +82,12 @@ public class Entity extends Movable {
   }
   
   @Override public void setY(float y) {
-    _y = y;
-    _ry = (_y % Settings.Map.Size);
+    loc.setY(y);
+    _ry = (y % Settings.Map.Size);
     if(_ry < 0) _ry += Settings.Map.Size;
     
-    int my = (int)_y / Settings.Map.Size;
-    if(_y < 0) my -= 1;
+    int my = (int)y / Settings.Map.Size;
+    if(y < 0) my -= 1;
     if(my != _my) {
       _my = my;
       setRegion(world.getRegion(_mx, _my));

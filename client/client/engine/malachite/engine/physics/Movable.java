@@ -1,18 +1,20 @@
 package malachite.engine.physics;
 
+import malachite.engine.util.Point;
+
 public abstract class Movable {
-  protected float _x, _y;
+  public final Point loc = new Point();
   protected float _bear;
   protected float _acc, _dec;
   protected float _vel;
   protected float _velTerm;
   protected float _velTarget;
   
-  public float getX() { return _x; }
-  public float getY() { return _y; }
+  public float getX() { return loc.getX(); }
+  public float getY() { return loc.getY(); }
   
-  public void setX(float x) { _x = x; }
-  public void setY(float y) { _y = y; }
+  public void setX(float x) { loc.setX(x); }
+  public void setY(float y) { loc.setY(y); }
   
   public final float getBear     () { return _bear; }
   public final float getAcc      () { return _acc; }

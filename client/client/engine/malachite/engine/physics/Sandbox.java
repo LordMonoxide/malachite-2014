@@ -46,8 +46,10 @@ public class Sandbox {
               }
               
               if(m._vel != 0) {
-                m.setX(m._x + (float)Math.cos(m._bear) * m._vel);
-                m.setY(m._y + (float)Math.sin(m._bear) * m._vel);
+                m.loc.set(
+                  m.loc.getX() + (float)Math.cos(m._bear) * m._vel,
+                  m.loc.getY() + (float)Math.sin(m._bear) * m._vel
+                );
               }
             }
           }
