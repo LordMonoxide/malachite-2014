@@ -77,14 +77,14 @@ public class Textbox extends Control<Textbox.Events> {
     _border.setColour(_normalBorder);
 
     Scalable s = Context.newScalable();
-    _background = s;
-    
     s.setTexture(_textureNormal);
     s.setXY(-5, -5);
     s.setSize(new float[] {12, 12, 12, 12},
-        new float[] {12, 12, 12, 12},
-        25, 25, 1
+      new float[] {12, 12, 12, 12},
+      25, 25, 1
     );
+    
+    setBackground(s);
   }
 
   @Override protected void setGUI(GUI gui) {
