@@ -5,7 +5,6 @@ import java.util.HashMap;
 import org.lwjgl.input.Keyboard;
 
 import malachite.api.Settings;
-import malachite.client.game.Game;
 import malachite.client.gfx.RegionRenderer;
 import malachite.engine.world.Region;
 import malachite.gfx.fonts.Font;
@@ -13,6 +12,7 @@ import malachite.gfx.fonts.FontBuilder;
 import malachite.gfx.fonts.TextStream;
 import malachite.gfx.gui.GUI;
 import malachite.gfx.gui.control.Textbox;
+import malachite.server.Game;
 
 public class GameGUI extends GUI {
   private static final Font _font = FontBuilder.getInstance().getDefault();

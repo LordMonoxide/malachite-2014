@@ -4,6 +4,7 @@ import java.util.LinkedList;
 
 import malachite.api.Settings;
 import malachite.engine.physics.Movable;
+import malachite.server.world.World;
 
 public class Entity extends Movable {
   @Override public String toString() {

@@ -1,7 +1,7 @@
 package malachite.api;
 
-import malachite.net.http.Request;
-import malachite.net.http.Response;
+import net.http.Request;
+import net.http.Response;
 import io.netty.handler.codec.http.HttpHeaders;
 import io.netty.handler.codec.http.HttpMethod;
 

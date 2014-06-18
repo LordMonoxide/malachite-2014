@@ -2,24 +2,24 @@ package malachite.engine.world;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 
-import malachite.engine.data.Map;
+import malachite.engine.Engine;
+import malachite.engine.data.MapInterface;
 
-public class World implements Iterable<Entity> {
+public abstract class WorldInterface {
   @Override public String toString() {
     return "world '" + name + '\''; //$NON-NLS-1$
   }
   
   public final String name;
 
-  private HashMap<String, Region> _region = new HashMap<>();
-  private HashMap<String, Map>    _map    = new HashMap<>();
+  private HashMap<String, Region>       _region = new HashMap<>();
+  private HashMap<String, MapInterface> _map    = new HashMap<>();
   
   private List<Entity> _entity = new ArrayList<>();
   
-  public World(String name) {
+  public WorldInterface(String name) {
     this.name = name;
   }
   
@@ -27,22 +27,20 @@ public class World implements Iterable<Entity> {
     _entity.add(e);
   }
   
-  @Override public Iterator<Entity> iterator() {
-    return _entity.iterator();
-  }
-  
   public Region getRegion(int x, int y) {
     String name = x + "x" + y; //$NON-NLS-1$
     Region r = _region.get(name);
     
     if(r == null) {
-      Map m = _map.get(name);
+      MapInterface m = _map.get(name);
       
       if(m == null) {
-        m = new Map(x, y);
-        //TODO:m.request();
-        
         System.out.println("Map " + name + " requested."); //$NON-NLS-1$ //$NON-NLS-2$
+        
+        m = Engine.newMap(x, y);
+        m.load(map -> {
+          System.out.println("Map " + name + " loaded."); //$NON-NLS-1$ //$NON-NLS-2$
+        });
         
         _map.put(name, m);
       }

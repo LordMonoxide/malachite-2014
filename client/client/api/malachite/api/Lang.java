@@ -2,9 +2,9 @@ package malachite.api;
 
 import java.util.Map;
 
-import org.json.JSONException;
+import net.http.Response;
 
-import malachite.net.http.Response;
+import org.json.JSONException;
 
 public class Lang<T> {
   public static final Lang<AppKeys>  App  = new Lang<>();

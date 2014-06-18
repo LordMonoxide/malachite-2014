@@ -2,22 +2,16 @@ package malachite.engine.data;
 
 import malachite.api.Settings;
 
-public class Map {
+public abstract class MapInterface extends Loadable {
   public final int x, y;
   public final Layer[] layer = new Layer[Settings.Map.Depth];
   
-  public Map(int x, int y) {
+  public MapInterface(int x, int y) {
     this.x = x;
     this.y = y;
     
     for(int z = 0; z < Settings.Map.Depth; z++) {
       layer[z] = new Layer();
-    }
-    
-    for(int x1 = 0; x1 < Settings.Map.Tile.Count; x1++) {
-      for(int y1 = 0; y1 < Settings.Map.Tile.Count; y1++) {
-        layer[0].tile[x1][y1].a = (byte)255;
-      }
     }
   }
   

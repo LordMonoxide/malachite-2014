@@ -1,7 +1,7 @@
 package malachite.client.gfx;
 
 import malachite.api.Settings;
-import malachite.engine.data.Map;
+import malachite.engine.data.MapInterface;
 import malachite.engine.world.Region;
 import malachite.gfx.Context;
 import malachite.gfx.Drawable;
@@ -64,7 +64,7 @@ public class RegionRenderer {
     
     TextureBuilder t = TextureBuilder.getInstance();
     
-    Map m = region.map;
+    MapInterface m = region.map;
     
     for(int x = 0; x < m.layer[z].tile.length; x++) {
       for(int y = 0; y < m.layer[z].tile[x].length; y++) {

@@ -1,15 +1,15 @@
 package malachite.engine.world;
 
 import malachite.api.Settings;
-import malachite.engine.data.Map;
+import malachite.engine.data.MapInterface;
 
 public class Region {
-  public final World world;
-  public final Map map;
+  public final WorldInterface world;
+  public final MapInterface map;
   public final int x, y;
   public final String name;
   
-  public Region(World world, Map map) {
+  public Region(WorldInterface world, MapInterface map) {
     this.world = world;
     this.map = map;
     this.x = map.x * Settings.Map.Size;
