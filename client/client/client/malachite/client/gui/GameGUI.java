@@ -24,7 +24,7 @@ public class GameGUI extends GUI {
   }
   
   @Override protected void load() {
-    
+    _context.camera.bind(gameInterface.me().loc);
   }
   
   @Override public void destroy() {

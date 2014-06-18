@@ -38,7 +38,6 @@ public final class Game {
           
           _me = new Entity(0, _world);
           _me.setXYZ(Settings.Map.Size / 2, Settings.Map.Size / 2, Settings.Map.Depth / 2);
-          ctx.camera.bind(_me.loc);
           
           new GameGUI(new GameInterface()).push();
         }
