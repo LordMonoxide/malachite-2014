@@ -22,7 +22,7 @@ public final class Game {
     Request.init();
     Lang.load();
     
-    Manager.registerContext(malachite.gfx.gl32.Context.class);
+    //Manager.registerContext(malachite.gfx.gl32.Context.class);
     Manager.registerContext(malachite.gfx.gl21.Context.class);
     
     Context context = Manager.create(ctx -> {

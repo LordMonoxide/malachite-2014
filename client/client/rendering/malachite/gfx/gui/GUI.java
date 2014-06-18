@@ -44,8 +44,8 @@ public abstract class GUI {
   }
   
   protected void ready() {
-    _context.addLoadCallback(Loader.LoaderThread.OFFLOAD, () -> {
-      this.load();
+    _context.addLoadCallback(Loader.LoaderThread.GRAPHICS, () -> {
+      load();
       _loaded = true;
       _events.raiseLoad();
     });

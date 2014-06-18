@@ -8,8 +8,6 @@ import malachite.gfx.Matrix;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.IntBuffer;
-import java.util.Deque;
-import java.util.concurrent.ConcurrentLinkedDeque;
 
 import org.lwjgl.opengl.EXTFramebufferObject;
 import org.lwjgl.opengl.GL11;
@@ -19,9 +17,6 @@ public class Canvas {
   private Matrix  _matrix  = Context.getMatrix();
   private Texture _texture;
   
-  private Events  _events = new Events(this);
-  private boolean _loaded;
-  
   private int _id;
   
   public Canvas(String name, int w, int h) {
@@ -30,18 +25,10 @@ public class Canvas {
     
     _id = buffer.get();
     _texture = TextureBuilder.getInstance().getTexture(name, w, h, null);
-    _texture.events().addLoadHandler(() -> {
-      bind();
-      EXTFramebufferObject.glFramebufferTexture2DEXT(EXTFramebufferObject.GL_FRAMEBUFFER_EXT, EXTFramebufferObject.GL_COLOR_ATTACHMENT0_EXT, GL11.GL_TEXTURE_2D, _texture.getID(), 0);
-      unbind();
-      
-      _loaded = true;
-      _events.raiseLoad();
-    });
-  }
-  
-  public Events events() {
-    return _events;
+    
+    bind();
+    EXTFramebufferObject.glFramebufferTexture2DEXT(EXTFramebufferObject.GL_FRAMEBUFFER_EXT, EXTFramebufferObject.GL_COLOR_ATTACHMENT0_EXT, GL11.GL_TEXTURE_2D, _texture.getID(), 0);
+    unbind();
   }
   
   public Texture getTexture() {
@@ -52,7 +39,7 @@ public class Canvas {
     GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
   }
   
-  public void bind(Events.Event e) {
+  public void bind(Event e) {
     bind();
     e.run();
     unbind();
@@ -75,33 +62,8 @@ public class Canvas {
     GL11.glViewport(0, 0, _context.getW(), _context.getH());
     EXTFramebufferObject.glBindFramebufferEXT(EXTFramebufferObject.GL_FRAMEBUFFER_EXT, 0);
   }
-  
-  public static class Events {
-    private Deque<Event> _load = new ConcurrentLinkedDeque<>();
     
-    private Canvas _this;
-    
-    public Events(Canvas canvas) {
-      _this = canvas;
-    }
-    
-    public void addLoadHandler(Event e) {
-      _load.add(e);
-      
-      if(_this._loaded) {
-        raiseLoad();
-      }
-    }
-    
-    public void raiseLoad() {
-      Event e = null;
-      while((e = _load.poll()) != null) {
-        e.run();
-      }
-    }
-    
-    public interface Event {
-      void run();
-    }
+  public interface Event {
+    void run();
   }
 }

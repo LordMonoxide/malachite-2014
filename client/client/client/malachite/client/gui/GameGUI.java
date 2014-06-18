@@ -13,6 +13,7 @@ import malachite.gfx.fonts.Font;
 import malachite.gfx.fonts.FontBuilder;
 import malachite.gfx.fonts.TextStream;
 import malachite.gfx.gui.GUI;
+import malachite.gfx.textures.Canvas;
 import malachite.gfx.textures.TextureBuilder;
 
 public class GameGUI extends GUI {
@@ -23,6 +24,7 @@ public class GameGUI extends GUI {
   private HashMap<String, RegionRenderer> _region = new HashMap<>();
   
   private Drawable test;
+  private Canvas c;
   
   public GameGUI(Game.GameInterface gi) {
     gameInterface = gi;
@@ -31,7 +33,7 @@ public class GameGUI extends GUI {
   
   @Override protected void load() {
     test = Context.newDrawable();
-    //test.setTexture(TextureBuilder.getInstance().getTexture("tiles/0.png"));
+    test.setTexture(TextureBuilder.getInstance().getTexture("tiles/0.png"));
     test.setXYWH(100, 100, 256, 256);
     //test.setProgram(ShaderBuilder.getInstance().getProgram("default.vsh", "default.fsh"));
     test.createQuad();
