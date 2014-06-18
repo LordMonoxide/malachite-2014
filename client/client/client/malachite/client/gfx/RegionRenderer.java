@@ -73,9 +73,13 @@ public class RegionRenderer {
         if(m.layer[z].tile[x][y].a != 0) {
           Drawable tile = Context.newDrawable();
           tile.setTexture(t.getTexture("tiles/" + m.layer[z].tile[x][y].tileset + ".png")); //$NON-NLS-1$ //$NON-NLS-2$
-          tile.setXYWH(x * Settings.Map.Tile.Size, y * Settings.Map.Tile.Size, Settings.Map.Tile.Size, Settings.Map.Tile.Size);
-          tile.setTXYWH(m.layer[z].tile[x][y].x * Settings.Map.Tile.Size, m.layer[z].tile[x][y].y * Settings.Map.Tile.Size, Settings.Map.Tile.Size, Settings.Map.Tile.Size);
-          tile.createQuad();
+          
+          final int xf = x, yf = y, zf = z;
+          tile.getTexture().events().addLoadHandler(() -> {
+            tile.setXYWH(xf * Settings.Map.Tile.Size, yf * Settings.Map.Tile.Size, Settings.Map.Tile.Size, Settings.Map.Tile.Size);
+            tile.setTXYWH(m.layer[zf].tile[xf][yf].x * Settings.Map.Tile.Size, m.layer[zf].tile[xf][yf].y * Settings.Map.Tile.Size, Settings.Map.Tile.Size, Settings.Map.Tile.Size);
+            tile.createQuad();
+          });
           d[tiles++] = tile;
         }
       }
