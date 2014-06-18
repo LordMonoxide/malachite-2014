@@ -1,4 +1,4 @@
-package malachite.net.http;
+package net.http;
 
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;

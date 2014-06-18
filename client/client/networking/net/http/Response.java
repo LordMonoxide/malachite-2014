@@ -1,4 +1,4 @@
-package malachite.net.http;
+package net.http;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
