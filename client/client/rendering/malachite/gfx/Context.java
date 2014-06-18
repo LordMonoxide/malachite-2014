@@ -22,6 +22,7 @@ public abstract class Context {
   protected static Matrix  _matrix;
   protected static Class<? extends Vertex>   _vertex;
   protected static Class<? extends Drawable> _drawable;
+  protected static Class<? extends Scalable> _scalable;
   protected static Class<? extends Shader>   _shader;
   protected static Class<? extends Program>  _program;
 
@@ -41,6 +42,16 @@ public abstract class Context {
   public static Drawable newDrawable() {
     try {
       return _drawable.newInstance();
+    } catch(Exception e) {
+      e.printStackTrace();
+    }
+
+    return null;
+  }
+
+  public static Scalable newScalable() {
+    try {
+      return _scalable.newInstance();
     } catch(Exception e) {
       e.printStackTrace();
     }
@@ -164,6 +175,7 @@ public abstract class Context {
     if(_matrix   == null) { System.err.println("!! Matrix is null !!"); } //$NON-NLS-1$
     if(_vertex   == null) { System.err.println("!! Vertex is null !!"); } //$NON-NLS-1$
     if(_drawable == null) { System.err.println("!! Drawable is null !!"); } //$NON-NLS-1$
+    if(_scalable == null) { System.err.println("!! Scalable is null !!"); } //$NON-NLS-1$
     if(_shader   == null) { System.err.println("!! Shader is null !!"); } //$NON-NLS-1$
     if(_program  == null) { System.err.println("!! Program is null !!"); } //$NON-NLS-1$
 

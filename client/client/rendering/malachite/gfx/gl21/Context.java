@@ -17,6 +17,7 @@ public class Context extends malachite.gfx.Context {
     _matrix = new Matrix();
     _vertex = Vertex.class;
     _drawable = Drawable.class;
+    _scalable = Scalable.class;
     _shader = Shader.class;
     _program = Program.class;
   }
