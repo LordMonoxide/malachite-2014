@@ -20,7 +20,7 @@ public class TextureBuilder {
     double t = Time.get();
 
     if(_textures.containsKey(name)) {
-      System.out.println("Textures \"" + name + "\" already loaded."); //$NON-NLS-1$ //$NON-NLS-2$
+      //System.out.println("Textures \"" + name + "\" already loaded."); //$NON-NLS-1$ //$NON-NLS-2$
       return _textures.get(name);
     }
 
@@ -36,8 +36,7 @@ public class TextureBuilder {
     double t = Time.get();
 
     if(_textures.containsKey(file)) {
-      System.out.println("Textures \"" + file + "\" already loaded."); //$NON-NLS-1$ //$NON-NLS-2$
-      System.out.println(_textures.get(file));
+      //System.out.println("Textures \"" + file + "\" already loaded."); //$NON-NLS-1$ //$NON-NLS-2$
       return _textures.get(file);
     }
 
