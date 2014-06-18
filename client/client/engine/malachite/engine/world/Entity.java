@@ -19,9 +19,9 @@ public class Entity extends Movable {
   
   private String _name;
   
-  private double _rx, _ry;
-  private int    _mx, _my;
-  private int    _z;
+  private float _rx, _ry;
+  private int   _mx, _my;
+  private int   _z;
   
   public Entity(int id, World world) {
     _events = new Events(this);
@@ -67,7 +67,7 @@ public class Entity extends Movable {
     _events.raiseMove();
   }
   
-  public void setX(float x) {
+  @Override public void setX(float x) {
     _x = x;
     _rx = (_x % Settings.Map.Size);
     if(_rx < 0) _rx += Settings.Map.Size;
@@ -82,7 +82,7 @@ public class Entity extends Movable {
     _events.raiseMove();
   }
   
-  public void setY(float y) {
+  @Override public void setY(float y) {
     _y = y;
     _ry = (_y % Settings.Map.Size);
     if(_ry < 0) _ry += Settings.Map.Size;
@@ -105,11 +105,11 @@ public class Entity extends Movable {
     _z = z;
   }
   
-  public double getRX() {
+  public float getRX() {
     return _rx;
   }
   
-  public double getRY() {
+  public float getRY() {
     return _ry;
   }
   

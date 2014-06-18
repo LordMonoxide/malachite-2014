@@ -1,18 +1,18 @@
 package malachite.engine.physics;
 
 public abstract class Movable {
-  protected double _x, _y;
-  protected float  _bear;
-  protected float  _acc, _dec;
-  protected float  _vel;
-  protected float  _velTerm;
-  protected float  _velTarget;
+  protected float _x, _y;
+  protected float _bear;
+  protected float _acc, _dec;
+  protected float _vel;
+  protected float _velTerm;
+  protected float _velTarget;
   
-  public double getX() { return _x; }
-  public double getY() { return _y; }
+  public float getX() { return _x; }
+  public float getY() { return _y; }
   
-  public void setX(double x) { _x = x; }
-  public void setY(double y) { _y = y; }
+  public void setX(float x) { _x = x; }
+  public void setY(float y) { _y = y; }
   
   public final float getBear     () { return _bear; }
   public final float getAcc      () { return _acc; }
