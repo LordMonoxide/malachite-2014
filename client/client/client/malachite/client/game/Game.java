@@ -56,5 +56,13 @@ public final class Game {
     public Entity me() {
       return _me;
     }
+    
+    public void startMoving(float bear) {
+      //_net.send(new EntityMoveStart(_entity.getX(), _entity.getY(), bear));
+    }
+    
+    public void stopMoving() {
+      //_net.send(new EntityMoveStop(_entity));
+    }
   }
 }
