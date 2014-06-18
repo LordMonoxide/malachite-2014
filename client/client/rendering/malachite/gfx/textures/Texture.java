@@ -9,13 +9,19 @@ import java.util.Deque;
 import java.util.concurrent.ConcurrentLinkedDeque;
 
 public class Texture {
+  @Override public String toString() {
+    return "Texture " + _id + ' ' + _name + " (" + _w + 'x' + _h + ')'; //$NON-NLS-1$ //$NON-NLS-2$
+  }
+  
   private int _id;
+  private String _name;
   private int _w, _h;
 
   private Events _events = new Events(this);
   private boolean _loaded;
 
-  protected Texture(int w, int h, ByteBuffer data) {
+  protected Texture(String name, int w, int h, ByteBuffer data) {
+    _name = name;
     _w = w;
     _h = h;
 

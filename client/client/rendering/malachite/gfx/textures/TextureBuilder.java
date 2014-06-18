@@ -15,35 +15,31 @@ public class TextureBuilder {
   private static final String TEXTURES_DIR = "gfx/textures/"; //$NON-NLS-1$
 
   private Map<String, Texture> _textures = new HashMap<>();
-  private int _lock;
-
-  public Texture getTexture(String name, int w, int h, ByteBuffer data) {
+  
+  public synchronized Texture getTexture(String name, int w, int h, ByteBuffer data) {
     double t = Time.get();
 
-    while(_lock != 0) try { Thread.sleep(1); } catch(Exception e) { }
     if(_textures.containsKey(name)) {
+      System.out.println("Textures \"" + name + "\" already loaded."); //$NON-NLS-1$ //$NON-NLS-2$
       return _textures.get(name);
     }
 
-    _lock++;
-    Texture texture = new Texture(w, h, data);
+    Texture texture = new Texture(name, w, h, data);
     _textures.put(name, texture);
-    _lock--;
 
     System.out.println("Texture \"" + name + "\" (" + w + 'x' + h + ") loaded. (" + (Time.get() - t) + ')'); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
     return texture;
   }
 
-  public Texture getTexture(String file) {
+  public synchronized Texture getTexture(String file) {
     double t = Time.get();
 
-    while(_lock != 0) try { Thread.sleep(1); } catch(Exception e) { }
     if(_textures.containsKey(file)) {
+      System.out.println("Textures \"" + file + "\" already loaded."); //$NON-NLS-1$ //$NON-NLS-2$
+      System.out.println(_textures.get(file));
       return _textures.get(file);
     }
-
-    _lock++;
 
     ByteBuffer data = null;
 
@@ -64,19 +60,15 @@ public class TextureBuilder {
       }
     } catch(FileNotFoundException e) {
       System.err.println("Couldn't find texture \"" + file + '\"'); //$NON-NLS-1$
-      _lock--;
       return null;
     } catch(IOException e) {
       System.err.println("Error loading texture \"" + file + '\"'); //$NON-NLS-1$
       e.printStackTrace();
-      _lock--;
       return null;
     }
 
-    Texture texture = new Texture(w, h, data);
+    Texture texture = new Texture(file, w, h, data);
     _textures.put(file, texture);
-
-    _lock--;
 
     System.out.println("Texture \"" + file + "\" (" + w + 'x' + h +") loaded. (" + (Time.get() - t) + ')'); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
