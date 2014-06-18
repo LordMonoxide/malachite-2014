@@ -80,7 +80,9 @@ public abstract class Context {
   private int _w, _h;
   private float[] _backColour = {1.0f, 1.0f, 1.0f, 1.0f};
   private int[] _selectColour = {1, 0, 0, 255};
-
+  
+  private float _cameraX, _cameraY;
+  
   private int _mouseX = 0;
   private int _mouseY = 0;
   private int _mouseButton = -1;
@@ -101,12 +103,16 @@ public abstract class Context {
   public int     getFPSTarget() { return _fpsTarget; }
   public double  getSPF      () { return _spfAvg; }
   public double  getFPS      () { return 1000 / _spfAvg; }
+  public float   getCameraX  () { return _cameraX; }
+  public float   getCameraY  () { return _cameraY; }
   
   public int getMouseX() { return Mouse.getX(); }
   public int getMouseY() { return _h - Mouse.getY(); }
 
   public void setTitle    (String title)      { Display.setTitle(title); }
   public void setResizable(boolean resizable) { Display.setResizable(resizable); }
+  public void   setCameraX(float cameraX)     { _cameraX = cameraX; }
+  public void   setCameraY(float cameraY)     { _cameraY = cameraY; }
   public void setBackColour(float r, float g, float b, float a) {
     _backColour[0] = r;
     _backColour[1] = g;
@@ -273,7 +279,10 @@ public abstract class Context {
   }
 
   private void drawScene() {
-    _gui.draw();
+    _matrix.push(() -> {
+      _matrix.translate(_cameraX, _cameraY);
+      _gui.draw();
+    });
   }
 
   private void updateFrameRate() {
