@@ -2,6 +2,7 @@ package malachite.gfx;
 
 import malachite.gfx.fonts.FontBuilder;
 import malachite.gfx.gui.GUIManager;
+import malachite.engine.util.Point;
 import malachite.engine.util.Time;
 
 import org.lwjgl.BufferUtils;
@@ -81,7 +82,7 @@ public abstract class Context {
   private float[] _backColour = {1.0f, 1.0f, 1.0f, 1.0f};
   private int[] _selectColour = {1, 0, 0, 255};
   
-  private float _cameraX, _cameraY;
+  public final Camera camera = new Camera();
   
   private int _mouseX = 0;
   private int _mouseY = 0;
@@ -103,16 +104,12 @@ public abstract class Context {
   public int     getFPSTarget() { return _fpsTarget; }
   public double  getSPF      () { return _spfAvg; }
   public double  getFPS      () { return 1000 / _spfAvg; }
-  public float   getCameraX  () { return _cameraX; }
-  public float   getCameraY  () { return _cameraY; }
   
   public int getMouseX() { return Mouse.getX(); }
   public int getMouseY() { return _h - Mouse.getY(); }
 
   public void setTitle    (String title)      { Display.setTitle(title); }
   public void setResizable(boolean resizable) { Display.setResizable(resizable); }
-  public void   setCameraX(float cameraX)     { _cameraX = cameraX; }
-  public void   setCameraY(float cameraY)     { _cameraY = cameraY; }
   public void setBackColour(float r, float g, float b, float a) {
     _backColour[0] = r;
     _backColour[1] = g;
@@ -280,7 +277,7 @@ public abstract class Context {
 
   private void drawScene() {
     _matrix.push(() -> {
-      _matrix.translate(_cameraX, _cameraY);
+      _matrix.translate(camera);
       _gui.draw();
     });
   }
@@ -369,6 +366,16 @@ public abstract class Context {
         } else {
           _loader.add(callback);
         }
+    }
+  }
+  
+  public class Camera extends Point {
+    @Override public float getX() {
+      return _x + (_bind != null ? -_bind.getX() : 0) + getW() / 2;
+    }
+    
+    @Override public float getY() {
+      return _y + (_bind != null ? -_bind.getY() : 0) + getH() / 2;
     }
   }
 }
