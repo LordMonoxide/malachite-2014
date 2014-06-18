@@ -15,6 +15,8 @@ public final class Game {
     new Game().start();
   }
   
+  private Context _context;
+  
   private World  _world;
   private Entity _me;
   
@@ -25,7 +27,7 @@ public final class Game {
     //Manager.registerContext(malachite.gfx.gl32.Context.class);
     Manager.registerContext(malachite.gfx.gl21.Context.class);
     
-    Context context = Manager.create(ctx -> {
+    _context = Manager.create(ctx -> {
       ctx.setTitle(Lang.App.get(Lang.AppKeys.TITLE));
       ctx.setResizable(true);
       ctx.setWH(1280, 720);
@@ -36,6 +38,7 @@ public final class Game {
           
           _me = new Entity(0, _world);
           _me.setXYZ(Settings.Map.Size / 2, Settings.Map.Size / 2, Settings.Map.Depth / 2);
+          ctx.camera.bind(_me.loc);
           
           new GameGUI(new GameInterface()).push();
         }
@@ -47,7 +50,7 @@ public final class Game {
       });
     });
     
-    context.run();
+    _context.run();
   }
   
   public class GameInterface {
