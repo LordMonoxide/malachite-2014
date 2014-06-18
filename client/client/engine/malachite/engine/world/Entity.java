@@ -1,5 +1,7 @@
 package malachite.engine.world;
 
+import java.util.LinkedList;
+
 import malachite.api.Settings;
 import malachite.engine.physics.Movable;
 
@@ -7,6 +9,8 @@ public class Entity extends Movable {
   @Override public String toString() {
     return "Entity '" + _name + "' on " + world + " at (" + _x + ", " + _y + ", " + _z + ')'; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
   }
+  
+  private Events _events;
   
   public final int   id;
   public final World world;
@@ -20,6 +24,8 @@ public class Entity extends Movable {
   private int    _z;
   
   public Entity(int id, World world) {
+    _events = new Events(this);
+    
     this.id    = id;
     this.world = world;
     
@@ -30,6 +36,8 @@ public class Entity extends Movable {
     world.add(this);
     setRegion(world.getRegion(0, 0));
   }
+  
+  public Events events() { return _events; }
   
   public void setXYZ(float x, float y, int z) {
     setXY(x, y);
@@ -55,6 +63,8 @@ public class Entity extends Movable {
       
       setRegion(world.getRegion(_mx, _my));
     }
+    
+    _events.raiseMove();
   }
   
   public void setX(float x) {
@@ -113,5 +123,25 @@ public class Entity extends Movable {
   
   public void setRegion(Region r) {
     _region = r;
+  }
+  
+  public static class Events {
+    private LinkedList<Event> _move = new LinkedList<>();
+    
+    public void addMoveHandler(Event e) { _move.add(e); }
+    
+    private Entity _entity;
+    
+    private Events(Entity entity) {
+      _entity = entity;
+    }
+    
+    public void raiseMove() {
+      for(Event e : _move) {
+        e.run(_entity);
+      }
+    }
+    
+    public static interface Event { public void run(Entity e); }
   }
 }
