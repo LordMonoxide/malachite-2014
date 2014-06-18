@@ -135,6 +135,7 @@ public abstract class Control<T extends ControlEvents> {
 
   public void setBackground(Drawable d) {
     _background = d;
+    _needsUpdate = true;
   }
 
   public Drawable getBackground() {
