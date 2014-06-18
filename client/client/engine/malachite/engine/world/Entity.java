@@ -78,6 +78,8 @@ public class Entity extends Movable {
       _mx = mx;
       setRegion(world.getRegion(_mx, _my));
     }
+    
+    _events.raiseMove();
   }
   
   public void setY(float y) {
@@ -91,6 +93,8 @@ public class Entity extends Movable {
       _my = my;
       setRegion(world.getRegion(_mx, _my));
     }
+    
+    _events.raiseMove();
   }
   
   public int getZ() {
