@@ -40,7 +40,22 @@ public final class Game implements GameInterface {
           _server.setBacklog(100);
           _server.setKeepAlive(true);
           _server.setNoDelay(true);
-          _server.bind(null);
+          
+          _server.events.onConnect(connection -> {
+            System.out.println("Connection: " + connection);
+          });
+          
+          _server.events.onDisconnect(connection -> {
+            System.out.println("Disconnection: " + connection);
+          });
+          
+          _server.bind(success -> {
+            if(success) {
+              System.out.println("Server bound");
+            } else {
+              System.out.println("Bind failed");
+            }
+          });
           break;
         }
         
