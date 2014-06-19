@@ -11,6 +11,10 @@ Route::group(['prefix' => 'api'], function() {
     Route::post('/login',    ['as' => 'api.auth.login',    'uses' => 'api\auth\AuthController@login']);
     Route::post('/logout',   ['as' => 'api.auth.logout',   'uses' => 'api\auth\AuthController@logout']);
   });
+  
+  Route::group(['prefix' => 'storage'], function() {
+    
+  });
 });
 
 Route::get('/', ['as' => 'home', 'uses' => 'HomeController@home']);
