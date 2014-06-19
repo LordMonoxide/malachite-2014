@@ -7,10 +7,10 @@ import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.MessageToMessageDecoder;
 
-public class Decoder extends MessageToMessageDecoder<ByteBuf> {
+public class DecoderServer extends MessageToMessageDecoder<ByteBuf> {
   private Server.Connections _connections;
   
-  public Decoder(Server.Connections connections) {
+  public DecoderServer(Server.Connections connections) {
     _connections = connections;
   }
   
