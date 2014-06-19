@@ -11,11 +11,16 @@ class DatabaseSeeder extends Seeder {
 
 class TableSeeder extends Seeder {
   public function run() {
-    User::create([
+    $corey = User::create([
       'email'      => 'corey@narwhunderful.com',
       'password'   => Hash::make('monoxide'),
       'name_first' => 'Corey',
       'name_last'  => 'Frenette'
+    ]);
+    
+    Character::create([
+      'user_id' => $corey->id,
+      'name'    => 'Corey'
     ]);
   }
 }

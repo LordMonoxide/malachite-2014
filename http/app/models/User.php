@@ -9,4 +9,8 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 	use UserTrait, RemindableTrait;
 
 	protected $hidden = ['password', 'remember_token'];
+  
+  public function characters() {
+    return $this->hasMany('Character');
+  }
 }
