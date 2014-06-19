@@ -22,9 +22,27 @@ Route::filter('auth.basic', function() {
   return Auth::basic();
 });
 
+Route::filter('auth.api', function() {
+  if(Auth::guest()) {
+    return Response::json([
+      'error' => 'not-logged-in',
+      'show'  => 'login'
+    ], 401);
+  }
+});
+
 Route::filter('guest', function() {
   if(Auth::check()) {
     return Redirect::to('/');
+  }
+});
+
+Route::filter('guest.api', function() {
+  if(Auth::check()) {
+    return Response::json([
+      'error' => 'already-logged-in',
+      'show'  => 'home'
+    ], 409);
   }
 });
 
