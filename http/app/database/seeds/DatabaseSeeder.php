@@ -5,6 +5,18 @@ class DatabaseSeeder extends Seeder {
     Eloquent::unguard();
     
     $this->call('TableTruncater');
+    $this->call('TableSeeder');
+  }
+}
+
+class TableSeeder extends Seeder {
+  public function run() {
+    User::create([
+      'email'      => 'corey@narwhunderful.com',
+      'password'   => Hash::make('monoxide'),
+      'name_first' => 'Corey',
+      'name_last'  => 'Frenette'
+    ]);
   }
 }
 
