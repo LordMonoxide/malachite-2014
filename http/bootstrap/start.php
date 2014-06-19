@@ -25,7 +25,8 @@ $app = new Illuminate\Foundation\Application;
 */
 
 $env = $app->detectEnvironment([
-	'corey' => ['Corey-Server'],
+	'corey'        => ['Corey-Server'],
+  'corey-laptop' => ['Corey-Laptop']
 ]);
 
 /*
