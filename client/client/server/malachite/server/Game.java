@@ -83,8 +83,11 @@ public final class Game implements GameInterface {
           new GameGUI(new GameInterface()).push();
         }
         
-        @Override
-        public void onClosed() {
+        @Override public void onClosed() {
+          if(_server != null) {
+            _server.shutdown();
+          }
+          
           Request.destroy();
         }
       });

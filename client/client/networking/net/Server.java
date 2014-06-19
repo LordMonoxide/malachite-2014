@@ -23,16 +23,19 @@ import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 
 public class Server {
-  private ServerBootstrap _bootstrap;
-  private Channel         _channel;
-  private Connections     _connection = new Connections();
-  public final Events      events     = new Events();
+  private NioEventLoopGroup _parentGroup, _childGroup;
+  private ServerBootstrap   _bootstrap;
+  private Channel           _channel;
+  private Connections       _connection = new Connections();
+  public final Events        events     = new Events();
   
   public Server() {
     _connection = new Connections();
     
+    _parentGroup = new NioEventLoopGroup();
+    _childGroup  = new NioEventLoopGroup();
     _bootstrap = new ServerBootstrap()
-      .group(new NioEventLoopGroup(), new NioEventLoopGroup())
+      .group(_parentGroup, _childGroup)
       .channel(NioServerSocketChannel.class)
       .childHandler(new ChannelInitializer<SocketChannel>() {
         @Override protected void initChannel(SocketChannel ch) throws Exception {
@@ -85,6 +88,11 @@ public class Server {
         }
       }
     });
+  }
+  
+  public void shutdown() {
+    _parentGroup.shutdownGracefully();
+    _childGroup .shutdownGracefully();
   }
   
   public class Connections {
