@@ -33,7 +33,7 @@ public class Client {
       .group(_group)
       .channel(NioSocketChannel.class)
       .handler(new ChannelInitializer<SocketChannel>() {
-        protected void initChannel(SocketChannel ch) throws Exception {
+        @Override protected void initChannel(SocketChannel ch) throws Exception {
           ch.pipeline().addLast(new EncoderLength(), new Encoder());
           ch.pipeline().addLast(new DecoderLength(), new DecoderClient());
           ch.pipeline().addLast(new Handler());
