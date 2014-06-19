@@ -5,8 +5,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import net.codec.Decoder;
 import net.codec.DecoderLength;
+import net.codec.DecoderServer;
 import net.codec.Encoder;
 import net.codec.EncoderLength;
 import net.codec.Packet;
@@ -37,7 +37,7 @@ public class Server {
       .childHandler(new ChannelInitializer<SocketChannel>() {
         @Override protected void initChannel(SocketChannel ch) throws Exception {
           ch.pipeline().addLast(new EncoderLength(), new Encoder());
-          ch.pipeline().addLast(new DecoderLength(), new Decoder(_connection));
+          ch.pipeline().addLast(new DecoderLength(), new DecoderServer(_connection));
           ch.pipeline().addLast(new Handler());
         }
       });
