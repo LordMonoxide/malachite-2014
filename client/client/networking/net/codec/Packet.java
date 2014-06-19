@@ -13,6 +13,10 @@ public abstract class Packet {
     _packet.add(packet);
   }
   
+  static Packet create(int index, ByteBuf data) throws IndexOutOfBoundsException, Packet.NotEnoughDataException {
+    return create(index, data, null);
+  }
+  
   static Packet create(int index, ByteBuf data, Connection connection) throws IndexOutOfBoundsException, Packet.NotEnoughDataException {
     Class<? extends Packet> packet = _packet.get(index);
     
