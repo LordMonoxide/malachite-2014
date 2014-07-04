@@ -1,6 +1,10 @@
 <?php namespace api\auth;
 
+use Auth;
 use Controller;
+use Input;
+use Response;
+use Validator;
 
 class AuthController extends Controller {
   public function __construct() {
