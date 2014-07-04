@@ -1,4 +1,4 @@
-package shared.gui.mainmenu;
+package shared;
 
 import org.json.JSONException;
 import org.json.JSONObject;

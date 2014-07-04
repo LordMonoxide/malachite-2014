@@ -1,6 +1,5 @@
-package shared.gui.mainmenu;
+package shared;
 
 public interface IMainMenuProvider {
-  public void setMainMenu(IMainMenu menu);
   public void login(String email, String password);
 }

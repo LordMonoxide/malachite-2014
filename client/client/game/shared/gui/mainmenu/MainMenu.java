@@ -3,8 +3,9 @@ package shared.gui.mainmenu;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import shared.IMainMenu;
+import shared.IMainMenuProvider;
 import api.Lang;
-
 import gfx.gui.GUI;
 import gfx.gui.builtin.Message;
 
