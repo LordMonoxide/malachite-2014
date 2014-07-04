@@ -1,7 +1,5 @@
 package shared.gui.mainmenu;
 
-import net.http.Response;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -11,6 +9,6 @@ public interface IMainMenu {
   public void loginSuccess();
   public void loginError(JSONObject errors);
   
-  public void showError    (Response r);
-  public void showJSONError(Response r, JSONException e);
+  public void showError    (String source);
+  public void showJSONError(String source, JSONException e);
 }

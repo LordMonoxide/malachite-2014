@@ -30,7 +30,7 @@ public class HTTPAuthGateway implements IAuthGateway {
           }
         }
       } catch(JSONException e) {
-        callback.jsonError(resp, e);
+        callback.jsonError(resp.toString(), e);
       }
       
       f.complete();

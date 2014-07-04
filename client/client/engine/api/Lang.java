@@ -2,9 +2,9 @@ package api;
 
 import java.util.Map;
 
-import net.http.Response;
-
 import org.json.JSONException;
+
+import api.gateways.ILangGateway;
 
 public class Lang<T> {
   public static final Lang<AppKeys>  App  = new Lang<>();
@@ -13,32 +13,34 @@ public class Lang<T> {
   public static void load() {
     System.out.println("Getting lang..."); //$NON-NLS-1$
     
+    ILangGateway lang = Instances.newLangGateway();
+    
     Future.await(
-      HTTP.lang(Routes.Lang.App, new HTTP.LangResponse() {
+      lang.lang(Routes.Lang.App, new ILangGateway.LangResponse() {
         @Override public void success(Map<String, String> lang) {
           App._lang = lang;
         }
         
-        @Override public void error(Response r) {
-          System.err.println(r.content());
+        @Override public void error(String source) {
+          System.err.println(source);
         }
         
-        @Override public void jsonError(Response r, JSONException e) {
-          System.err.println("JSON encoding error getting app lang:\n" + e + '\n' + r.content()); //$NON-NLS-1$
+        @Override public void jsonError(String source, JSONException e) {
+          System.err.println("JSON encoding error getting app lang:\n" + e + '\n' + source); //$NON-NLS-1$
         }
       }),
       
-      HTTP.lang(Routes.Lang.Menu, new HTTP.LangResponse() {
+      lang.lang(Routes.Lang.Menu, new ILangGateway.LangResponse() {
         @Override public void success(Map<String, String> lang) {
           Menu._lang = lang;
         }
         
-        @Override public void error(Response r) {
-          System.err.println(r.content());
+        @Override public void error(String source) {
+          System.err.println(source);
         }
         
-        @Override public void jsonError(Response r, JSONException e) {
-          System.err.println("JSON encoding error getting app lang:\n" + e + '\n' + r.content()); //$NON-NLS-1$
+        @Override public void jsonError(String source, JSONException e) {
+          System.err.println("JSON encoding error getting app lang:\n" + e + '\n' + source); //$NON-NLS-1$
         }
       })
     );

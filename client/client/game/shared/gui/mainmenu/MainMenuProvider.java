@@ -3,8 +3,8 @@ package shared.gui.mainmenu;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import net.http.Response;
-import api.HTTP;
+import api.IErrorResponse;
+import api.IGenericResponse;
 import api.gateways.IAuthGateway;
 
 public class MainMenuProvider implements IMainMenuProvider {
@@ -34,17 +34,17 @@ public class MainMenuProvider implements IMainMenuProvider {
     _auth.login(email, password, new R());
   }
   
-  private class ErrorResponse implements HTTP.ErrorResponse {
-    @Override public void error(Response r) {
-      _menu.showError(r);
+  private class ErrorResponse implements IErrorResponse {
+    @Override public void error(String source) {
+      _menu.showError(source);
     }
     
-    @Override public void jsonError(Response r, JSONException e) {
-      _menu.showJSONError(r, e);
+    @Override public void jsonError(String source, JSONException e) {
+      _menu.showJSONError(source, e);
     }
   }
   
-  private class GenericResponse extends ErrorResponse implements HTTP.GenericResponse {
+  private class GenericResponse extends ErrorResponse implements IGenericResponse {
     @Override //TODO
     public void loginRequired() {
       _menu.showLogin();

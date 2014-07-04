@@ -1,12 +1,10 @@
 package shared.gui.mainmenu;
 
-import net.http.Response;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import api.Lang;
-import api.models.User;
+
 import gfx.gui.GUI;
 import gfx.gui.builtin.Message;
 
@@ -67,15 +65,15 @@ public class MainMenu extends GUI implements IMainMenu {
     _wndLogin.showErrors(errors);
   }
   
-  @Override public void showError(Response r) {
-    System.err.println(Lang.Menu.get(Lang.MenuKeys.ERROR_ERROR) + '\n' + r.toString());
-    _error = Message.wait(Lang.Menu.get(Lang.MenuKeys.ERROR_ERROR), r.toString());
+  @Override public void showError(String source) {
+    System.err.println(Lang.Menu.get(Lang.MenuKeys.ERROR_ERROR) + '\n' + source);
+    _error = Message.wait(Lang.Menu.get(Lang.MenuKeys.ERROR_ERROR), source);
     _error.push();
   }
   
-  @Override public void showJSONError(Response r, JSONException e) {
-    System.err.println(Lang.Menu.get(Lang.MenuKeys.ERROR_JSON) + '\n' + r.toString() + '\n' + e);
-    _error = Message.wait(Lang.Menu.get(Lang.MenuKeys.ERROR_JSON), r.toString() + '\n' + e);
+  @Override public void showJSONError(String source, JSONException e) {
+    System.err.println(Lang.Menu.get(Lang.MenuKeys.ERROR_JSON) + '\n' + source + '\n' + e);
+    _error = Message.wait(Lang.Menu.get(Lang.MenuKeys.ERROR_JSON), source + '\n' + e);
     _error.push();
   }
 }
