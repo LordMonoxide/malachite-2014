@@ -1,2 +1,0 @@
-[15-Jun-2014 02:24:02 UTC] PHP Warning:  require(C:\Users\Administrator\Desktop\GitHub\malachite\http\bootstrap/../vendor/autoload.php): failed to open stream: No such file or directory in C:\Users\Administrator\Desktop\GitHub\malachite\http\bootstrap\autoload.php on line 17
-[15-Jun-2014 02:24:02 UTC] PHP Fatal error:  require(): Failed opening required 'C:\Users\Administrator\Desktop\GitHub\malachite\http\bootstrap/../vendor/autoload.php' (include_path='.;C:\php\pear') in C:\Users\Administrator\Desktop\GitHub\malachite\http\bootstrap\autoload.php on line 17
