@@ -1,4 +1,4 @@
-package api;
+package api.responses;
 
 import org.json.JSONException;
 

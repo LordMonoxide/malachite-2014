@@ -9,6 +9,8 @@ import java.util.Map;
 
 import org.json.JSONObject;
 
+import api.responses.IGenericResponse;
+
 public final class HTTP {
   private HTTP() { }
   

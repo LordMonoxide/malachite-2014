@@ -23,4 +23,8 @@ public class Routes {
     
     private Auth() { }
   }
+  
+  public static final class Storage {
+    public static final Routes User = new Routes("/storage/user", HttpMethod.GET); //$NON-NLS-1$
+  }
 }

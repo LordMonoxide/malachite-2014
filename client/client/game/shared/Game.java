@@ -3,11 +3,12 @@ package shared;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import api.IErrorResponse;
-import api.IGenericResponse;
 import api.Instances;
 import api.Lang;
 import api.gateways.IAuthGateway;
+import api.responses.IErrorResponse;
+import api.responses.IGenericResponse;
+import api.responses.ILoginResponse;
 import gfx.Context;
 import gfx.ContextListenerAdapter;
 import gfx.Manager;
@@ -60,7 +61,7 @@ public class Game {
     }
     
     @Override public void login(String email, String password) {
-      class R extends GenericResponse implements IAuthGateway.LoginResponse {
+      class R extends GenericResponse implements ILoginResponse {
         @Override public void success() {
           _menu.loginSuccess();
         }

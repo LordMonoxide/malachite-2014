@@ -1,15 +1,9 @@
 package api.gateways;
 
-import java.util.Map;
-
 import api.Future;
-import api.IErrorResponse;
 import api.Routes;
+import api.responses.ILangResponse;
 
 public interface ILangGateway {
-  public Future lang(Routes route, LangResponse callback);
-  
-  public interface LangResponse extends IErrorResponse {
-    public void success(Map<String, String> lang);
-  }
+  public Future lang(Routes route, ILangResponse callback);
 }

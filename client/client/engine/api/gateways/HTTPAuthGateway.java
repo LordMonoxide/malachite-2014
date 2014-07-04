@@ -9,9 +9,10 @@ import api.HTTP;
 import api.Future;
 import api.Routes;
 import api.models.User;
+import api.responses.ILoginResponse;
 
 public class HTTPAuthGateway implements IAuthGateway {
-  @Override public Future login(String email, String password, LoginResponse callback) {
+  @Override public Future login(String email, String password, ILoginResponse callback) {
     Future f = new Future();
     
     Map<String, String> data = new HashMap<>();

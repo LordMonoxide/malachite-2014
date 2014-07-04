@@ -9,9 +9,10 @@ import org.json.JSONObject;
 import api.Future;
 import api.HTTP;
 import api.Routes;
+import api.responses.ILangResponse;
 
 public class HTTPLangGateway implements ILangGateway {
-  @Override public Future lang(Routes route, LangResponse callback) {
+  @Override public Future lang(Routes route, ILangResponse callback) {
     Future f = new Future();
     
     HTTP.dispatch(route, resp -> {

@@ -5,6 +5,7 @@ import java.util.Map;
 import org.json.JSONException;
 
 import api.gateways.ILangGateway;
+import api.responses.ILangResponse;
 
 public class Lang<T> {
   public static final Lang<AppKeys>  App  = new Lang<>();
@@ -16,7 +17,7 @@ public class Lang<T> {
     ILangGateway lang = Instances.newLangGateway();
     
     Future.await(
-      lang.lang(Routes.Lang.App, new ILangGateway.LangResponse() {
+      lang.lang(Routes.Lang.App, new ILangResponse() {
         @Override public void success(Map<String, String> lang) {
           App._lang = lang;
         }
@@ -30,7 +31,7 @@ public class Lang<T> {
         }
       }),
       
-      lang.lang(Routes.Lang.Menu, new ILangGateway.LangResponse() {
+      lang.lang(Routes.Lang.Menu, new ILangResponse() {
         @Override public void success(Map<String, String> lang) {
           Menu._lang = lang;
         }
