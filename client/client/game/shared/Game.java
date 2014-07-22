@@ -9,17 +9,17 @@ import api.gateways.IAuthGateway;
 import api.responses.IErrorResponse;
 import api.responses.IGenericResponse;
 import api.responses.ILoginResponse;
+import game.BasicMainMenu;
 import gfx.Context;
 import gfx.ContextListenerAdapter;
 import gfx.Manager;
 import gfx.gui.GUI;
-import net.http.Request;
 import shared.gui.mainmenu.MainMenu;
 
 public class Game {
   private Context _context;
   
-  private IMainMenu _menu;
+  private BasicMainMenu _menu;
   
   public static void main(String[] args) {
     Game game = new Game();
@@ -27,9 +27,6 @@ public class Game {
   }
   
   public void start() {
-    Request.init();
-    Lang.load();
-    
     Manager.registerContext(gfx.gl21.Context.class);
     
     _context = Manager.create(ctx -> {
@@ -42,10 +39,6 @@ public class Game {
           _menu = new MainMenu(new MainMenuProvider(Instances.newAuthGateway()));
           _menu.showLogin();
           ((GUI)_menu).push();
-        }
-        
-        @Override public void onClosed() {
-          Request.destroy();
         }
       });
     });

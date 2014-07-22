@@ -3,13 +3,13 @@ package shared.gui.mainmenu;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import shared.IMainMenu;
 import shared.IMainMenuProvider;
 import api.Lang;
+import game.BasicMainMenu;
 import gfx.gui.GUI;
 import gfx.gui.builtin.Message;
 
-public class MainMenu extends GUI implements IMainMenu {
+public class MainMenu extends GUI implements BasicMainMenu {
   private IMainMenuProvider _provider;
   
   private Message _error;

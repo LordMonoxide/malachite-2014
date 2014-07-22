@@ -3,31 +3,11 @@ package shared.gui.mainmenu;
 import java.util.Deque;
 import java.util.concurrent.ConcurrentLinkedDeque;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-import org.lwjgl.input.Keyboard;
+import game.BasicLoginWindow;
 
-import api.Lang;
-import api.Lang.MenuKeys;
-import api.models.User;
-import gfx.fonts.TextStream;
-import gfx.gui.Control;
-import gfx.gui.ControlEvents;
-import gfx.gui.builtin.Tooltip;
-import gfx.gui.control.Button;
-import gfx.gui.control.Textbox;
-import gfx.gui.control.Window;
-import gfx.textures.TextureBuilder;
-
-public class Login extends Window<Login.Events> {
-  private Textbox _txtEmail;
-  private Textbox _txtPassword;
-  private Button  _btnLogin;
-  
+public class Login extends BasicLoginWindow {
   public Login() {
     super();
-    
-    _events = new Events(this);
     
     ControlEvents.Key loginSubmit = new ControlEvents.Key() {
       @Override public void text(char key) { }
@@ -86,15 +66,11 @@ public class Login extends Window<Login.Events> {
     _txtEmail.setFocus(true);
   }
   
-  public String getEmail   () { return _txtEmail   .getText(); }
-  public String getPassword() { return _txtPassword.getText(); }
+  @Override public String getEmail   () { return _txtEmail   .getText(); }
+  @Override public String getPassword() { return _txtPassword.getText(); }
   
-  public void setEmail   (String email   ) { _txtEmail   .setText(email   ); }
-  public void setPassword(String password) { _txtPassword.setText(password); }
-  
-  private void login() {
-    events().raiseLogin();
-  }
+  @Override public void setEmail   (String email   ) { _txtEmail   .setText(email   ); }
+  @Override public void setPassword(String password) { _txtPassword.setText(password); }
   
   protected void showErrors(JSONObject errors) {
     System.err.println(errors);
@@ -117,26 +93,6 @@ public class Login extends Window<Login.Events> {
       
       showTooltip(anchor, ts);
       anchor.setFocus(true);
-    }
-  }
-  
-  public static class Events extends Window.Events {
-    private Deque<Event> _login = new ConcurrentLinkedDeque<>();
-    
-    public void addLoginHandler(Event e) { _login.add(e); }
-    
-    protected Events(Control<? extends ControlEvents> c) {
-      super(c);
-    }
-    
-    public void raiseLogin() {
-      for(Event e : _login) {
-        e.run();
-      }
-    }
-    
-    public interface Event {
-      public abstract void run();
     }
   }
 }
