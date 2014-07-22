@@ -132,17 +132,4 @@ public class GUIManager {
       }
     }
   }
-  
-  public GUI loadFromFile(Path f) throws IOException {
-    byte[] raw = Files.readAllBytes(f);
-    String data = new String(raw);
-    JSONObject json = new JSONObject(data);
-    
-    
-    for(String key : json.keySet()) {
-      if(key.equals("controls")) {
-        
-      }
-    }
-  }
 }
