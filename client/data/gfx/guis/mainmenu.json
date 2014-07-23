@@ -1,0 +1,37 @@
+{
+  controls: [
+    {
+      Type: Window,
+      Text: "@menu.login.title",
+      Icon: "#gui.icons.key",
+      W: 300,
+      H: 200,
+      
+      controls: [
+        {
+          Type: Textbox,
+          TextPlaceholder: "@menu.login.email",
+          X: 4,
+          Y: 4,
+          H: 20
+        },
+        
+        {
+          Type: Textbox,
+          TextPlaceholder: "@menu.login.password",
+          Masked: true,
+          X: 4,
+          Y: 32,
+          H: 20
+        },
+        
+        {
+          Type: Button,
+          AutoSize: true,
+          Text: "@menu.login.submit",
+          Y: 60
+        }
+      ]
+    }
+  ]
+}
