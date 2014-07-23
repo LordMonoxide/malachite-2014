@@ -16,7 +16,7 @@ public class TextureBuilder {
   private static TextureBuilder _instance = new TextureBuilder();
   public static TextureBuilder getInstance() { return _instance; }
   
-  private static final String TEXTURES_DIR = "gfx/textures/"; //$NON-NLS-1$
+  private static final String TEXTURES_DIR = "../data/gfx/textures/"; //$NON-NLS-1$
 
   private Map<String, Texture> _textures = new HashMap<>();
   
