@@ -3,13 +3,17 @@ package gfx.gui;
 import gfx.Context;
 import gfx.ContextListenerAdapter;
 import gfx.Manager;
+import gfx.textures.Texture;
+import gfx.textures.TextureBuilder;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -29,8 +33,8 @@ public class GUIParser {
           GUI gui = null;
           
           try {
-            gui = parser.load(new JSONObject("{controls:{Textbox:{Text:\"Test\",W:200,H:20}}}"));
-          } catch(IllegalArgumentException | JSONException | SecurityException e) {
+            gui = parser.loadFromFile(Paths.get("../data/gfx/guis/mainmenu.json"));
+          } catch(IllegalArgumentException | JSONException | SecurityException | IOException e) {
             e.printStackTrace();
           }
           
@@ -64,7 +68,7 @@ public class GUIParser {
         for(String key : json.keySet()) {
           if(key.equals("controls")) {
             try {
-              addControls(_gui.controls(), json.getJSONObject("controls"));
+              addControls(_gui.controls(), json.getJSONArray("controls"));
             } catch(InstantiationException | IllegalAccessException | ClassNotFoundException | NoSuchMethodException | SecurityException | IllegalArgumentException | InvocationTargetException | JSONException e) {
               e.printStackTrace();
             }
@@ -85,24 +89,42 @@ public class GUIParser {
     return _gui;
   }
   
-  private void addControls(ControlList controls, JSONObject json) throws InstantiationException, IllegalAccessException, ClassNotFoundException, NoSuchMethodException, SecurityException, IllegalArgumentException, InvocationTargetException {
-    for(String key : json.keySet()) {
-      Control<?> c = Class.forName("gfx.gui.control." + key).asSubclass(Control.class).newInstance();
+  private void addControls(ControlList controls, JSONArray array) throws InstantiationException, IllegalAccessException, ClassNotFoundException, NoSuchMethodException, SecurityException, IllegalArgumentException, InvocationTargetException {
+    for(int i = 0; i < array.length(); i++) {
+      JSONObject control = array.getJSONObject(i);
+      
+      Control<?> c = Class.forName("gfx.gui.control." + control.getString("Type")).asSubclass(Control.class).newInstance();
       controls.add(c);
       
-      JSONObject control = json.getJSONObject(key);
       for(String attrib : control.keySet()) {
-        if(attrib.equals("controls")) {
-          addControls(c.controls(), control.getJSONObject(attrib));
-        } else {
-          Object value = control.get(attrib);
-          
-          Class<?> type = value.getClass();
-          if(type == Integer.class) { type = int.class; }
-          if(type == Boolean.class) { type = boolean.class; }
-          
-          Method method = c.getClass().getMethod("set" + attrib, new Class<?>[] { type });
-          method.invoke(c, value);
+        switch(attrib) {
+          case "Type": break;
+          case "controls":
+            addControls(c.controls(), control.getJSONArray(attrib));
+            break;
+            
+          default:
+            Object value = control.get(attrib);
+            
+            Class<?> type = value.getClass();
+            if(type == Integer.class) { type = int.class; }
+            if(type == Boolean.class) { type = boolean.class; }
+            if(type == String .class) {
+              String s = (String)value;
+              if(s.startsWith("@")) {
+                
+              }
+              
+              if(s.startsWith("#")) {
+                String path = s.substring(1).replace('.', '/') + ".png";
+                value = TextureBuilder.getInstance().getTexture(path);
+                type = Texture.class;
+              }
+            }
+            
+            Method method = c.getClass().getMethod("set" + attrib, new Class<?>[] { type });
+            method.invoke(c, value);
+            break;
         }
       }
     }
