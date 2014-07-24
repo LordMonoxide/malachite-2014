@@ -12,7 +12,7 @@ public class Label extends Control<ControlEvents> {
   private TextStream _textStream = new TextStream();
   private TextStream.Text _text = new TextStream.Text();
   private TextStream.Colour _textColour = new TextStream.Colour(65f / 255, 52f / 255, 8f / 255, 1);
-  private int _textX, _textY;
+  private float _textX, _textY;
   private int _textW, _textH;
   private boolean _autoSize;
   
@@ -38,7 +38,7 @@ public class Label extends Control<ControlEvents> {
       _textH = _font.regular().getH();
       
       if(_autoSize) {
-        setWH(_textW + _padW * 2 + 1, _textH + _padH * 2);
+        _size.set(_textW + _padW * 2 + 1, _textH + _padH * 2);
       }
     });
   }
@@ -51,7 +51,7 @@ public class Label extends Control<ControlEvents> {
       _textH = _font.regular().getH();
       
       if(_autoSize) {
-        setWH(_textW + _padW * 2 + 1, _textH + _padH * 2);
+        _size.set(_textW + _padW * 2 + 1, _textH + _padH * 2);
       }
     });
   }
@@ -83,20 +83,20 @@ public class Label extends Control<ControlEvents> {
   @Override protected void resize() {
     switch(_hAlign) {
       case ALIGN_LEFT:   _textX = _padW; break;
-      case ALIGN_CENTER: _textX = (_w - _textW) / 2; break;
-      case ALIGN_RIGHT:  _textX =  _w - _textW - _padW; break;
+      case ALIGN_CENTER: _textX = (_size.getX() - _textW) / 2; break;
+      case ALIGN_RIGHT:  _textX =  _size.getX() - _textW - _padW; break;
     }
 
     switch(_vAlign) {
       case ALIGN_TOP:    _textY = _padH; break;
-      case ALIGN_MIDDLE: _textY = (_h - _textH) / 2; break;
-      case ALIGN_BOTTOM: _textY =  _h - _textH - _padH; break;
+      case ALIGN_MIDDLE: _textY = (_size.getY() - _textH) / 2; break;
+      case ALIGN_BOTTOM: _textY =  _size.getY() - _textH - _padH; break;
     }
   }
 
   @Override public void draw() {
     if(drawBegin()) {
-      _font.draw(_textX, _textY, _w - _padW * 2, _h - _padH * 2, _textStream);
+      _font.draw(_textX, _textY, (int)_size.getX() - _padW * 2, (int)_size.getY() - _padH * 2, _textStream);
     }
 
     drawEnd();

@@ -98,6 +98,8 @@ public class Window<T extends Window.Events> extends Control<T> {
     _content = new Image();
     _content.setBackground(s);
     _content.pos().set(8, 8);
+    _content.size().bind(_size);
+    _content.size().set(16, 16);
     
     super.controls().add(_title);
     super.controls().add(_content);
@@ -115,19 +117,12 @@ public class Window<T extends Window.Events> extends Control<T> {
   }
   
   @Override protected void resize() {
-    _title.setW(_w);
-    
-    if(_icon.getTexture() != null) {
+    /*if(_icon.getTexture() != null) {
       _text.setX(_icon.getX() + _icon.getW());
       _icon.setY(_title.getH() - _icon.getH());
     } else {
       _text.setX(4);
-    }
-    
-    _content.setWH(
-      _w - _content.getX() * 2,
-      _h - _content.getY() * 2
-    );
+    }*/
   }
   
   public String getText() {
@@ -147,12 +142,12 @@ public class Window<T extends Window.Events> extends Control<T> {
     resize();
   }
   
-  public int getContentW() {
-    return _content.getW();
+  public float getContentW() {
+    return _content.size().getX();
   }
   
-  public int getContentH() {
-    return _content.getH();
+  public float getContentH() {
+    return _content.size().getY();
   }
   
   public void showCloseButton() {

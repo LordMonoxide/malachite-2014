@@ -40,19 +40,19 @@ public class Font {
     _events.raiseLoad();
   }
   
-  public void draw(int x, int y, TextStream text) {
+  public void draw(float x, float y, TextStream text) {
     draw(x, y, 0, 0, text, 0);
   }
   
-  public void draw(int x, int y, TextStream text, int mask) {
+  public void draw(float x, float y, TextStream text, int mask) {
     draw(x, y, 0, 0, text, mask);
   }
   
-  public void draw(int x, int y, int w, int h, TextStream text) {
+  public void draw(float x, float y, int w, int h, TextStream text) {
     draw(x, y, w, h, text, 0);
   }
   
-  public void draw(int x, int y, int w, int h, TextStream text, int mask) {
+  public void draw(float x, float y, int w, int h, TextStream text, int mask) {
     if(text == null)     { return; }
     if(_regular == null) { return; }
     

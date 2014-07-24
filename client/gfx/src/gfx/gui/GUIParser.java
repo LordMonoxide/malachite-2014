@@ -5,9 +5,13 @@ import gfx.ContextListenerAdapter;
 import gfx.Manager;
 import gfx.textures.Texture;
 import gfx.textures.TextureBuilder;
+import static gfx.util.ReflectionUtils.*;
+import static gfx.util.StringUtils.*;
 
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -93,12 +97,21 @@ public class GUIParser {
     for(int i = 0; i < array.length(); i++) {
       JSONObject control = array.getJSONObject(i);
       
-      Control<?> c = Class.forName("gfx.gui.control." + control.getString("Type")).asSubclass(Control.class).newInstance();
+      String controlType;
+      try {
+        controlType = control.getString("type");
+      } catch(JSONException e) {
+        controlType = control.getString("Type");
+      }
+      
+      controlType = snakeToProper(controlType);
+      
+      Control<?> c = Class.forName("gfx.gui.control." + controlType).asSubclass(Control.class).newInstance();
       controls.add(c);
       
       for(String attrib : control.keySet()) {
-        switch(attrib) {
-          case "Type": break;
+        switch(attrib.toLowerCase()) {
+          case "type": break;
           case "controls":
             addControls(c.controls(), control.getJSONArray(attrib));
             break;
@@ -122,8 +135,17 @@ public class GUIParser {
               }
             }
             
-            Method method = c.getClass().getMethod("set" + attrib, new Class<?>[] { type });
-            method.invoke(c, value);
+            String methodName = snakeToCamel(attrib);
+            Member member = findMethodOrFieldByName(c.getClass(), methodName);
+            
+            if(member instanceof Field) {
+              
+            } else if(member instanceof Method) {
+              Method method = (Method)member;
+              method.invoke(c, value);
+            }
+            
+            //Method method = c.getClass().getMethod(methodName, new Class<?>[] { type });
             break;
         }
       }

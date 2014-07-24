@@ -27,15 +27,15 @@ public class Textbox extends Control<Textbox.Events> {
   private static final String EMPTY = ""; //$NON-NLS-1$
   
   private Font _font = FontBuilder.getInstance().getDefault();
-  private TextStream _textPlaceholderStream = new TextStream();
-  private TextStream.Text _textPlaceholder = new TextStream.Text();
-  private TextStream.Colour _textPlaceholderColour = new TextStream.Colour(65f / 255, 52f / 255, 8f / 255, 0.5f);
+  private TextStream _placeholderStream = new TextStream();
+  private TextStream.Text _placeholder = new TextStream.Text();
+  private TextStream.Colour _placeholderColour = new TextStream.Colour(65f / 255, 52f / 255, 8f / 255, 0.5f);
   private String[] _text = {EMPTY, EMPTY, EMPTY};
   private TextStream _textStream = new TextStream();
   private TextStream.Text _textFull = new TextStream.Text();
   private TextStream.Colour _textColour = new TextStream.Colour(65f / 255, 52f / 255, 8f / 255, 1);
   private int _mask;
-  private int _textX, _textY;
+  private float _textX, _textY;
   private int[] _textW = new int[3];
   private int _textH;
   
@@ -59,8 +59,8 @@ public class Textbox extends Control<Textbox.Events> {
       InitFlags.WITH_BORDER
     );
     
-    _textPlaceholderStream.insert(_textPlaceholderColour);
-    _textPlaceholderStream.insert(_textPlaceholder);
+    _placeholderStream.insert(_placeholderColour);
+    _placeholderStream.insert(_placeholder);
     _textStream.insert(_textColour);
     _textStream.insert(_textFull);
     
@@ -126,12 +126,12 @@ public class Textbox extends Control<Textbox.Events> {
     return _textFull.getText();
   }
   
-  public void setTextPlaceholder(String text) {
-    _textPlaceholder.setText(text);
+  public void setPlaceholder(String text) {
+    _placeholder.setText(text);
   }
   
-  public String getTextPlaceholder() {
-    return _textPlaceholder.getText();
+  public String getPlaceholder() {
+    return _placeholder.getText();
   }
   
   public void setMasked(boolean masked) {
@@ -205,14 +205,14 @@ public class Textbox extends Control<Textbox.Events> {
     
     switch(_hAlign) {
       case ALIGN_LEFT:   _textX = _padW; break;
-      case ALIGN_CENTER: _textX = (_size.w() - totalW) / 2; break;
-      case ALIGN_RIGHT:  _textX =  _size.w() - totalW - _padW; break;
+      case ALIGN_CENTER: _textX = (_size.getX() - totalW) / 2; break;
+      case ALIGN_RIGHT:  _textX =  _size.getX() - totalW - _padW; break;
     }
     
     switch(_vAlign) {
       case ALIGN_TOP:    _textY = _padH; break;
-      case ALIGN_MIDDLE: _textY = (_size.h() - _textH) / 2; break;
-      case ALIGN_BOTTOM: _textY =  _size.h() - _textH - _padH; break;
+      case ALIGN_MIDDLE: _textY = (_size.getY() - _textH) / 2; break;
+      case ALIGN_BOTTOM: _textY =  _size.getY() - _textH - _padH; break;
     }
   }
   
@@ -224,8 +224,8 @@ public class Textbox extends Control<Textbox.Events> {
       if(!_textFull.getText().isEmpty()) {
         _font.draw(0, 0, _textStream, _mask);
       } else {
-        if(_textPlaceholder.getText() != null && !_textPlaceholder.getText().isEmpty()) {
-          _font.draw(0, 0, _textPlaceholderStream);
+        if(_placeholder.getText() != null && !_placeholder.getText().isEmpty()) {
+          _font.draw(0, 0, _placeholderStream);
         }
       }
       

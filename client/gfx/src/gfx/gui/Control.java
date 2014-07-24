@@ -12,8 +12,10 @@ public abstract class Control<T extends ControlEvents> {
 
   protected Drawable _background;
   protected Drawable _border;
-  protected Position _pos = new Position(0, 0);
-  protected Size     _size = new Size(0, 0);
+  
+  public final Position pos = new Position(0, 0);
+  public final Size     size = new Size(0, 0);
+  
   protected HAlign _hAlign = HAlign.ALIGN_LEFT;
   protected VAlign _vAlign = VAlign.ALIGN_MIDDLE;
 
@@ -103,15 +105,12 @@ public abstract class Control<T extends ControlEvents> {
     return (T)_events;
   }
 
-  public Position pos () { return _pos; }
-  public Size     size() { return _size; }
-
   public final float calculateTotalX() {
-    float x = _pos.getX();
+    float x = pos.getX();
     
     Control<? extends ControlEvents> c = _controlParent;
     while(c != null) {
-      x += c.pos().getX();
+      x += c.pos.getX();
       c = c._controlParent;
     }
     
@@ -119,11 +118,11 @@ public abstract class Control<T extends ControlEvents> {
   }
 
   public final float calculateTotalY() {
-    float y = _pos.getY();
+    float y = pos.getY();
     
     Control<? extends ControlEvents> c = _controlParent;
     while(c != null) {
-      y += c.pos().getY();
+      y += c.pos.getY();
       c = c._controlParent;
     }
     
@@ -339,19 +338,19 @@ public abstract class Control<T extends ControlEvents> {
 
   private void updateSize() {
     if(_selBox != null) {
-      _selBox.setWH(_size.getX(), _size.getY());
+      _selBox.setWH(size.getX(), size.getY());
       _selBox.createQuad();
     }
 
     if(_background != null) {
-      _background.setWH(_size.getX() - _background.getX() * 2,
-                        _size.getY() - _background.getY() * 2);
+      _background.setWH(size.getX() - _background.getX() * 2,
+                        size.getY() - _background.getY() * 2);
       _background.createQuad();
     }
 
     if(_border != null) {
-      _border.setWH(_size.getX() - _border.getX() * 2,
-                    _size.getY() - _border.getY() * 2);
+      _border.setWH(size.getX() - _border.getX() * 2,
+                    size.getY() - _border.getY() * 2);
       _border.createBorder();
     }
 
@@ -373,7 +372,7 @@ public abstract class Control<T extends ControlEvents> {
       }
 
       _matrix.push();
-      _matrix.translate(_pos);
+      _matrix.translate(pos);
 
       if(_background != null) {
         _background.draw();
@@ -430,7 +429,7 @@ public abstract class Control<T extends ControlEvents> {
       }
 
       _matrix.push();
-      _matrix.translate(_pos);
+      _matrix.translate(pos);
 
       if(_selBox != null) {
         _selBox.draw();
