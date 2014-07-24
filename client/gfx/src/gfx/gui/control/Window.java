@@ -48,11 +48,12 @@ public class Window<T extends Window.Events> extends Control<T> {
     
     _title = new Image(InitFlags.WITH_DEFAULT_EVENTS, InitFlags.REGISTER);
     _title.setBackground(s);
-    _title.setY(-20);
-    _title.setH(21);
+    _title.pos().setY(-20);
+    _title.size().bindX(_size);
+    _title.size().setY(21);
     _title.events().onMouseMove(e -> {
       if(e.button == 0) {
-        setXY(getX() + e.x - _x, getY() + e.y - _y);
+        _pos.set(_pos.getX() + e.x - _x, _pos.getY() + e.y - _y);
       }
     }).onMouseDown(e -> {
       _x = e.x;
@@ -63,7 +64,7 @@ public class Window<T extends Window.Events> extends Control<T> {
     _text.setTextColour(1, 1, 1, 1);
     _text.setAutoSize(true);
     _text.events().onResize(e -> {
-      _text.setY((_title.getH() - _text.getH()) / 2);
+      _text.pos().setY((_title.size().getY() - _text.size().getY()) / 2);
     });
     
     _icon = new Image();
@@ -76,8 +77,9 @@ public class Window<T extends Window.Events> extends Control<T> {
     _close.getBackground().setTexture(t.getTexture("gui/close.png"));
     _close.getBackground().setTWH(13, 13);
     _close.setBackgroundColour(new float[] {0.8f, 0.8f, 0.8f, 1});
-    _close.setY(4);
-    _close.setWH(13, 13);
+    _close.size().set(13, 13);
+    _close.pos().bindX(_title.pos());
+    _close.pos().set(-_close.size().getX() - _close.pos().getY(), 4);
     _close.events().onClick(e -> {
       events().onClose();
     });
@@ -95,7 +97,7 @@ public class Window<T extends Window.Events> extends Control<T> {
     
     _content = new Image();
     _content.setBackground(s);
-    _content.setXY(8, 8);
+    _content.pos().set(8, 8);
     
     super.controls().add(_title);
     super.controls().add(_content);
@@ -122,7 +124,6 @@ public class Window<T extends Window.Events> extends Control<T> {
       _text.setX(4);
     }
     
-    _close.setX(_w - _close.getW() - _close.getY());
     _content.setWH(
       _w - _content.getX() * 2,
       _h - _content.getY() * 2

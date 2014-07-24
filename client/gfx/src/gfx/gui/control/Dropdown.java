@@ -58,7 +58,7 @@ public class Dropdown<T> extends Control<ControlEvents> {
     _events.onClick(e -> {
       _drop.push();
       _drop.resize();
-      _drop._frame.setXY(calculateTotalX(), calculateTotalY());
+      _drop._pos.xy(calculateTotalX(), calculateTotalY());
     });
     
     _border.setColour(_normalBorder);
@@ -154,9 +154,16 @@ public class Dropdown<T> extends Control<ControlEvents> {
   
   private class Drop extends GUI {
     private Frame _frame;
+    private AbsolutePosition _pos;
+    private AbsoluteSize _size;
     
     @Override protected void load() {
+      _pos  = new AbsolutePosition(0, 0);
+      _size = new AbsoluteSize(0, 0);
+      
       _frame = new Frame();
+      _frame.pos(_pos);
+      _frame.size(_size);
       
       _frame.events().onDraw(e -> {
         int y = 0;
@@ -179,7 +186,7 @@ public class Dropdown<T> extends Control<ControlEvents> {
     }
     
     @Override protected void resize() {
-      _frame.setWH(_w, _items.size() * _font.regular().getH());
+      _size.wh(_size.w(), _items.size() * _font.regular().getH());
     }
     
     @Override protected void draw() {

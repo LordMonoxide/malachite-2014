@@ -86,7 +86,7 @@ public abstract class GUI {
   }
 
   protected void setWH(int w, int h) {
-    _control.setWH(w, h);
+    _control.size().set(w, h);
   }
 
   protected abstract void load();
@@ -159,7 +159,8 @@ public abstract class GUI {
           _selectControl.setFocus(true);
         }
 
-        _selectControl.handleMouseDown(x - _selectControl.calculateTotalX(), y - _selectControl.calculateTotalY(), button);
+        //TODO: Should all these int casts really be here?
+        _selectControl.handleMouseDown(x - (int)_selectControl.calculateTotalX(), y - (int)_selectControl.calculateTotalY(), button);
         handled = true;
       } else {
         System.err.println("Found no controls of this colour"); //$NON-NLS-1$
@@ -175,7 +176,7 @@ public abstract class GUI {
     _selectButton = -1;
 
     if(_selectControl != null) {
-      _selectControl.handleMouseUp(x - _selectControl.calculateTotalX(), y - _selectControl.calculateTotalY(), button);
+      _selectControl.handleMouseUp(x - (int)_selectControl.calculateTotalX(), y - (int)_selectControl.calculateTotalY(), button);
       _selectControl = null;
       handled = true;
     }
@@ -190,7 +191,7 @@ public abstract class GUI {
     _mouseY = y;
 
     if(_selectControl != null) {
-      _selectControl.handleMouseMove(x - _selectControl.calculateTotalX(), y - _selectControl.calculateTotalY(), _selectButton);
+      _selectControl.handleMouseMove(x - (int)_selectControl.calculateTotalX(), y - (int)_selectControl.calculateTotalY(), _selectButton);
       
       handled = true;
     } else {
@@ -208,7 +209,7 @@ public abstract class GUI {
         }
 
         if(_selectControl != null) {
-          _selectControl.handleMouseMove(x - _selectControl.calculateTotalX(), y - _selectControl.calculateTotalY(), _selectButton);
+          _selectControl.handleMouseMove(x - (int)_selectControl.calculateTotalX(), y - (int)_selectControl.calculateTotalY(), _selectButton);
           _selectControl = null;
           
           handled = true;

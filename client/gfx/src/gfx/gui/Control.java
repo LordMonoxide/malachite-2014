@@ -3,6 +3,7 @@ package gfx.gui;
 import gfx.Context;
 import gfx.Drawable;
 import gfx.Matrix;
+import gfx.util.Point;
 
 import org.lwjgl.input.Keyboard;
 
@@ -11,8 +12,8 @@ public abstract class Control<T extends ControlEvents> {
 
   protected Drawable _background;
   protected Drawable _border;
-  protected int _x, _y;
-  protected int _w, _h;
+  protected Position _pos = new Position(0, 0);
+  protected Size     _size = new Size(0, 0);
   protected HAlign _hAlign = HAlign.ALIGN_LEFT;
   protected VAlign _vAlign = VAlign.ALIGN_MIDDLE;
 
@@ -102,29 +103,27 @@ public abstract class Control<T extends ControlEvents> {
     return (T)_events;
   }
 
-  public int getX() { return _x; }
-  public int getY() { return _y; }
-  public int getW() { return _w; }
-  public int getH() { return _h; }
+  public Position pos () { return _pos; }
+  public Size     size() { return _size; }
 
-  public final int calculateTotalX() {
-    int x = _x;
+  public final float calculateTotalX() {
+    float x = _pos.getX();
     
     Control<? extends ControlEvents> c = _controlParent;
     while(c != null) {
-      x += c.getX();
+      x += c.pos().getX();
       c = c._controlParent;
     }
     
     return x;
   }
 
-  public final int calculateTotalY() {
-    int y = _y;
+  public final float calculateTotalY() {
+    float y = _pos.getY();
     
     Control<? extends ControlEvents> c = _controlParent;
     while(c != null) {
-      y += c.getY();
+      y += c.pos().getY();
       c = c._controlParent;
     }
     
@@ -162,43 +161,6 @@ public abstract class Control<T extends ControlEvents> {
 
   public final boolean acceptsFocus() {
     return _acceptsFocus;
-  }
-
-  public final void setX(int x) {
-    _x = x;
-  }
-
-  public final void setY(int y) {
-    _y = y;
-  }
-
-  public final void setXY(int x, int y) {
-    _x = x;
-    _y = y;
-  }
-
-  public final void setW(int w) {
-    _w = w;
-    _needsUpdate = true;
-  }
-
-  public final void setH(int h) {
-    _h = h;
-    _needsUpdate = true;
-  }
-
-  public final void setWH(int w, int h) {
-    _w = w;
-    _h = h;
-    _needsUpdate = true;
-  }
-
-  public final void setXYWH(int x, int y, int w, int h) {
-    _x = x;
-    _y = y;
-    _w = w;
-    _h = h;
-    _needsUpdate = true;
   }
 
   public void setHAlign(HAlign align) {
@@ -377,19 +339,19 @@ public abstract class Control<T extends ControlEvents> {
 
   private void updateSize() {
     if(_selBox != null) {
-      _selBox.setWH(_w, _h);
+      _selBox.setWH(_size.getX(), _size.getY());
       _selBox.createQuad();
     }
 
     if(_background != null) {
-      _background.setWH(_w - _background.getX() * 2,
-                        _h - _background.getY() * 2);
+      _background.setWH(_size.getX() - _background.getX() * 2,
+                        _size.getY() - _background.getY() * 2);
       _background.createQuad();
     }
 
     if(_border != null) {
-      _border.setWH(_w - _border.getX() * 2,
-                    _h - _border.getY() * 2);
+      _border.setWH(_size.getX() - _border.getX() * 2,
+                    _size.getY() - _border.getY() * 2);
       _border.createBorder();
     }
 
@@ -411,7 +373,7 @@ public abstract class Control<T extends ControlEvents> {
       }
 
       _matrix.push();
-      _matrix.translate(_x, _y);
+      _matrix.translate(_pos);
 
       if(_background != null) {
         _background.draw();
@@ -468,7 +430,7 @@ public abstract class Control<T extends ControlEvents> {
       }
 
       _matrix.push();
-      _matrix.translate(_x, _y);
+      _matrix.translate(_pos);
 
       if(_selBox != null) {
         _selBox.draw();
@@ -507,5 +469,43 @@ public abstract class Control<T extends ControlEvents> {
     WITH_DEFAULT_EVENTS,
     ACCEPTS_FOCUS,
     REGISTER
+  }
+  
+  public enum PositionType {
+    ABSOLUTE, FRACTIONAL
+  }
+  
+  public class Position extends Point {
+    private PositionType _typeX, _typeY;
+    
+    public Position(float x, float y) {
+      _x = x;
+      _y = y;
+    }
+    
+    public PositionType getXType() { return _typeX; }
+    public PositionType getYType() { return _typeY; }
+    
+    public void setXType(PositionType type) { _typeX = type; }
+    public void setYType(PositionType type) { _typeY = type; }
+  }
+  
+  public class Size extends Point {
+    private PositionType _typeX, _typeY;
+    
+    public Size(float x, float y) {
+      _x = x;
+      _y = y;
+    }
+    
+    @Override public void set(float x, float y) { super.set(x, y); _needsUpdate = true; }
+    @Override public void setX(float x) { super.setX(x); _needsUpdate = true; }
+    @Override public void setY(float y) { super.setY(y); _needsUpdate = true; }
+    
+    public PositionType getXType() { return _typeX; }
+    public PositionType getYType() { return _typeY; }
+    
+    public void setXType(PositionType type) { _typeX = type; }
+    public void setYType(PositionType type) { _typeY = type; }
   }
 }

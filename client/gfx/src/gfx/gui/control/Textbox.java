@@ -205,14 +205,14 @@ public class Textbox extends Control<Textbox.Events> {
     
     switch(_hAlign) {
       case ALIGN_LEFT:   _textX = _padW; break;
-      case ALIGN_CENTER: _textX = (_w - totalW) / 2; break;
-      case ALIGN_RIGHT:  _textX =  _w - totalW - _padW; break;
+      case ALIGN_CENTER: _textX = (_size.w() - totalW) / 2; break;
+      case ALIGN_RIGHT:  _textX =  _size.w() - totalW - _padW; break;
     }
     
     switch(_vAlign) {
       case ALIGN_TOP:    _textY = _padH; break;
-      case ALIGN_MIDDLE: _textY = (_h - _textH) / 2; break;
-      case ALIGN_BOTTOM: _textY =  _h - _textH - _padH; break;
+      case ALIGN_MIDDLE: _textY = (_size.h() - _textH) / 2; break;
+      case ALIGN_BOTTOM: _textY =  _size.h() - _textH - _padH; break;
     }
   }
   

@@ -132,7 +132,7 @@ public class Button extends Label {
   @Override protected void resize() {
     super.resize();
     
-    _border.setXYWH(0, 0, _w, _h);
+    _border.setXYWH(0, 0, _size.getX(), _size.getY());
     _border.createBorder();
   }
 }
