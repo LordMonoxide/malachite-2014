@@ -23,9 +23,9 @@ public class Image extends Control<ControlEvents> {
     if(texture != null) {
       _image.setTexture(texture);
       _image.createQuad();
-      setWH(texture.getW(), texture.getH());
+      size.set(texture.getW(), texture.getH());
     } else {
-      setWH(0, 0);
+      size.set(0, 0);
     }
   }
 

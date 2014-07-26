@@ -383,11 +383,11 @@ public abstract class Context {
   
   public class Camera extends Point {
     @Override public float getX() {
-      return _x + (_bind != null ? -_bind.getX() : 0) + getW() / 2;
+      return _x + (_bindX != null ? -_bindX.getX() : 0) + getW() / 2;
     }
     
     @Override public float getY() {
-      return _y + (_bind != null ? -_bind.getY() : 0) + getH() / 2;
+      return _y + (_bindY != null ? -_bindY.getY() : 0) + getH() / 2;
     }
   }
 }

@@ -48,12 +48,12 @@ public class Window<T extends Window.Events> extends Control<T> {
     
     _title = new Image(InitFlags.WITH_DEFAULT_EVENTS, InitFlags.REGISTER);
     _title.setBackground(s);
-    _title.pos().setY(-20);
-    _title.size().bindX(_size);
-    _title.size().setY(21);
+    _title.pos.setY(-20);
+    _title.size.bindX(size);
+    _title.size.setY(21);
     _title.events().onMouseMove(e -> {
       if(e.button == 0) {
-        _pos.set(_pos.getX() + e.x - _x, _pos.getY() + e.y - _y);
+        pos.set(pos.getX() + e.x - _x, pos.getY() + e.y - _y);
       }
     }).onMouseDown(e -> {
       _x = e.x;
@@ -64,7 +64,7 @@ public class Window<T extends Window.Events> extends Control<T> {
     _text.setTextColour(1, 1, 1, 1);
     _text.setAutoSize(true);
     _text.events().onResize(e -> {
-      _text.pos().setY((_title.size().getY() - _text.size().getY()) / 2);
+      _text.pos.setY((_title.size.getY() - _text.size.getY()) / 2);
     });
     
     _icon = new Image();
@@ -77,9 +77,9 @@ public class Window<T extends Window.Events> extends Control<T> {
     _close.getBackground().setTexture(t.getTexture("gui/close.png"));
     _close.getBackground().setTWH(13, 13);
     _close.setBackgroundColour(new float[] {0.8f, 0.8f, 0.8f, 1});
-    _close.size().set(13, 13);
-    _close.pos().bindX(_title.pos());
-    _close.pos().set(-_close.size().getX() - _close.pos().getY(), 4);
+    _close.size.set(13, 13);
+    _close.pos.bindX(_title.pos);
+    _close.pos.set(-_close.size.getX() - _close.pos.getY(), 4);
     _close.events().onClick(e -> {
       events().onClose();
     });
@@ -97,9 +97,9 @@ public class Window<T extends Window.Events> extends Control<T> {
     
     _content = new Image();
     _content.setBackground(s);
-    _content.pos().set(8, 8);
-    _content.size().bind(_size);
-    _content.size().set(16, 16);
+    _content.pos.set(8, 8);
+    _content.size.bind(size);
+    _content.size.set(16, 16);
     
     super.controls().add(_title);
     super.controls().add(_content);
@@ -143,11 +143,11 @@ public class Window<T extends Window.Events> extends Control<T> {
   }
   
   public float getContentW() {
-    return _content.size().getX();
+    return _content.size.getX();
   }
   
   public float getContentH() {
-    return _content.size().getY();
+    return _content.size.getY();
   }
   
   public void showCloseButton() {

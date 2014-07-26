@@ -425,6 +425,7 @@ public abstract class Control<T extends ControlEvents> {
   public void drawSelect() {
     if(_visible && _disabled == 0) {
       if(_needsUpdate) {
+        System.out.println("Updating " + this);
         updateSize();
       }
 

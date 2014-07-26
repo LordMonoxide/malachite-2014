@@ -8,15 +8,30 @@ import static gfx.util.StringUtils.*;
 
 public class ReflectionUtils {
   public static Member findMethodOrFieldByName(Class<?> c, String name) {
+    return findMethodOrFieldByName(c, name, null);
+  }
+  
+  public static Member findMethodOrFieldByName(Class<?> c, String name, Class<?> argHint) {
     for(Field f : c.getFields()) {
-      if(f.getName().equals(name)) {
+      if(f.getName().equalsIgnoreCase(name)) {
         return f;
       }
     }
     
     String methodName = "set" + capitolizeFirst(name);
+    
+    if(argHint != null) {
+      try {
+        return c.getMethod(methodName, argHint);
+      } catch(NoSuchMethodException e) {
+        System.err.println("No method by name of " + methodName + " which takes " + argHint + " as an argument.");
+      } catch(SecurityException e) {
+        e.printStackTrace();
+      }
+    }
+    
     for(Method m : c.getMethods()) {
-      if(m.getName().equals(methodName)) {
+      if(m.getName().equalsIgnoreCase(methodName)) {
         return m;
       }
     }

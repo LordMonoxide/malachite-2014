@@ -136,13 +136,18 @@ public class GUIParser {
             }
             
             String methodName = snakeToCamel(attrib);
-            Member member = findMethodOrFieldByName(c.getClass(), methodName);
+            Member member = findMethodOrFieldByName(c.getClass(), methodName, type);
             
-            if(member instanceof Field) {
-              
-            } else if(member instanceof Method) {
-              Method method = (Method)member;
-              method.invoke(c, value);
+            if(member != null) {
+              if(member instanceof Field) {
+                
+              } else if(member instanceof Method) {
+                Method method = (Method)member;
+                System.out.println(method);
+                method.invoke(c, value);
+              }
+            } else {
+              System.err.println("Couldn't find field/method " + methodName + "!");
             }
             
             //Method method = c.getClass().getMethod(methodName, new Class<?>[] { type });
