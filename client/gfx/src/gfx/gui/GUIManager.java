@@ -1,5 +1,7 @@
 package gfx.gui;
 
+import java.io.IOException;
+import java.nio.file.Paths;
 import java.util.concurrent.ConcurrentLinkedDeque;
 
 public class GUIManager {
@@ -126,5 +128,10 @@ public class GUIManager {
         }
       }
     }
+  }
+  
+  public GUI loadFromFile(String file) throws IOException {
+    GUIParser parser = new GUIParser();
+    return parser.loadFromFile(Paths.get("../data/gfx/guis/" + file));
   }
 }
