@@ -148,12 +148,8 @@ public class Window<T extends Window.Events> extends Control<T> {
     }
   }
   
-  public float getContentW() {
-    return _content.size.getX();
-  }
-  
-  public float getContentH() {
-    return _content.size.getY();
+  public Control<?>.Size getContentSize() {
+    return _content.size;
   }
   
   public void showCloseButton() {
