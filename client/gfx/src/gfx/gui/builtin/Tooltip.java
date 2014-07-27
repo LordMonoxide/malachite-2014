@@ -36,7 +36,7 @@ public class Tooltip extends GUI {
   }
   
   @Override protected void draw() {
-    _tooltip.setXY(_anchor.calculateTotalX() + _anchor.getW() - 7, _anchor.calculateTotalY());
+    _tooltip.pos.set(_anchor.calculateTotalX() + _anchor.size.getX() - 7, _anchor.calculateTotalY());
   }
   
   @Override protected boolean logic() {

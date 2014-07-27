@@ -21,7 +21,7 @@ public class Check extends Control<Check.Events> {
   private TextStream _textStream = new TextStream();
   private TextStream.Text  _text = new TextStream.Text();
   private TextStream.Colour _textColour = new TextStream.Colour(65f / 255, 52f / 255, 8f / 255, 1);
-  private int _textX, _textY;
+  private float _textX, _textY;
   private int _textW, _textH;
   
   private float[] _normalBorder = {160f / 0xFF, 147f / 0xFF, 111f / 0xFF, 1};
@@ -141,31 +141,31 @@ public class Check extends Control<Check.Events> {
   }
   
   @Override protected void resize() {
-    if(_size.w() < _bg.getW() + _textW + 2) {
-      setW((int)_bg.getW() + _textW + 2);
+    if(size.getX() < _bg.getW() + _textW + 2) {
+      size.setX(_bg.getW() + _textW + 2);
     }
     
-    if(_size.h() < _bg.getH()) {
-      setH((int)_bg.getH());
+    if(size.getY() < _bg.getH()) {
+      size.setY(_bg.getH());
     }
     
     switch(_hAlign) {
       case ALIGN_LEFT:   _bg.setX(_padW); break;
-      case ALIGN_CENTER: _bg.setX(_size.w() - (_textW + _bg.getW()) / 2);    break;
-      case ALIGN_RIGHT:  _bg.setX(_size.w() -  _textW - _bg.getW() - _padW); break;
+      case ALIGN_CENTER: _bg.setX(size.getX() - (_textW + _bg.getW()) / 2);    break;
+      case ALIGN_RIGHT:  _bg.setX(size.getX() -  _textW - _bg.getW() - _padW); break;
     }
     
     switch(_vAlign) {
       case ALIGN_TOP:    _bg.setY(_padH); _textY = _padH; break;
-      case ALIGN_MIDDLE: _bg.setY((_size.h() - _bg.getH()) / 2); _textY = (_size.h() - _textH) / 2;    break;
-      case ALIGN_BOTTOM: _bg.setY( _size.h() - _bg.getH());      _textY =  _size.h() - _textH - _padH; break;
+      case ALIGN_MIDDLE: _bg.setY((size.getY() - _bg.getH()) / 2); _textY = (size.getY() - _textH) / 2;    break;
+      case ALIGN_BOTTOM: _bg.setY( size.getY() - _bg.getH());      _textY =  size.getY() - _textH - _padH; break;
     }
     
     _check.setXY(_bg.getX(), _bg.getY());
     _border.setXYWH(_bg.getX() + 1, _bg.getY() + 1, 12, 12);
     _border.createBorder();
     
-    _textX = (int)(_bg.getX() + _bg.getW()) + 2;
+    _textX = (_bg.getX() + _bg.getW()) + 2;
   }
   
   @Override public void draw() {

@@ -44,12 +44,16 @@ public class Scrollbar extends Control<Scrollbar.Events> {
   }
   
   @Override protected void resize() {
-    if(_w >= _h) {
-      _dec.setXYWH(0, 0, _w / 2, _h);
-      _inc.setXYWH(_dec.getW(), 0, _w - _dec.getW(), _h);
+    if(size.getX() >= size.getY()) {
+      _dec.size.set(size.getX() / 2, size.getY());
+      
+      _inc.pos .set(_dec.size.getX(), 0);
+      _inc.size.set(size.getX() - _dec.size.getX(), size.getY());
     } else {
-      _dec.setXYWH(0, 0, _w, _h / 2);
-      _inc.setXYWH(0, _dec.getH(), _w, _h - _dec.getH());
+      _dec.size.set(size.getX(), size.getY() / 2);
+      
+      _inc.pos. set(0, _dec.size.getY());
+      _inc.size.set(size.getX(), size.getY() - _dec.size.getY());
     }
   }
   
