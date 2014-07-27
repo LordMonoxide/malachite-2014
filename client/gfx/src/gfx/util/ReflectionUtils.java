@@ -24,7 +24,6 @@ public class ReflectionUtils {
       try {
         return c.getMethod(methodName, argHint);
       } catch(NoSuchMethodException e) {
-        System.err.println("No method by name of " + methodName + " which takes " + argHint + " as an argument.");
       } catch(SecurityException e) {
         e.printStackTrace();
       }
@@ -35,6 +34,8 @@ public class ReflectionUtils {
         return m;
       }
     }
+    
+    System.err.println("No method by name of " + methodName + '.');
     
     return null;
   }
