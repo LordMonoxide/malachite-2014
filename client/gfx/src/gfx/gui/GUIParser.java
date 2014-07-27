@@ -117,17 +117,14 @@ public class GUIParser {
             break;
             
           default:
-            parseAttrib(null, control, attrib);
-            
+            parseAttrib(c, control.get(attrib), attrib);
             break;
         }
       }
     }
   }
   
-  private void parseAttrib(Object obj, JSONObject control, String attrib) {
-    Object value = control.get(attrib);
-    
+  private void parseAttrib(Object c, Object value, String attrib) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
     Class<?> type = value.getClass();
     if(type == Integer.class) { type = int.class; }
     if(type == Boolean.class) { type = boolean.class; }
