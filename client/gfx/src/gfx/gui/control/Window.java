@@ -78,8 +78,9 @@ public class Window<T extends Window.Events> extends Control<T> {
     _close.getBackground().setTWH(13, 13);
     _close.setBackgroundColour(new float[] {0.8f, 0.8f, 0.8f, 1});
     _close.size.set(13, 13);
-    _close.pos.bindX(_title.pos);
-    _close.pos.set(-_close.size.getX() - _close.pos.getY(), 4);
+    _close.pos.bindX(_title.size);
+    _close.pos.setY(4);
+    _close.pos.setX(-_close.size.getX() - _close.pos.getY());
     _close.events().onClick(e -> {
       events().onClose();
     });
