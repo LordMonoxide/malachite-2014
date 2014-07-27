@@ -9,7 +9,7 @@ import api.gateways.IAuthGateway;
 import api.responses.IErrorResponse;
 import api.responses.IGenericResponse;
 import api.responses.ILoginResponse;
-import game.BasicMainMenu;
+import game.MainMenuListenerInterface;
 import gfx.Context;
 import gfx.ContextListenerAdapter;
 import gfx.Manager;
@@ -19,7 +19,7 @@ import shared.gui.mainmenu.MainMenu;
 public class Game {
   private Context _context;
   
-  private BasicMainMenu _menu;
+  private MainMenuListenerInterface _menu;
   
   public static void main(String[] args) {
     Game game = new Game();

@@ -3,9 +3,11 @@ package game;
 import gfx.Context;
 import gfx.ContextListenerAdapter;
 import gfx.Manager;
+import gfx.gui.GUI;
 
 public class Game {
   private Context _context;
+  private GUI     _menu;
   
   public void init() {
     Manager.registerContext(gfx.gl21.Context.class);
