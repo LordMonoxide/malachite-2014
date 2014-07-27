@@ -109,22 +109,31 @@ public class GUIParser {
       Control<?> c = Class.forName("gfx.gui.control." + controlType).asSubclass(Control.class).newInstance();
       controls.add(c);
       
-      for(String attrib : control.keySet()) {
-        switch(attrib.toLowerCase()) {
-          case "type": break;
-          case "controls":
-            addControls(c.controls(), control.getJSONArray(attrib));
-            break;
-            
-          default:
-            parseAttrib(c, control.get(attrib), attrib);
-            break;
-        }
+      parseAttribs(c, control);
+    }
+  }
+  
+  private void parseAttribs(Object c, JSONObject attribs) throws InstantiationException, IllegalAccessException, ClassNotFoundException, NoSuchMethodException, SecurityException, IllegalArgumentException, InvocationTargetException, JSONException {
+    for(String attrib : attribs.keySet()) {
+      switch(attrib.toLowerCase()) {
+        case "type": break;
+        case "controls":
+          if(!(c instanceof Control)) {
+            System.err.println("Tried to add controls to a non-control");
+            return;
+          }
+          
+          addControls(((Control<?>)c).controls(), attribs.getJSONArray(attrib));
+          break;
+          
+        default:
+          parseAttrib(c, attrib, attribs.get(attrib));
+          break;
       }
     }
   }
   
-  private void parseAttrib(Object c, Object value, String attrib) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+  private void parseAttrib(Object c, String attrib, Object value) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, InstantiationException, ClassNotFoundException, NoSuchMethodException, SecurityException, JSONException {
     Class<?> type = value.getClass();
     if(type == Integer.class) { type = int.class; }
     if(type == Boolean.class) { type = boolean.class; }
@@ -146,10 +155,14 @@ public class GUIParser {
     
     if(member != null) {
       if(member instanceof Field) {
+        if(!(value instanceof JSONObject)) {
+          System.err.println("Value of a field must be a JSONObject");
+          return;
+        }
         
+        parseAttribs(((Field)member).get(c), (JSONObject)value);
       } else if(member instanceof Method) {
         Method method = (Method)member;
-        System.out.println(method);
         method.invoke(c, value);
       }
     } else {

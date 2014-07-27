@@ -5,8 +5,8 @@
       text: "@menu.login.title",
       icon: "#gui.icons.key",
       size: {
-        w: 300,
-        h: 200
+        x: 300,
+        y: 200
       },
       
       controls: [
@@ -18,7 +18,7 @@
             y: 4
           },
           size: {
-            h: 20
+            y: 20
           }
         },
         
@@ -31,7 +31,7 @@
             y: 32
           },
           size: {
-            h: 20
+            y: 20
           }
         },
         
