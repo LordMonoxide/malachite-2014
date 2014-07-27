@@ -36,16 +36,15 @@ public class GUIParser {
       ctx.setFPSTarget(60);
       ctx.setContextListener(new ContextListenerAdapter() {
         @Override public void onRun() {
-          GUIParser parser = new GUIParser();
-          GUI gui = null;
-          
           try {
+            GUIParser parser = new GUIParser();
+            GUI gui = null;
+            
             gui = parser.loadFromFile(Paths.get("../data/gfx/guis/mainmenu.json"));
-          } catch(IllegalArgumentException | JSONException | SecurityException | IOException e) {
+            gui.push();
+          } catch(IOException e) {
             e.printStackTrace();
           }
-          
-          gui.push();
         }
       });
     });
@@ -57,13 +56,13 @@ public class GUIParser {
   private List<AssignLater> _assignLater = new ArrayList<>();
   private Map<String, Control<?>> _controls = new HashMap<>();
   
-  public GUI loadFromFile(Path f) throws IOException, JSONException, SecurityException, IllegalArgumentException {
+  public GUI loadFromFile(Path f) throws IOException {
     byte[] raw = Files.readAllBytes(f);
     String data = new String(raw);
     return load(new JSONObject(data));
   }
   
-  public GUI load(JSONObject json) throws JSONException, SecurityException, IllegalArgumentException {
+  public GUI load(JSONObject json) {
     _gui = new GUI() {
       @Override protected void resize() {
         
@@ -74,19 +73,19 @@ public class GUIParser {
       }
       
       @Override protected void load() {
-        for(String key : json.keySet()) {
-          if(key.equals("controls")) {
-            try {
-              addControls(_gui.controls(), json.getJSONObject("controls"));
-            } catch(InstantiationException | IllegalAccessException | ClassNotFoundException | NoSuchMethodException | SecurityException | IllegalArgumentException | InvocationTargetException | JSONException e) {
-              e.printStackTrace();
+        try {
+          for(String key : json.keySet()) {
+            if(key.equals("controls")) {
+              try {
+                addControls(_gui.controls(), json.getJSONObject("controls"));
+              } catch(JSONException e) {
+                throw new GUIParserException.SyntaxException(e);
+              }
             }
           }
-        }
-        
-        try {
+          
           processLateAssignment();
-        } catch(IllegalAccessException | IllegalArgumentException | InvocationTargetException | InstantiationException | ClassNotFoundException | NoSuchMethodException | SecurityException | JSONException e) {
+        } catch(GUIParserException e) {
           e.printStackTrace();
         }
       }
@@ -104,7 +103,7 @@ public class GUIParser {
     return _gui;
   }
   
-  private void addControls(ControlList controls, JSONObject json) throws InstantiationException, IllegalAccessException, ClassNotFoundException, NoSuchMethodException, SecurityException, IllegalArgumentException, InvocationTargetException {
+  private void addControls(ControlList controls, JSONObject json) throws GUIParserException {
     for(String name : json.keySet()) {
       JSONObject attribs = json.getJSONObject(name);
       
@@ -118,7 +117,16 @@ public class GUIParser {
       
       controlType = snakeToProper(controlType);
       
-      Control<?> c = Class.forName("gfx.gui.control." + controlType).asSubclass(Control.class).newInstance();
+      Control<?> c;
+      
+      try {
+        c = Class.forName("gfx.gui.control." + controlType).asSubclass(Control.class).newInstance();
+      } catch(InstantiationException | IllegalAccessException e) {
+        throw new GUIParserException.EngineException(e);
+      } catch(ClassNotFoundException e) {
+        throw new GUIParserException.NoSuchControlException(controlType, e);
+      }
+      
       controls.add(c);
       _controls.put(name, c);
       
@@ -126,7 +134,7 @@ public class GUIParser {
     }
   }
   
-  private void parseAttribs(Object c, JSONObject attribs) throws InstantiationException, IllegalAccessException, ClassNotFoundException, NoSuchMethodException, SecurityException, IllegalArgumentException, InvocationTargetException, JSONException {
+  private void parseAttribs(Object c, JSONObject attribs) throws GUIParserException {
     for(String attrib : attribs.keySet()) {
       switch(attrib.toLowerCase()) {
         case "type": break;
@@ -136,7 +144,12 @@ public class GUIParser {
             return;
           }
           
-          addControls(((Control<?>)c).controls(), attribs.getJSONObject(attrib));
+          try {
+            addControls(((Control<?>)c).controls(), attribs.getJSONObject(attrib));
+          } catch(JSONException e) {
+            throw new GUIParserException.SyntaxException(e);
+          }
+          
           break;
           
         default:
@@ -146,7 +159,7 @@ public class GUIParser {
     }
   }
   
-  private void parseAttrib(Object obj, String attrib, Object value) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, InstantiationException, ClassNotFoundException, NoSuchMethodException, SecurityException, JSONException {
+  private void parseAttrib(Object obj, String attrib, Object value) throws GUIParserException {
     // Deduce type
     Class<?> type = value.getClass();
     if(type == Integer.class) { type = int.class; }
@@ -171,25 +184,28 @@ public class GUIParser {
       
       assignValue(obj, member, value);
     } else {
-      System.err.println("Couldn't find field/method " + attrib + "!");
+      throw new GUIParserException.NoSuchMemberException(obj, attrib, null);
     }
   }
   
-  private void assignValue(Object obj, Member member, Object value) throws InstantiationException, IllegalAccessException, ClassNotFoundException, NoSuchMethodException, SecurityException, IllegalArgumentException, InvocationTargetException, JSONException {
-    if(member instanceof Field) {
-      if(!(value instanceof JSONObject)) {
-        System.err.println("Value of a field must be a JSONObject");
-        return;
+  private void assignValue(Object obj, Member member, Object value) throws GUIParserException {
+    try {
+      if(member instanceof Field) {
+        if(!(value instanceof JSONObject)) {
+          throw new GUIParserException.SyntaxException("Value of " + obj + "'s " + member + " should be a JSON object, but was " + value + " instead.", null);
+        }
+        
+        parseAttribs(((Field)member).get(obj), (JSONObject)value);
+      } else if(member instanceof Method) {
+        Method method = (Method)member;
+        method.invoke(obj, value);
       }
-      
-      parseAttribs(((Field)member).get(obj), (JSONObject)value);
-    } else if(member instanceof Method) {
-      Method method = (Method)member;
-      method.invoke(obj, value);
+    } catch(IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+      throw new GUIParserException.EngineException(e);
     }
   }
   
-  private void processLateAssignment() throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, InstantiationException, ClassNotFoundException, NoSuchMethodException, SecurityException, JSONException {
+  private void processLateAssignment() throws GUIParserException {
     for(AssignLater late : _assignLater) {
       String[] parts = late.value.substring(1).split("\\.");
       
@@ -198,11 +214,15 @@ public class GUIParser {
         if(value == null) {
           value = _controls.get(part);
         } else {
-          Member member = findMethodOrFieldByName(value.getClass(), snakeToCamel(part));
-          if(member instanceof Method) {
-            value = ((Method)member).invoke(value);
-          } else if(member instanceof Field) {
-            value = ((Field)member).get(value);
+          try {
+            Member member = findMethodOrFieldByName(value.getClass(), snakeToCamel(part));
+            if(member instanceof Method) {
+              value = ((Method)member).invoke(value);
+            } else if(member instanceof Field) {
+              value = ((Field)member).get(value);
+            }
+          } catch(IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+            throw new GUIParserException.EngineException(e);
           }
         }
       }
