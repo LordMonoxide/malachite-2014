@@ -120,12 +120,7 @@ public class Window<T extends Window.Events> extends Control<T> {
   }
   
   @Override protected void resize() {
-    /*if(_icon.getTexture() != null) {
-      _text.setX(_icon.getX() + _icon.getW());
-      _icon.setY(_title.getH() - _icon.getH());
-    } else {
-      _text.setX(4);
-    }*/
+    
   }
   
   public String getText() {
@@ -151,8 +146,6 @@ public class Window<T extends Window.Events> extends Control<T> {
       _text.pos.bindX(null);
       _text.pos.setX(4);
     }
-    
-    resize();
   }
   
   public float getContentW() {
