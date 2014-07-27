@@ -117,43 +117,46 @@ public class GUIParser {
             break;
             
           default:
-            Object value = control.get(attrib);
+            parseAttrib(null, control, attrib);
             
-            Class<?> type = value.getClass();
-            if(type == Integer.class) { type = int.class; }
-            if(type == Boolean.class) { type = boolean.class; }
-            if(type == String .class) {
-              String s = (String)value;
-              if(s.startsWith("@")) {
-                
-              }
-              
-              if(s.startsWith("#")) {
-                String path = s.substring(1).replace('.', '/') + ".png";
-                value = TextureBuilder.getInstance().getTexture(path);
-                type = Texture.class;
-              }
-            }
-            
-            String methodName = snakeToCamel(attrib);
-            Member member = findMethodOrFieldByName(c.getClass(), methodName, type);
-            
-            if(member != null) {
-              if(member instanceof Field) {
-                
-              } else if(member instanceof Method) {
-                Method method = (Method)member;
-                System.out.println(method);
-                method.invoke(c, value);
-              }
-            } else {
-              System.err.println("Couldn't find field/method " + methodName + "!");
-            }
-            
-            //Method method = c.getClass().getMethod(methodName, new Class<?>[] { type });
             break;
         }
       }
+    }
+  }
+  
+  private void parseAttrib(Object obj, JSONObject control, String attrib) {
+    Object value = control.get(attrib);
+    
+    Class<?> type = value.getClass();
+    if(type == Integer.class) { type = int.class; }
+    if(type == Boolean.class) { type = boolean.class; }
+    if(type == String .class) {
+      String s = (String)value;
+      if(s.startsWith("@")) {
+        
+      }
+      
+      if(s.startsWith("#")) {
+        String path = s.substring(1).replace('.', '/') + ".png";
+        value = TextureBuilder.getInstance().getTexture(path);
+        type = Texture.class;
+      }
+    }
+    
+    String methodName = snakeToCamel(attrib);
+    Member member = findMethodOrFieldByName(c.getClass(), methodName, type);
+    
+    if(member != null) {
+      if(member instanceof Field) {
+        
+      } else if(member instanceof Method) {
+        Method method = (Method)member;
+        System.out.println(method);
+        method.invoke(c, value);
+      }
+    } else {
+      System.err.println("Couldn't find field/method " + methodName + "!");
     }
   }
 }
