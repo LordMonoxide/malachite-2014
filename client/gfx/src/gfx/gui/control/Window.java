@@ -63,6 +63,7 @@ public class Window<T extends Window.Events> extends Control<T> {
     _text = new Label();
     _text.setTextColour(1, 1, 1, 1);
     _text.setAutoSize(true);
+    _text.pos.setX(4);
     _text.events().onResize(e -> {
       _text.pos.setY((_title.size.getY() - _text.size.getY()) / 2);
     });
@@ -144,6 +145,11 @@ public class Window<T extends Window.Events> extends Control<T> {
     
     if(_icon != null) {
       _icon.pos.setY(-_icon.size.getY());
+      _text.pos.bindX(_icon.size);
+      _text.pos.setX(0);
+    } else {
+      _text.pos.bindX(null);
+      _text.pos.setX(4);
     }
     
     resize();
