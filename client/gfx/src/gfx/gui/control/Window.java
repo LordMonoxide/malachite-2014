@@ -102,7 +102,7 @@ public class Window<T extends Window.Events> extends Control<T> {
     _content.setBackground(s);
     _content.pos.set(8, 8);
     _content.size.bind(size);
-    _content.size.set(16, 16);
+    _content.size.set(-16, -16);
     
     super.controls().add(_title);
     super.controls().add(_content);
