@@ -68,6 +68,7 @@ public class Window<T extends Window.Events> extends Control<T> {
     });
     
     _icon = new Image();
+    _icon.pos.bindY(_title.size);
     
     _title.controls().add(_text);
     _title.controls().add(_icon);
@@ -140,6 +141,11 @@ public class Window<T extends Window.Events> extends Control<T> {
   
   public void setIcon(Texture icon) {
     _icon.setTexture(icon);
+    
+    if(_icon != null) {
+      _icon.pos.setY(-_icon.size.getY());
+    }
+    
     resize();
   }
   
