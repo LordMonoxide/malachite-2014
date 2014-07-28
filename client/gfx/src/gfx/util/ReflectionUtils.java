@@ -43,17 +43,25 @@ public class ReflectionUtils {
       try {
         return c.getMethod(name, argHint);
       } catch(NoSuchMethodException e) {
+        System.out.println("No " + name + " with " + argHint);
       } catch(SecurityException e) {
         e.printStackTrace();
       }
     }
     
+    Method candidate = null;
     for(Method m : c.getMethods()) {
       if(m.getName().equalsIgnoreCase(name)) {
-        return m;
+        if(argHint == null || (m.getParameterCount() != 0 && argHint.isAssignableFrom(m.getParameterTypes()[0]))) {
+          return m;
+        } else {
+          if(candidate == null) {
+            candidate = m;
+          }
+        }
       }
     }
     
-    return null;
+    return candidate;
   }
 }
