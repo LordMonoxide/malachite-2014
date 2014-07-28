@@ -53,16 +53,21 @@ public class GUIParser {
   }
   
   private GUI _gui;
+  private GUIGateway _gateway;
+  
   private List<AssignLater> _assignLater = new ArrayList<>();
   private Map<String, Control<?>> _controls = new HashMap<>();
   
-  public GUI loadFromFile(Path f) throws IOException {
+  public GUI loadFromFile(Path f) throws IOException { return loadFromFile(f, null); }
+  public GUI loadFromFile(Path f, GUIGateway gateway) throws IOException {
     byte[] raw = Files.readAllBytes(f);
     String data = new String(raw);
-    return load(new JSONObject(data));
+    return load(new JSONObject(data), gateway);
   }
   
-  public GUI load(JSONObject json) {
+  public GUI load(JSONObject json) { return load(json, null); }
+  public GUI load(JSONObject json, GUIGateway gateway) {
+    _gateway = gateway;
     _gui = new GUI() {
       @Override protected void resize() {
         

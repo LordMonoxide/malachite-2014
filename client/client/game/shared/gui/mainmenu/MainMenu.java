@@ -5,11 +5,11 @@ import org.json.JSONObject;
 
 import shared.IMainMenuProvider;
 import api.Lang;
-import game.MainMenuListenerInterface;
+import game.MainMenuGateway;
 import gfx.gui.GUI;
 import gfx.gui.builtin.Message;
 
-public class MainMenu extends GUI implements MainMenuListenerInterface {
+public class MainMenu extends GUI implements MainMenuGateway {
   private IMainMenuProvider _provider;
   
   private Message _error;

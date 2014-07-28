@@ -51,6 +51,9 @@
             bindX: @login_password.pos,
             bindY: @login_password.pos,
             y: 28
+          },
+          events: {
+            click: 
           }
         }
       }

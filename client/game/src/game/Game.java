@@ -1,5 +1,7 @@
 package game;
 
+import java.io.IOException;
+
 import gfx.Context;
 import gfx.ContextListenerAdapter;
 import gfx.Manager;
@@ -18,9 +20,15 @@ public class Game {
       ctx.setFPSTarget(60);
       ctx.setContextListener(new ContextListenerAdapter() {
         @Override public void onRun() {
-          _menu = new MainMenu(new MainMenuProvider(Instances.newAuthGateway()));
-          _menu.showLogin();
-          ((GUI)_menu).push();
+          try {
+            _menu = ctx.GUIs().loadFromFile("mainmenu.json");
+          } catch(IOException e) {
+            e.printStackTrace();
+          }
+          
+          //_menu = new MainMenu(new MainMenuProvider(Instances.newAuthGateway()));
+          //_menu.showLogin();
+          _menu.push();
         }
       });
     });
