@@ -82,7 +82,7 @@ public class GUIParser {
           for(String key : json.keySet()) {
             if(key.equals("controls")) {
               try {
-                addControls(_gui.controls(), json.getJSONObject("controls"));
+                parseControls(_gui.controls(), json.getJSONObject("controls"));
               } catch(JSONException e) {
                 throw new GUIParserException.SyntaxException(e);
               }
@@ -108,7 +108,7 @@ public class GUIParser {
     return _gui;
   }
   
-  private void addControls(ControlList controls, JSONObject json) throws GUIParserException {
+  private void parseControls(ControlList controls, JSONObject json) throws GUIParserException {
     for(String name : json.keySet()) {
       JSONObject attribs = json.getJSONObject(name);
       
@@ -150,7 +150,7 @@ public class GUIParser {
           }
           
           try {
-            addControls(((Control<?>)c).controls(), attribs.getJSONObject(attrib));
+            parseControls(((Control<?>)c).controls(), attribs.getJSONObject(attrib));
           } catch(JSONException e) {
             throw new GUIParserException.SyntaxException(e);
           }
