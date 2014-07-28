@@ -139,18 +139,36 @@ public class GUIParser {
     }
   }
   
+  private void parseEvents(Control<?> control, JSONObject json) throws GUIParserException {
+    
+  }
+  
   private void parseAttribs(Object c, JSONObject attribs) throws GUIParserException {
     for(String attrib : attribs.keySet()) {
       switch(attrib.toLowerCase()) {
         case "type": break;
         case "controls":
           if(!(c instanceof Control)) {
-            System.err.println("Tried to add controls to a non-control");
-            return;
+            parseAttrib(c, attrib, attribs.get(attrib));
+            break;
           }
           
           try {
             parseControls(((Control<?>)c).controls(), attribs.getJSONObject(attrib));
+          } catch(JSONException e) {
+            throw new GUIParserException.SyntaxException(e);
+          }
+          
+          break;
+          
+        case "events":
+          if(!(c instanceof Control)) {
+            parseAttrib(c, attrib, attribs.get(attrib));
+            break;
+          }
+          
+          try {
+            parseEvents((Control<?>)c, attribs.getJSONObject(attrib));
           } catch(JSONException e) {
             throw new GUIParserException.SyntaxException(e);
           }
