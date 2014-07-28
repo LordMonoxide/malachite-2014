@@ -5,9 +5,15 @@ import java.io.IOException;
 import gfx.Context;
 import gfx.ContextListenerAdapter;
 import gfx.Manager;
+import gfx.gui.ControlEvents;
 import gfx.gui.GUI;
+import gfx.gui.GUIEvents;
 
 public class Game {
+  public static void main(String[] args) {
+    new Game().init();
+  }
+  
   private Context _context;
   private GUI     _menu;
   
@@ -21,7 +27,11 @@ public class Game {
       ctx.setContextListener(new ContextListenerAdapter() {
         @Override public void onRun() {
           try {
-            _menu = ctx.GUIs().loadFromFile("mainmenu.json");
+            _menu = ctx.GUIs().loadFromFile("mainmenu.json", new GUIEvents() {
+              public void loginSubmitClick(ControlEvents.ClickEventData e) {
+                System.out.println(e);
+              }
+            });
           } catch(IOException e) {
             e.printStackTrace();
           }

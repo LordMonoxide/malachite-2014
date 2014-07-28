@@ -53,7 +53,7 @@
             y: 28
           },
           events: {
-            click: 
+            on_click: login_submit_click
           }
         }
       }

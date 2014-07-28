@@ -1,13 +1,11 @@
 package game;
 
-import gfx.gui.GUIGateway;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import api.gateways.IUserGateway;
 
-public abstract class MainMenuGateway implements GUIGateway {
+public abstract class MainMenuGateway {
   private IUserGateway _gateway;
   
   protected MainMenuGateway(IUserGateway gateway) {

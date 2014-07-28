@@ -131,7 +131,11 @@ public class GUIManager {
   }
   
   public GUI loadFromFile(String file) throws IOException {
+    return loadFromFile(file, null);
+  }
+  
+  public GUI loadFromFile(String file, GUIEvents events) throws IOException {
     GUIParser parser = new GUIParser();
-    return parser.loadFromFile(Paths.get("../data/gfx/guis/" + file));
+    return parser.loadFromFile(Paths.get("../data/gfx/guis/" + file), events);
   }
 }

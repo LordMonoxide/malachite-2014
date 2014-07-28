@@ -1,8 +1,5 @@
 package gfx.gui;
 
-import gfx.Context;
-import gfx.ContextListenerAdapter;
-import gfx.Manager;
 import gfx.textures.Texture;
 import gfx.textures.TextureBuilder;
 import static gfx.util.ReflectionUtils.*;
@@ -10,12 +7,13 @@ import static gfx.util.StringUtils.*;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Member;
 import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -25,48 +23,21 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class GUIParser {
-  private static Context _context;
-  
-  public static void main(String[] args) throws JSONException, SecurityException {
-    Manager.registerContext(gfx.gl21.Context.class);
-    
-    _context = Manager.create(ctx -> {
-      ctx.setResizable(true);
-      ctx.setWH(1280, 720);
-      ctx.setFPSTarget(60);
-      ctx.setContextListener(new ContextListenerAdapter() {
-        @Override public void onRun() {
-          try {
-            GUIParser parser = new GUIParser();
-            GUI gui = null;
-            
-            gui = parser.loadFromFile(Paths.get("../data/gfx/guis/mainmenu.json"));
-            gui.push();
-          } catch(IOException e) {
-            e.printStackTrace();
-          }
-        }
-      });
-    });
-    
-    _context.run();
-  }
-  
   private GUI _gui;
-  private GUIGateway _gateway;
+  private GUIEvents _gateway;
   
   private List<AssignLater> _assignLater = new ArrayList<>();
   private Map<String, Control<?>> _controls = new HashMap<>();
   
   public GUI loadFromFile(Path f) throws IOException { return loadFromFile(f, null); }
-  public GUI loadFromFile(Path f, GUIGateway gateway) throws IOException {
+  public GUI loadFromFile(Path f, GUIEvents gateway) throws IOException {
     byte[] raw = Files.readAllBytes(f);
     String data = new String(raw);
     return load(new JSONObject(data), gateway);
   }
   
   public GUI load(JSONObject json) { return load(json, null); }
-  public GUI load(JSONObject json, GUIGateway gateway) {
+  public GUI load(JSONObject json, GUIEvents gateway) {
     _gateway = gateway;
     _gui = new GUI() {
       @Override protected void resize() {
@@ -139,8 +110,38 @@ public class GUIParser {
     }
   }
   
-  private void parseEvents(Control<?> control, JSONObject json) throws GUIParserException {
-    
+  private void parseEvents(Control<?> control, JSONObject events) throws GUIParserException {
+    for(String name : events.keySet()) {
+      String event = events.getString(name);
+      
+      Method controlEvent = findMethodByName(control.events().getClass(), snakeToCamel(name),  ControlEvents.Event.class);
+      Method callback     = findMethodByName(_gateway        .getClass(), snakeToCamel(event), ControlEvents.EventData.class);
+      
+      if(controlEvent == null) {
+        throw new GUIParserException.InvalidCallbackException(name, control.getClass().getName(), null);
+      }
+      
+      if(callback == null) {
+        throw new GUIParserException.NoEventListenerException(event, control.getClass().getName(), null);
+      }
+      
+      System.out.println(controlEvent);
+      Class<?> type = controlEvent.getParameters()[0].getType();
+      
+      Object o = Proxy.newProxyInstance(getClass().getClassLoader(), new Class[] { type }, new InvocationHandler() {
+        @Override public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+          callback.setAccessible(true);
+          callback.invoke(_gateway, args);
+          return null;
+        }
+      });
+      
+      try {
+        controlEvent.invoke(control.events(), o);
+      } catch(IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+        throw new GUIParserException.EngineException(e);
+      }
+    }
   }
   
   private void parseAttribs(Object c, JSONObject attribs) throws GUIParserException {
