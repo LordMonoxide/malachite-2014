@@ -234,38 +234,66 @@ public class GUIParser {
   
   private void processLateAssignment() throws GUIParserException {
     for(AssignLater late : _assignLater) {
-      String[] parts = late.value.substring(1).split("\\.");
-      
-      Object value = null;
-      for(String part : parts) {
-        if(value == null) {
-          value = _controls.get(part);
-        } else {
-          try {
-            Member member = findMethodOrFieldByName(value.getClass(), snakeToCamel(part));
-            if(member instanceof Method) {
-              value = ((Method)member).invoke(value);
-            } else if(member instanceof Field) {
-              value = ((Field)member).get(value);
-            }
-          } catch(IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-            throw new GUIParserException.EngineException(e);
-          }
+      BoundMember member = memberFromPath(late.value);
+      Object value = valueFromMember(member);
+      assignValue(late.member.obj, late.member.member, value);
+    }
+  }
+  
+  private BoundMember memberFromPath(String path) throws GUIParserException {
+    String[] parts = path.substring(1).split("\\.");
+    
+    Member member = null;
+    Object value = null;
+    for(String part : parts) {
+      if(value == null) {
+        value = _controls.get(part);
+      } else {
+        if(member != null) {
+          value = valueFromMember(value, member);
         }
+        
+        member = findMethodOrFieldByName(value.getClass(), snakeToCamel(part));
       }
-      
-      assignValue(late.obj, late.member, value);
+    }
+    
+    return new BoundMember(value, member);
+  }
+  
+  private Object valueFromMember(BoundMember member) throws GUIParserException {
+    return valueFromMember(member.obj, member.member);
+  }
+  
+  private Object valueFromMember(Object obj, Member member) throws GUIParserException {
+    try {
+      if(member instanceof Method) {
+        return ((Method)member).invoke(obj);
+      } else if(member instanceof Field) {
+        return ((Field)member).get(obj);
+      }
+    } catch(IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+      throw new GUIParserException.EngineException(e);
+    }
+    
+    return null;
+  }
+  
+  private class BoundMember {
+    public Object obj;
+    public Member member;
+    
+    public BoundMember(Object obj, Member member) {
+      this.obj = obj;
+      this.member = member;
     }
   }
   
   private class AssignLater {
-    public Object obj;
-    public Member member;
-    public String value;
+    public BoundMember member;
+    public String      value;
     
     public AssignLater(Object obj, Member member, String value) {
-      this.obj = obj;
-      this.member = member;
+      this.member = new BoundMember(obj, member);
       this.value = value;
     }
   }
