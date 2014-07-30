@@ -53,7 +53,7 @@
             y: 28
           },
           events: {
-            on_click: login_submit_click
+            on_click: "login(@login_email.text,@login_password.text)"
           }
         }
       }

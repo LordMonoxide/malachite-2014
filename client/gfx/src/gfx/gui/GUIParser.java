@@ -288,6 +288,16 @@ public class GUIParser {
     }
   }
   
+  private class Event {
+    public String name;
+    public String[] arguments;
+    
+    public Event(String name, String[] arguments) {
+      this.name = name;
+      this.arguments = arguments;
+    }
+  }
+  
   private class AssignLater {
     public BoundMember member;
     public String      value;
