@@ -125,11 +125,11 @@ public class GUIParser {
         throw new GUIParserException.NoEventListenerException(event, control.getClass().getName(), null);
       }
       
+      callback.setAccessible(true);
       Class<?> type = controlEvent.getParameters()[0].getType();
       
       Object o = Proxy.newProxyInstance(getClass().getClassLoader(), new Class[] { type }, new InvocationHandler() {
         @Override public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-          callback.setAccessible(true);
           callback.invoke(_gateway, args);
           return null;
         }
