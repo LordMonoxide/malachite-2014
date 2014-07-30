@@ -163,6 +163,10 @@ public class GUIParser {
           break;
           
         case "events":
+          if(_gateway == null) {
+            continue;
+          }
+          
           if(!(c instanceof Control)) {
             parseAttrib(c, attrib, attribs.get(attrib));
             break;
