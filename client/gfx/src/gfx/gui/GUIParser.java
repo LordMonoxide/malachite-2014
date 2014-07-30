@@ -198,7 +198,7 @@ public class GUIParser {
       if(type == String .class) {
         String s = (String)value;
         if(s.startsWith("@")) {
-          _assignLater.add(new AssignLater(obj, member, (String)value));
+          _assignLater.add(new AssignLater(obj, member, s));
           return;
         }
         
