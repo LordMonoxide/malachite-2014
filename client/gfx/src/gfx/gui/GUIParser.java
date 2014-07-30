@@ -125,7 +125,6 @@ public class GUIParser {
         throw new GUIParserException.NoEventListenerException(event, control.getClass().getName(), null);
       }
       
-      System.out.println(controlEvent);
       Class<?> type = controlEvent.getParameters()[0].getType();
       
       Object o = Proxy.newProxyInstance(getClass().getClassLoader(), new Class[] { type }, new InvocationHandler() {
