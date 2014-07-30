@@ -22,7 +22,7 @@
             y: 4
           },
           size: {
-            bindX: @login.content_size,
+            bind_x: @login.content_size,
             x: -8,
             y: 20
           }
@@ -33,13 +33,13 @@
           placeholder: ~menu.login.password,
           masked: true,
           pos: {
-            bindX: @login_email.pos,
-            bindY: @login_email.pos,
+            bind_x: @login_email.pos,
+            bind_y: @login_email.pos,
             y: 28
           },
           size: {
-            bindX: @login_email.size,
-            bindY: @login_email.size
+            bind_x: @login_email.size,
+            bind_y: @login_email.size
           }
         },
         
@@ -48,8 +48,8 @@
           auto_size: true,
           text: ~menu.login.submit,
           pos: {
-            bindX: @login_password.pos,
-            bindY: @login_password.pos,
+            bind_x: @login_password.pos,
+            bind_y: @login_password.pos,
             y: 28
           },
           events: {
