@@ -1,22 +1,18 @@
 package malachite.game;
 
 import java.io.IOException;
+import java.util.Objects;
 
 import malachite.gfx.Context;
 import malachite.gfx.ContextListenerAdapter;
 import malachite.gfx.Manager;
 import malachite.gfx.gui.GUI;
-import malachite.gfx.gui.GUIEvents;
 
 public class Game {
-  public static void main(String[] args) {
-    new Game().init();
-  }
-  
   private Context _context;
   private GUI     _menu;
   
-  public void init() {
+  public void init(String gui, Object guiEventHandler) {
     Manager.registerContext(malachite.gfx.gl21.Context.class);
     
     _context = Manager.create(ctx -> {
@@ -26,7 +22,7 @@ public class Game {
       ctx.setContextListener(new ContextListenerAdapter() {
         @Override public void onRun() {
           try {
-            _menu = ctx.GUIs().loadFromFile("mainmenu.json", new GUIEvents() {
+            _menu = ctx.GUIs().loadFromFile("mainmenu.json", new Object() {
               public void login(String email, String password) {
                 System.out.println(email);
                 System.out.println(password);
@@ -36,12 +32,14 @@ public class Game {
             e.printStackTrace();
           }
           
-          //_menu = new MainMenu(new MainMenuProvider(Instances.newAuthGateway()));
-          //_menu.showLogin();
           _menu.push();
         }
       });
     });
+  }
+  
+  public void run() {
+    Objects.requireNonNull(_context, this + " must be initialized before it is run.");
     
     _context.run();
   }

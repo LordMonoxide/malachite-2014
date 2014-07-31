@@ -27,7 +27,7 @@ import org.json.JSONObject;
 
 public class GUIParser {
   private GUI _gui;
-  private GUIEvents _gateway;
+  private Object _events;
   
   private List<AssignLater> _assignLater = new ArrayList<>();
   private Map<String, Control<?>> _controls = new HashMap<>();
@@ -35,15 +35,15 @@ public class GUIParser {
   private Pattern _eventParser = Pattern.compile("^(\\w+)(?:\\(((?:@[\\w\\.]+,? ?)+)\\))?$");
   
   public GUI loadFromFile(Path f) throws IOException { return loadFromFile(f, null); }
-  public GUI loadFromFile(Path f, GUIEvents gateway) throws IOException {
+  public GUI loadFromFile(Path f, Object gateway) throws IOException {
     byte[] raw = Files.readAllBytes(f);
     String data = new String(raw);
     return load(new JSONObject(data), gateway);
   }
   
   public GUI load(JSONObject json) { return load(json, null); }
-  public GUI load(JSONObject json, GUIEvents gateway) {
-    _gateway = gateway;
+  public GUI load(JSONObject json, Object events) {
+    _events = events;
     _gui = new GUI() {
       @Override protected void resize() {
         
@@ -120,7 +120,7 @@ public class GUIParser {
       Event event = parseEventString(events.getString(name));
       
       Method controlEvent = findMethodByName(control.events().getClass(), snakeToCamel(name),       ControlEvents.Event.class);
-      Method callback     = findMethodByName(_gateway        .getClass(), snakeToCamel(event.name), ControlEvents.EventData.class);
+      Method callback     = findMethodByName(_events         .getClass(), snakeToCamel(event.name), ControlEvents.EventData.class);
       
       if(controlEvent == null) {
         throw new GUIParserException.InvalidCallbackException(name, control.getClass().getName(), null);
@@ -136,14 +136,14 @@ public class GUIParser {
       Object o = Proxy.newProxyInstance(getClass().getClassLoader(), new Class[] { type }, new InvocationHandler() {
         @Override public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
           if(event.arguments == null) {
-            callback.invoke(_gateway, args);
+            callback.invoke(_events, args);
           } else {
             Object[] objs = new Object[event.arguments.length];
             for(int i = 0; i < event.arguments.length; i++) {
               objs[i] = valueFromMember(event.arguments[i]);
             }
             
-            callback.invoke(_gateway, objs);
+            callback.invoke(_events, objs);
           }
           
           return null;
@@ -203,7 +203,7 @@ public class GUIParser {
           break;
           
         case "events":
-          if(_gateway == null) {
+          if(_events == null) {
             continue;
           }
           
