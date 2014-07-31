@@ -5,7 +5,6 @@ import java.io.IOException;
 import gfx.Context;
 import gfx.ContextListenerAdapter;
 import gfx.Manager;
-import gfx.gui.ControlEvents;
 import gfx.gui.GUI;
 import gfx.gui.GUIEvents;
 
