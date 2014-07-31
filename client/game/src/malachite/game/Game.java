@@ -22,12 +22,7 @@ public class Game {
       ctx.setContextListener(new ContextListenerAdapter() {
         @Override public void onRun() {
           try {
-            _menu = ctx.GUIs().loadFromFile("mainmenu.json", new Object() {
-              public void login(String email, String password) {
-                System.out.println(email);
-                System.out.println(password);
-              }
-            });
+            _menu = ctx.GUIs().loadFromFile(gui, guiEventHandler);
           } catch(IOException e) {
             e.printStackTrace();
           }
