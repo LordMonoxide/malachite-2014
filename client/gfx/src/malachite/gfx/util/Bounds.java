@@ -33,9 +33,7 @@ public class Bounds {
     }
   };
   
-  public final Point tl = new Point() {
-    
-  };
+  public final Point tl = xy;
   
   public final Point tm = new Point() {
     
