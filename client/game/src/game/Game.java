@@ -28,8 +28,9 @@ public class Game {
         @Override public void onRun() {
           try {
             _menu = ctx.GUIs().loadFromFile("mainmenu.json", new GUIEvents() {
-              public void loginSubmitClick(ControlEvents.ClickEventData e) {
-                System.out.println(e);
+              public void login(String email, String password) {
+                System.out.println(email);
+                System.out.println(password);
               }
             });
           } catch(IOException e) {
