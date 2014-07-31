@@ -15,9 +15,12 @@ import java.lang.reflect.Proxy;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -28,6 +31,8 @@ public class GUIParser {
   
   private List<AssignLater> _assignLater = new ArrayList<>();
   private Map<String, Control<?>> _controls = new HashMap<>();
+  
+  private Pattern _eventParser = Pattern.compile("^(\\w+)(?:\\(((?:@[\\w\\.]+,? ?)+)\\))?$");
   
   public GUI loadFromFile(Path f) throws IOException { return loadFromFile(f, null); }
   public GUI loadFromFile(Path f, GUIEvents gateway) throws IOException {
@@ -112,17 +117,17 @@ public class GUIParser {
   
   private void parseEvents(Control<?> control, JSONObject events) throws GUIParserException {
     for(String name : events.keySet()) {
-      String event = events.getString(name);
+      Event event = parseEventString(events.getString(name));
       
-      Method controlEvent = findMethodByName(control.events().getClass(), snakeToCamel(name),  ControlEvents.Event.class);
-      Method callback     = findMethodByName(_gateway        .getClass(), snakeToCamel(event), ControlEvents.EventData.class);
+      Method controlEvent = findMethodByName(control.events().getClass(), snakeToCamel(name),       ControlEvents.Event.class);
+      Method callback     = findMethodByName(_gateway        .getClass(), snakeToCamel(event.name), ControlEvents.EventData.class);
       
       if(controlEvent == null) {
         throw new GUIParserException.InvalidCallbackException(name, control.getClass().getName(), null);
       }
       
       if(callback == null) {
-        throw new GUIParserException.NoEventListenerException(event, control.getClass().getName(), null);
+        throw new GUIParserException.NoEventListenerException(event.name, control.getClass().getName(), null);
       }
       
       callback.setAccessible(true);
@@ -130,7 +135,17 @@ public class GUIParser {
       
       Object o = Proxy.newProxyInstance(getClass().getClassLoader(), new Class[] { type }, new InvocationHandler() {
         @Override public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-          callback.invoke(_gateway, args);
+          if(event.arguments == null) {
+            callback.invoke(_gateway, args);
+          } else {
+            Object[] objs = new Object[event.arguments.length];
+            for(int i = 0; i < event.arguments.length; i++) {
+              objs[i] = valueFromMember(event.arguments[i]);
+            }
+            
+            callback.invoke(_gateway, objs);
+          }
+          
           return null;
         }
       });
@@ -141,6 +156,32 @@ public class GUIParser {
         throw new GUIParserException.EngineException(e);
       }
     }
+  }
+  
+  private Event parseEventString(String eventString) throws GUIParserException {
+    Matcher matcher = _eventParser.matcher(eventString);
+    
+    String        fn   = null;
+    BoundMember[] args = null;
+    
+    System.out.println(eventString);
+    if(matcher.find()) {
+      fn = matcher.group(1);
+      
+      String a = matcher.group(2);
+      if(a != null) {
+        String[] a2 = a.split(", ?");
+        args = new BoundMember[a2.length];
+        
+        for(int i = 0; i < a2.length; i++) {
+          args[i] = memberFromPath(a2[i], true, false);
+        }
+      }
+    } else {
+      throw new GUIParserException.SyntaxException("Invalid event syntax", null);
+    }
+    
+    return new Event(fn, args);
   }
   
   private void parseAttribs(Object c, JSONObject attribs) throws GUIParserException {
@@ -234,13 +275,13 @@ public class GUIParser {
   
   private void processLateAssignment() throws GUIParserException {
     for(AssignLater late : _assignLater) {
-      BoundMember member = memberFromPath(late.value);
+      BoundMember member = memberFromPath(late.value, true, true);
       Object value = valueFromMember(member);
       assignValue(late.member.obj, late.member.member, value);
     }
   }
   
-  private BoundMember memberFromPath(String path) throws GUIParserException {
+  private BoundMember memberFromPath(String path, boolean withGets, boolean withSets) throws GUIParserException {
     String[] parts = path.substring(1).split("\\.");
     
     Member member = null;
@@ -253,7 +294,7 @@ public class GUIParser {
           value = valueFromMember(value, member);
         }
         
-        member = findMethodOrFieldByName(value.getClass(), snakeToCamel(part));
+        member = findMethodOrFieldByName(value.getClass(), snakeToCamel(part), withGets, withSets);
       }
     }
     
@@ -290,9 +331,9 @@ public class GUIParser {
   
   private class Event {
     public String name;
-    public String[] arguments;
+    public BoundMember[] arguments;
     
-    public Event(String name, String[] arguments) {
+    public Event(String name, BoundMember[] arguments) {
       this.name = name;
       this.arguments = arguments;
     }
