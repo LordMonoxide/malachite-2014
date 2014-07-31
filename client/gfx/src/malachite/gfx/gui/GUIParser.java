@@ -101,7 +101,7 @@ public class GUIParser {
       Control<?> c;
       
       try {
-        c = Class.forName("gfx.gui.control." + controlType).asSubclass(Control.class).newInstance();
+        c = Class.forName("malachite.gfx.gui.control." + controlType).asSubclass(Control.class).newInstance();
       } catch(InstantiationException | IllegalAccessException e) {
         throw new GUIParserException.EngineException(e);
       } catch(ClassNotFoundException e) {
