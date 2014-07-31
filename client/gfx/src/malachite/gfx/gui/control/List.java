@@ -35,7 +35,7 @@ public class List<T> extends Control<ControlEvents> {
     _border.setColour(_normalBorder);
     
     _inner = new Frame();
-    _inner.size.bind(size);
+    _inner.bounds.wh.bind(bounds.wh);
     controls().add(_inner);
   }
   
@@ -49,9 +49,9 @@ public class List<T> extends Control<ControlEvents> {
   
   public Item add(String name, T data) {
     Item i = new Item(name, data);
-    i.pos.setY(_inner.controls().size() * 20);
-    i.size.bindX(size);
-    i.size.setY(20);
+    i.bounds.setY(_inner.controls().size() * 20);
+    i.bounds.wh.bindX(bounds.wh);
+    i.bounds.setH(20);
     _inner.controls().add(i);
     return i;
   }
@@ -79,7 +79,7 @@ public class List<T> extends Control<ControlEvents> {
       _text = new Label();
       _text.setTextColour(65f / 255, 52f / 255, 8f / 255, 1);
       _text.setText(text);
-      _text.pos.setX(4);
+      _text.bounds.setX(4);
       
       Scalable s = Context.newScalable();
       _background = s;
@@ -115,7 +115,8 @@ public class List<T> extends Control<ControlEvents> {
     public void setData(T      data) { _data = data; }
     
     @Override protected void resize() {
-      _text.pos.setY(size.getY() / 2);
+      //TODO: USE LM
+      _text.bounds.setY(bounds.getH() / 2);
     }
   }
 }

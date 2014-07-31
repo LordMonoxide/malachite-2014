@@ -33,23 +33,23 @@ public class Tooltip extends Control<ControlEvents> {
     _tip.createQuad();
     
     _text = new Label();
-    _text.pos.setX(_body.getX() + 4);
+    _text.bounds.setX(_body.getX() + 4);
     _text.setTextColour(1, 1, 1, 1);
     _text.setAutoSize(true);
     _text.events().onResize(e -> {
-      size.setX(_text.pos.getX() + _text.pos.getX());
+      bounds.setW(_text.bounds.getX() + _text.bounds.getW());
     });
     
     controls().add(_text);
     
-    size.set(100, 21);
+    bounds.wh.set(100, 21);
   }
   
   @Override protected void resize() {
-    _body.setW(size.getX());
+    _body.setW(bounds.getW());
     _body.createQuad();
     
-    _text.pos.setY((_body.getH() - _text.size.getY()) / 2);
+    _text.bounds.setY((_body.getH() - _text.bounds.getH()) / 2);
   }
   
   public String getText() {

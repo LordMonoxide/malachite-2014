@@ -4,27 +4,26 @@
       type: window,
       text: ~menu.login.title,
       icon: "#gui.icons.key",
-      pos: {
+      bounds: {
         x: 490,
-        y: 260
-      },
-      size: {
-        x: 300,
-        y: 200
+        y: 260,
+        w: 300,
+        h: 200
       },
       
       controls: {
         login_email: {
           type: textbox,
           placeholder: ~menu.login.email,
-          pos: {
+          bounds: {
+            wh: {
+              bind_x: @login.content_bounds.wh
+            },
+            
             x: 4,
-            y: 4
-          },
-          size: {
-            bind_x: @login.content_size,
-            x: -8,
-            y: 20
+            y: 4,
+            w: -8,
+            h: 20
           }
         },
         
@@ -32,14 +31,18 @@
           type: textbox,
           placeholder: ~menu.login.password,
           masked: true,
-          pos: {
-            bind_x: @login_email.pos,
-            bind_y: @login_email.pos,
+          bounds: {
+            xy: {
+              bind_x: @login_email.bounds.xy,
+              bind_y: @login_email.bounds.xy
+            },
+            
+            wh: {
+              bind_x: @login_email.bounds.wh,
+              bind_y: @login_email.bounds.wh
+            },
+            
             y: 28
-          },
-          size: {
-            bind_x: @login_email.size,
-            bind_y: @login_email.size
           }
         },
         
@@ -47,9 +50,12 @@
           type: button,
           auto_size: true,
           text: ~menu.login.submit,
-          pos: {
-            bind_x: @login_password.pos,
-            bind_y: @login_password.pos,
+          bounds: {
+            xy: {
+              bind_x: @login_password.bounds.xy,
+              bind_y: @login_password.bounds.xy
+            },
+            
             y: 28
           },
           events: {

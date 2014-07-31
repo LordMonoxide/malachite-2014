@@ -141,24 +141,24 @@ public class Check extends Control<Check.Events> {
   }
   
   @Override protected void resize() {
-    if(size.getX() < _bg.getW() + _textW + 2) {
-      size.setX(_bg.getW() + _textW + 2);
+    if(bounds.getW() < _bg.getW() + _textW + 2) {
+      bounds.setW(_bg.getW() + _textW + 2);
     }
     
-    if(size.getY() < _bg.getH()) {
-      size.setY(_bg.getH());
+    if(bounds.getH() < _bg.getH()) {
+      bounds.setH(_bg.getH());
     }
     
     switch(_hAlign) {
       case ALIGN_LEFT:   _bg.setX(_padW); break;
-      case ALIGN_CENTER: _bg.setX(size.getX() - (_textW + _bg.getW()) / 2);    break;
-      case ALIGN_RIGHT:  _bg.setX(size.getX() -  _textW - _bg.getW() - _padW); break;
+      case ALIGN_CENTER: _bg.setX(bounds.getW() - (_textW + _bg.getW()) / 2);    break;
+      case ALIGN_RIGHT:  _bg.setX(bounds.getW() -  _textW - _bg.getW() - _padW); break;
     }
     
     switch(_vAlign) {
       case ALIGN_TOP:    _bg.setY(_padH); _textY = _padH; break;
-      case ALIGN_MIDDLE: _bg.setY((size.getY() - _bg.getH()) / 2); _textY = (size.getY() - _textH) / 2;    break;
-      case ALIGN_BOTTOM: _bg.setY( size.getY() - _bg.getH());      _textY =  size.getY() - _textH - _padH; break;
+      case ALIGN_MIDDLE: _bg.setY((bounds.getH() - _bg.getH()) / 2); _textY = (bounds.getH() - _textH) / 2;    break;
+      case ALIGN_BOTTOM: _bg.setY( bounds.getH() - _bg.getH());      _textY =  bounds.getH() - _textH - _padH; break;
     }
     
     _check.setXY(_bg.getX(), _bg.getY());

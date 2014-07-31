@@ -13,6 +13,7 @@ import malachite.gfx.gui.ControlEvents;
 import malachite.gfx.gui.GUI;
 import malachite.gfx.textures.Texture;
 import malachite.gfx.textures.TextureBuilder;
+import malachite.gfx.util.Bounds;
 
 public class Dropdown<T> extends Control<ControlEvents> {
   private Font _font = FontBuilder.getInstance().getDefault();
@@ -58,7 +59,7 @@ public class Dropdown<T> extends Control<ControlEvents> {
     _events.onClick(e -> {
       _drop.push();
       _drop.resize();
-      _drop.pos.set(calculateTotalX(), calculateTotalY());
+      _drop.bounds.xy.set(calculateTotalX(), calculateTotalY());
     });
     
     _border.setColour(_normalBorder);
@@ -154,7 +155,7 @@ public class Dropdown<T> extends Control<ControlEvents> {
   
   private class Drop extends GUI {
     private Frame _frame;
-    public Position pos;
+    public Bounds bounds;
     
     @Override protected void load() {
       _frame = new Frame();
@@ -171,7 +172,7 @@ public class Dropdown<T> extends Control<ControlEvents> {
         setSelected(e.y / _font.regular().getH());
       });
       
-      pos = _frame.pos;
+      bounds = _frame.bounds;
       
       controls().add(_frame);
     }
@@ -181,7 +182,7 @@ public class Dropdown<T> extends Control<ControlEvents> {
     }
     
     @Override protected void resize() {
-      size.setY(_items.size() * _font.regular().getH());
+      bounds.setH(_items.size() * _font.regular().getH());
     }
     
     @Override protected void draw() {

@@ -11,6 +11,7 @@ import malachite.gfx.gui.ControlList;
 import malachite.gfx.gui.GUI;
 import malachite.gfx.textures.Texture;
 import malachite.gfx.textures.TextureBuilder;
+import malachite.gfx.util.Bounds;
 
 public class Window<T extends Window.Events> extends Control<T> {
   private Image _title;
@@ -48,12 +49,12 @@ public class Window<T extends Window.Events> extends Control<T> {
     
     _title = new Image(InitFlags.WITH_DEFAULT_EVENTS, InitFlags.REGISTER);
     _title.setBackground(s);
-    _title.pos.setY(-20);
-    _title.size.bindX(size);
-    _title.size.setY(21);
+    _title.bounds.setY(-20);
+    _title.bounds.wh.bindX(bounds.wh);
+    _title.bounds.setH(21);
     _title.events().onMouseMove(e -> {
       if(e.button == 0) {
-        pos.set(pos.getX() + e.x - _x, pos.getY() + e.y - _y);
+        bounds.xy.set(bounds.getX() + e.x - _x, bounds.getY() + e.y - _y);
       }
     }).onMouseDown(e -> {
       _x = e.x;
@@ -63,13 +64,13 @@ public class Window<T extends Window.Events> extends Control<T> {
     _text = new Label();
     _text.setTextColour(1, 1, 1, 1);
     _text.setAutoSize(true);
-    _text.pos.setX(4);
+    _text.bounds.setX(4);
     _text.events().onResize(e -> {
-      _text.pos.setY((_title.size.getY() - _text.size.getY()) / 2);
+      _text.bounds.setY((_title.bounds.getH() - _text.bounds.getH()) / 2);
     });
     
     _icon = new Image();
-    _icon.pos.bindY(_title.size);
+    _icon.bounds.xy.bindY(_title.bounds.wh);
     
     _title.controls().add(_text);
     _title.controls().add(_icon);
@@ -79,10 +80,10 @@ public class Window<T extends Window.Events> extends Control<T> {
     _close.getBackground().setTexture(t.getTexture("gui/close.png"));
     _close.getBackground().setTWH(13, 13);
     _close.setBackgroundColour(new float[] {0.8f, 0.8f, 0.8f, 1});
-    _close.size.set(13, 13);
-    _close.pos.bindX(_title.size);
-    _close.pos.setY(4);
-    _close.pos.setX(-_close.size.getX() - _close.pos.getY());
+    _close.bounds.wh.set(13, 13);
+    _close.bounds.xy.bindX(_title.bounds.wh);
+    _close.bounds.setY(4);
+    _close.bounds.setX(-_close.bounds.getW() - _close.bounds.getY());
     _close.events().onClick(e -> {
       events().onClose();
     });
@@ -100,9 +101,9 @@ public class Window<T extends Window.Events> extends Control<T> {
     
     _content = new Image();
     _content.setBackground(s);
-    _content.pos.set(8, 8);
-    _content.size.bind(size);
-    _content.size.set(-16, -16);
+    _content.bounds.xy.set(8, 8);
+    _content.bounds.wh.bind(bounds.wh);
+    _content.bounds.wh.set(-16, -16);
     
     super.controls().add(_title);
     super.controls().add(_content);
@@ -139,17 +140,17 @@ public class Window<T extends Window.Events> extends Control<T> {
     _icon.setTexture(icon);
     
     if(_icon != null) {
-      _icon.pos.setY(-_icon.size.getY());
-      _text.pos.bindX(_icon.size);
-      _text.pos.setX(0);
+      _icon.bounds.setY(-_icon.bounds.getH());
+      _text.bounds.xy.bindX(_icon.bounds.wh);
+      _text.bounds.setX(0);
     } else {
-      _text.pos.bindX(null);
-      _text.pos.setX(4);
+      _text.bounds.xy.bindX(null);
+      _text.bounds.setX(4);
     }
   }
   
-  public Control<?>.Size getContentSize() {
-    return _content.size;
+  public Bounds getContentBounds() {
+    return _content.bounds;
   }
   
   public void showCloseButton() {

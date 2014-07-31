@@ -3,7 +3,7 @@ package malachite.gfx.gui;
 import malachite.gfx.Context;
 import malachite.gfx.Drawable;
 import malachite.gfx.Matrix;
-import malachite.gfx.util.Point;
+import malachite.gfx.util.Bounds;
 
 import org.lwjgl.input.Keyboard;
 
@@ -13,8 +13,7 @@ public abstract class Control<T extends ControlEvents> {
   protected Drawable _background;
   protected Drawable _border;
   
-  public final Position pos = new Position(0, 0);
-  public final Size     size = new Size(0, 0);
+  public final Bounds bounds = new ControlBounds();
   
   protected HAlign _hAlign = HAlign.ALIGN_LEFT;
   protected VAlign _vAlign = VAlign.ALIGN_MIDDLE;
@@ -106,11 +105,11 @@ public abstract class Control<T extends ControlEvents> {
   }
 
   public final float calculateTotalX() {
-    float x = pos.getX();
+    float x = bounds.getX();
     
     Control<? extends ControlEvents> c = _controlParent;
     while(c != null) {
-      x += c.pos.getX();
+      x += c.bounds.getX();
       c = c._controlParent;
     }
     
@@ -118,11 +117,11 @@ public abstract class Control<T extends ControlEvents> {
   }
 
   public final float calculateTotalY() {
-    float y = pos.getY();
+    float y = bounds.getY();
     
     Control<? extends ControlEvents> c = _controlParent;
     while(c != null) {
-      y += c.pos.getY();
+      y += c.bounds.getY();
       c = c._controlParent;
     }
     
@@ -338,19 +337,19 @@ public abstract class Control<T extends ControlEvents> {
 
   private void updateSize() {
     if(_selBox != null) {
-      _selBox.setWH(size.getX(), size.getY());
+      _selBox.setWH(bounds.getW(), bounds.getH());
       _selBox.createQuad();
     }
 
     if(_background != null) {
-      _background.setWH(size.getX() - _background.getX() * 2,
-                        size.getY() - _background.getY() * 2);
+      _background.setWH(bounds.getW() - _background.getX() * 2,
+                        bounds.getH() - _background.getY() * 2);
       _background.createQuad();
     }
 
     if(_border != null) {
-      _border.setWH(size.getX() - _border.getX() * 2,
-                    size.getY() - _border.getY() * 2);
+      _border.setWH(bounds.getW() - _border.getX() * 2,
+                    bounds.getH() - _border.getY() * 2);
       _border.createBorder();
     }
 
@@ -372,7 +371,7 @@ public abstract class Control<T extends ControlEvents> {
       }
 
       _matrix.push();
-      _matrix.translate(pos);
+      _matrix.translate(bounds.xy);
 
       if(_background != null) {
         _background.draw();
@@ -430,7 +429,7 @@ public abstract class Control<T extends ControlEvents> {
       }
 
       _matrix.push();
-      _matrix.translate(pos);
+      _matrix.translate(bounds.xy);
 
       if(_selBox != null) {
         _selBox.draw();
@@ -475,7 +474,7 @@ public abstract class Control<T extends ControlEvents> {
     ABSOLUTE, FRACTIONAL
   }
   
-  public class Position extends Point {
+  /*public class Position extends Point {
     private PositionType _typeX, _typeY;
     
     public Position(float x, float y) {
@@ -507,5 +506,11 @@ public abstract class Control<T extends ControlEvents> {
     
     public void setXType(PositionType type) { _typeX = type; }
     public void setYType(PositionType type) { _typeY = type; }
+  }*/
+  
+  public class ControlBounds extends Bounds {
+    @Override protected void updateWH() {
+      _needsUpdate = true;
+    }
   }
 }

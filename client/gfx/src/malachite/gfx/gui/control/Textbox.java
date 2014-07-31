@@ -205,14 +205,14 @@ public class Textbox extends Control<Textbox.Events> {
     
     switch(_hAlign) {
       case ALIGN_LEFT:   _textX = _padW; break;
-      case ALIGN_CENTER: _textX = (size.getX() - totalW) / 2; break;
-      case ALIGN_RIGHT:  _textX =  size.getX() - totalW - _padW; break;
+      case ALIGN_CENTER: _textX = (bounds.getW() - totalW) / 2; break;
+      case ALIGN_RIGHT:  _textX =  bounds.getW() - totalW - _padW; break;
     }
     
     switch(_vAlign) {
       case ALIGN_TOP:    _textY = _padH; break;
-      case ALIGN_MIDDLE: _textY = (size.getY() - _textH) / 2; break;
-      case ALIGN_BOTTOM: _textY =  size.getY() - _textH - _padH; break;
+      case ALIGN_MIDDLE: _textY = (bounds.getH() - _textH) / 2; break;
+      case ALIGN_BOTTOM: _textY =  bounds.getH() - _textH - _padH; break;
     }
   }
   

@@ -30,6 +30,7 @@ public class Point {
   }
   
   public void set(float x, float y) { _x = x; _y = y; propogate(); }
+  public void set(Point p) { set(p._x, p._y); }
   public void setX(float x) { _x = x; propogate(); }
   public void setY(float y) { _y = y; propogate(); }
   public float getX() { return _x + (_bindX != null ? _bindX.getX() : 0); }

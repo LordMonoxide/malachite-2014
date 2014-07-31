@@ -38,7 +38,7 @@ public class Label extends Control<ControlEvents> {
       _textH = _font.regular().getH();
       
       if(_autoSize) {
-        size.set(_textW + _padW * 2 + 1, _textH + _padH * 2);
+        bounds.wh.set(_textW + _padW * 2 + 1, _textH + _padH * 2);
       }
     });
   }
@@ -51,7 +51,7 @@ public class Label extends Control<ControlEvents> {
       _textH = _font.regular().getH();
       
       if(_autoSize) {
-        size.set(_textW + _padW * 2 + 1, _textH + _padH * 2);
+        bounds.wh.set(_textW + _padW * 2 + 1, _textH + _padH * 2);
       }
     });
   }
@@ -83,20 +83,20 @@ public class Label extends Control<ControlEvents> {
   @Override protected void resize() {
     switch(_hAlign) {
       case ALIGN_LEFT:   _textX = _padW; break;
-      case ALIGN_CENTER: _textX = (size.getX() - _textW) / 2; break;
-      case ALIGN_RIGHT:  _textX =  size.getX() - _textW - _padW; break;
+      case ALIGN_CENTER: _textX = (bounds.getW() - _textW) / 2; break;
+      case ALIGN_RIGHT:  _textX =  bounds.getW() - _textW - _padW; break;
     }
 
     switch(_vAlign) {
       case ALIGN_TOP:    _textY = _padH; break;
-      case ALIGN_MIDDLE: _textY = (size.getY() - _textH) / 2; break;
-      case ALIGN_BOTTOM: _textY =  size.getY() - _textH - _padH; break;
+      case ALIGN_MIDDLE: _textY = (bounds.getH() - _textH) / 2; break;
+      case ALIGN_BOTTOM: _textY =  bounds.getH() - _textH - _padH; break;
     }
   }
 
   @Override public void draw() {
     if(drawBegin()) {
-      _font.draw(_textX, _textY, (int)size.getX() - _padW * 2, (int)size.getY() - _padH * 2, _textStream);
+      _font.draw(_textX, _textY, (int)bounds.getW() - _padW * 2, (int)bounds.getH() - _padH * 2, _textStream);
     }
 
     drawEnd();

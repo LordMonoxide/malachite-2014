@@ -86,7 +86,7 @@ public abstract class GUI {
   }
 
   protected void setWH(int w, int h) {
-    _control.size.set(w, h);
+    _control.bounds.wh.set(w, h);
   }
 
   protected abstract void load();
