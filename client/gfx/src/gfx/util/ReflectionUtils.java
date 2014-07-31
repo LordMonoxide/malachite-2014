@@ -11,18 +11,30 @@ public class ReflectionUtils {
     return findMethodOrFieldByName(c, name, null);
   }
   
+  public static Member findMethodOrFieldByName(Class<?> c, String name, boolean withGets, boolean withSets) {
+    return findMethodOrFieldByName(c, name, null, withGets, withSets);
+  }
+  
   public static Member findMethodOrFieldByName(Class<?> c, String name, Class<?> argHint) {
+    return findMethodOrFieldByName(c, name, argHint, true, true);
+  }
+  
+  public static Member findMethodOrFieldByName(Class<?> c, String name, Class<?> argHint, boolean withGets, boolean withSets) {
     Member member = findFieldByName(c, name);
     if(member != null) { return member; }
     
     member = findMethodByName(c, name, argHint);
     if(member != null) { return member; }
     
-    member = findMethodByName(c, "set" + capitolizeFirst(name), argHint);
-    if(member != null) { return member; }
+    if(withSets) {
+      member = findMethodByName(c, "set" + capitolizeFirst(name), argHint);
+      if(member != null) { return member; }
+    }
     
-    member = findMethodByName(c, "get" + capitolizeFirst(name), argHint);
-    if(member != null) { return member; }
+    if(withGets) {
+      member = findMethodByName(c, "get" + capitolizeFirst(name), argHint);
+      if(member != null) { return member; }
+    }
     
     System.err.println("No member by name of " + name + '.');
     return null;
