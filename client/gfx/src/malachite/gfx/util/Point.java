@@ -31,8 +31,8 @@ public class Point {
   
   public void set(float x, float y) { _x = x; _y = y; propogate(); }
   public void set(Point p) { set(p.getX(), p.getY()); }
-  public void setX(float x) { _x = x; propogate(); }
-  public void setY(float y) { _y = y; propogate(); }
+  public void setX(float x) { set(x, _y); }
+  public void setY(float y) { set(_x, y); }
   public float getX() { return _x + (_bindX != null ? _bindX.getX() : 0); }
   public float getY() { return _y + (_bindY != null ? _bindY.getY() : 0); }
   
@@ -76,9 +76,18 @@ public class Point {
     propogate();
   }
   
+  private boolean _propogating = false;
+  
   private void propogate() {
+    if(_propogating) { return; }
+    _propogating = true;
+    
+    set(_x, _y);
+    
     for(Point p : _children) {
       p.set(p._x, p._y);
     }
+    
+    _propogating = false;
   }
 }
