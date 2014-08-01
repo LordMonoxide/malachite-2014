@@ -14,14 +14,6 @@ public class Bounds {
       updateSubpoints();
       updateXY();
     }
-    
-    @Override public void setX(float x) {
-      set(x, _y);
-    }
-    
-    @Override public void setY(float y) {
-      set(_x, y);
-    }
   };
   
   public final Point wh = new Point() {
@@ -29,14 +21,6 @@ public class Bounds {
       super.set(w, h);
       updateSubpoints();
       updateWH();
-    }
-    
-    @Override public void setX(float w) {
-      set(w, _y);
-    }
-    
-    @Override public void setY(float h) {
-      set(_x, h);
     }
   };
   
@@ -49,7 +33,7 @@ public class Bounds {
       if(_lock) { return; }
       
       if(_maintainSize) {
-        xy.set(x - wh._x / 2, y);
+        xy.set(x - wh.getX() / 2, y);
       } else {
         
       }
@@ -63,7 +47,7 @@ public class Bounds {
       if(_lock) { return; }
       
       if(_maintainSize) {
-        xy.set(x - wh._x, y);
+        xy.set(x - wh.getX(), y);
       } else {
         
       }
