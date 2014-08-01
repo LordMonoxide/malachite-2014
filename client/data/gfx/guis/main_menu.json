@@ -52,14 +52,12 @@
           text: ~menu.login.submit,
           bounds: {
             xy: {
-              bind_x: @login_password.bounds.xy,
-              bind_y: @login_password.bounds.xy
-            },
-            
-            y: 28
+              bind_x: @login_password.bounds.br,
+              bind_y: @login_password.bounds.br
+            }
           },
           events: {
-            on_click: "login(@login_email.text,@login_password.text)"
+            on_click: "login(@login_email.text,@login_password.text,@login_email.bounds)"
           }
         }
       }
