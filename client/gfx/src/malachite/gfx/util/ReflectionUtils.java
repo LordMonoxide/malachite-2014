@@ -60,36 +60,25 @@ public class ReflectionUtils {
     for(Method m : c.getMethods()) {
       boolean methodExists = false;
       
-      int total = 0;
-      int accuracy = 0;
-      
-      total += 2;
+      int total = 100;
       
       if(m.getName().equals(name)) {
         methodExists = true;
-        accuracy += 2;
       } else if(m.getName().equalsIgnoreCase(name)) {
         methodExists = true;
-        accuracy += 1;
+        total -= 2;
       }
       
       if(methodExists) {
-        if(argHint.length == m.getParameterCount()) {
-          total += 10;
-          accuracy += 10;
-        }
+        total -= java.lang.Math.abs(argHint.length - m.getParameterCount()) * 5;
         
         for(int i = 0; i < java.lang.Math.min(argHint.length, m.getParameterCount()); i++) {
-          total += 2;
-          
-          if(argHint[i] == m.getParameterTypes()[i]) {
-            accuracy += 2;
-          } else if(argHint[i].isAssignableFrom(m.getParameterTypes()[i])) {
-            accuracy += 1;
+          if(argHint[i] != m.getParameterTypes()[i] && argHint[i].isAssignableFrom(m.getParameterTypes()[i])) {
+            total -= 2;
           }
         }
         
-        methods.add(new MethodAccuracy(m, accuracy / total));
+        methods.add(new MethodAccuracy(m, total));
       }
     }
     
@@ -113,9 +102,9 @@ public class ReflectionUtils {
   
   private static class MethodAccuracy {
     public final Method method;
-    public final float  accuracy;
+    public final int    accuracy;
     
-    public MethodAccuracy(Method method, float accuracy) {
+    public MethodAccuracy(Method method, int accuracy) {
       this.method   = method;
       this.accuracy = accuracy;
     }
