@@ -236,10 +236,10 @@ public class GUIParser {
     Member member = findMethodOrFieldByName(obj.getClass(), snakeToCamel(attrib), type);
     
     if(member != null) {
-      if(type == String .class) {
+      if(type == String.class) {
         String s = (String)value;
         if(s.startsWith("@")) {
-          _assignLater.add(new AssignLater(obj, member, s));
+          _assignLater.add(new AssignLater(obj, member, memberFromPath(s, true, true)));
           return;
         }
         
@@ -256,28 +256,31 @@ public class GUIParser {
     }
   }
   
-  private void assignValue(Object obj, Member member, Object value) throws GUIParserException {
+  private void assignValue(Object obj, Member member, Object... value) throws GUIParserException {
     try {
       if(member instanceof Field) {
-        if(!(value instanceof JSONObject)) {
+        if(!(value[0] instanceof JSONObject)) { //TODO
           throw new GUIParserException.SyntaxException("Value of " + obj + "'s " + member + " should be a JSON object, but was " + value + " instead.", null);
         }
         
-        parseAttribs(((Field)member).get(obj), (JSONObject)value);
+        parseAttribs(((Field)member).get(obj), (JSONObject)value[0]); //TODO
       } else if(member instanceof Method) {
         Method method = (Method)member;
-        method.invoke(obj, value);
+        method.invoke(obj, (Object[])value);
       }
-    } catch(IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+    } catch(IllegalArgumentException e) {
+      System.out.println(member);
+      System.out.println(value);
+      throw new GUIParserException.EngineException(e);
+    } catch(IllegalAccessException | InvocationTargetException e) {
       throw new GUIParserException.EngineException(e);
     }
   }
   
   private void processLateAssignment() throws GUIParserException {
     for(AssignLater late : _assignLater) {
-      BoundMember member = memberFromPath(late.value, true, true);
-      Object value = valueFromMember(member);
-      assignValue(late.member.obj, late.member.member, value);
+      Object[] value = valuesFromMembers(late.value);
+      assignValue(late.member.obj, late.member.member, (Object[])value);
     }
   }
   
@@ -299,6 +302,15 @@ public class GUIParser {
     }
     
     return new BoundMember(value, member);
+  }
+  
+  private Object[] valuesFromMembers(BoundMember... member) throws GUIParserException {
+    Object[] ret = new Object[member.length];
+    for(int i = 0; i < member.length; i++) {
+      ret[i] = valueFromMember(member[i]);
+    }
+    
+    return ret;
   }
   
   private Object valueFromMember(BoundMember member) throws GUIParserException {
@@ -340,10 +352,10 @@ public class GUIParser {
   }
   
   private class AssignLater {
-    public BoundMember member;
-    public String      value;
+    public BoundMember   member;
+    public BoundMember[] value;
     
-    public AssignLater(Object obj, Member member, String value) {
+    public AssignLater(Object obj, Member member, BoundMember... value) {
       this.member = new BoundMember(obj, member);
       this.value = value;
     }
