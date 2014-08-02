@@ -1,12 +1,21 @@
 package malachite.gfx.util;
 
 public class Bounds {
+  private HAlign _hAlign = HAlign.ALIGN_LEFT;
+  private VAlign _vAlign = VAlign.ALIGN_TOP;
+  
   private boolean _maintainSize = true;
   private boolean _lock = false;
   
   public void maintainSize() { _maintainSize = true; }
   public void dontMaintainSize() { _maintainSize = false; }
   public boolean maintainsSize() { return _maintainSize; }
+  
+  public HAlign getHAlign() { return _hAlign; }
+  public VAlign getVAlign() { return _vAlign; }
+  
+  public void setHAlign(HAlign hAlign) { _hAlign = hAlign; }
+  public void setVAlign(VAlign vAlign) { _vAlign = vAlign; }
   
   public final Point xy = new Point() {
     @Override public void set(float x, float y) {
@@ -24,34 +33,16 @@ public class Bounds {
     }
   };
   
-  public final Point tl = xy;
+  public final Point tl = new Point() {
+    
+  };
   
   public final Point tm = new Point() {
-    @Override public void set(float x, float y) {
-      super.set(x, y);
-      
-      if(_lock) { return; }
-      
-      if(_maintainSize) {
-        xy.set(x - wh.getX() / 2, y);
-      } else {
-        
-      }
-    }
+    
   };
   
   public final Point tr = new Point() {
-    @Override public void set(float x, float y) {
-      super.set(x, y);
-      
-      if(_lock) { return; }
-      
-      if(_maintainSize) {
-        xy.set(x - wh.getX(), y);
-      } else {
-        
-      }
-    }
+    
   };
   
   public final Point ml = new Point() {
@@ -80,9 +71,24 @@ public class Bounds {
   
   private void updateSubpoints() {
     _lock = true;
-    tr.set(xy.getX() + wh.getX(), xy.getY());
+    
+    float x = 0, y = 0;
+    switch(_hAlign) {
+      case ALIGN_LEFT:   x = 0; break;
+      case ALIGN_CENTER: x = -wh.getX() / 2; break;
+      case ALIGN_RIGHT:  x = -wh.getX(); break;
+    }
+    
+    switch(_vAlign) {
+      case ALIGN_TOP:    y = 0; break;
+      case ALIGN_MIDDLE: y = -wh.getY() / 2; break;
+      case ALIGN_BOTTOM: y = -wh.getY(); break;
+    }
+    
+    tl.set(xy.getX() + x, xy.getY() + y);
+    tr.set(tl.getX() + wh.getX(), tl.getY());
     tm.set(Points.mean(tl, tr));
-    bl.set(xy.getX(), xy.getY() + wh.getY());
+    bl.set(tl.getX(), tl.getY() + wh.getY());
     br.set(tr.getX(), bl.getY());
     bm.set(tm.getX(), bl.getY());
     ml.set(Points.mean(tl, bl));
