@@ -51,7 +51,7 @@
           auto_size: true,
           text: ~menu.login.submit,
           bounds: {
-            tr: {
+            xy: {
               bind_x: @login_password.bounds.br,
               bind_y: @login_password.bounds.br
             }
