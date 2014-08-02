@@ -4,6 +4,8 @@ import malachite.gfx.Context;
 import malachite.gfx.Drawable;
 import malachite.gfx.Matrix;
 import malachite.gfx.util.Bounds;
+import malachite.gfx.util.HAlign;
+import malachite.gfx.util.VAlign;
 
 import org.lwjgl.input.Keyboard;
 

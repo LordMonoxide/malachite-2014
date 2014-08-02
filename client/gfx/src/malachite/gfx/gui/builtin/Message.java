@@ -1,9 +1,9 @@
 package malachite.gfx.gui.builtin;
 
 import malachite.gfx.gui.GUI;
-import malachite.gfx.gui.VAlign;
 import malachite.gfx.gui.control.Label;
 import malachite.gfx.gui.control.Window;
+import malachite.gfx.util.VAlign;
 
 public class Message extends GUI {
   public static Message wait(String title, String text) {

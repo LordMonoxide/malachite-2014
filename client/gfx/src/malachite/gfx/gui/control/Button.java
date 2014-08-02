@@ -4,8 +4,8 @@ import malachite.gfx.Context;
 import malachite.gfx.Drawable;
 import malachite.gfx.Scalable;
 import malachite.gfx.gui.GUI;
-import malachite.gfx.gui.HAlign;
 import malachite.gfx.textures.TextureBuilder;
+import malachite.gfx.util.HAlign;
 
 import org.lwjgl.input.Keyboard;
 
