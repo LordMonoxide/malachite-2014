@@ -6,6 +6,7 @@ import java.util.concurrent.ConcurrentLinkedDeque;
 import malachite.gfx.Context;
 import malachite.gfx.Loader;
 import malachite.gfx.Matrix;
+import malachite.gfx.gui.parser.ParserException;
 import malachite.gfx.textures.TextureBuilder;
 
 import org.lwjgl.input.Keyboard;
@@ -22,8 +23,8 @@ public abstract class GUI {
   private boolean _visible = true;
 
   protected Context _context;
-  private Control<? extends ControlEvents> _control;
-  private Control<? extends ControlEvents> _focus;
+  protected Control<? extends ControlEvents> _control;
+  private   Control<? extends ControlEvents> _focus;
 
   private Control<? extends ControlEvents> _keyDownControl;
   private Control<? extends ControlEvents> _selectControl;
