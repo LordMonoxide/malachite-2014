@@ -3,17 +3,20 @@ package malachite.gfx.gui.parser;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.HashMap;
+import java.util.Map;
 
 import malachite.gfx.gui.Control;
-import malachite.gfx.gui.ControlList;
 import malachite.gfx.gui.GUI;
 
 import org.json.JSONObject;
 
 public class Parser {
-  private GUI        _gui;
-  private Control<?> _root;
-  private Object     _events;
+  GUI        _gui;
+  Control<?> _root;
+  Object     _events;
+  
+  private Map<String, ParserControl> _controls = new HashMap<>();
   
   public GUI loadFromFile(Path f) throws IOException { return loadFromFile(f, null); }
   public GUI loadFromFile(Path f, Object gateway) throws IOException {
@@ -61,13 +64,13 @@ public class Parser {
     return _gui;
   }
   
-  private void parseGUIAttribs(JSONObject attribs) throws ParserException {
+  void parseGUIAttribs(JSONObject attribs) throws ParserException {
     for(String key : attribs.keySet()) {
       parseGUIAttrib(attribs, key);
     }
   }
   
-  private void parseGUIAttrib(JSONObject attribs, String key) throws ParserException {
+  void parseGUIAttrib(JSONObject attribs, String key) throws ParserException {
     switch(key) {
       case "controls":
         parseControls(_root, attribs.getJSONObject(key));
@@ -75,13 +78,9 @@ public class Parser {
     }
   }
   
-  private void parseControls(Control<?> parent, JSONObject controls) throws ParserException {
+  void parseControls(Control<?> parent, JSONObject controls) throws ParserException {
     for(String name : controls.keySet()) {
-      parseControl(parent, name, controls.getJSONObject(name));
+      _controls.put(name, new ParserControl(this, parent, controls.getJSONObject(name)));
     }
-  }
-  
-  private void parseControl(Control<?> parent, String name, JSONObject attribs) throws ParserException {
-    
   }
 }

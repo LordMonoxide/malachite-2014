@@ -1,14 +1,25 @@
 package malachite.gfx.gui.parser;
 
+import static malachite.gfx.util.ReflectionUtils.findMethodOrFieldByName;
+import static malachite.gfx.util.StringUtils.snakeToCamel;
 import static malachite.gfx.util.StringUtils.snakeToProper;
+
+import java.lang.reflect.Member;
+import java.util.Arrays;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import malachite.gfx.gui.Control;
+import malachite.gfx.textures.Texture;
+import malachite.gfx.textures.TextureBuilder;
 
 public class ParserControl {
-  ParserControl(Control<?> parent, JSONObject attribs) throws ParserException {
+  private Parser _parser;
+  
+  ParserControl(Parser parser, Control<?> parent, JSONObject attribs) throws ParserException {
+    _parser = parser;
+    
     String type = getClassNameFromAttribs(attribs);
     Control<?> control = createControlInstance(type);
     parent.controls().add(control);
@@ -45,5 +56,86 @@ public class ParserControl {
     }
     
     return control;
+  }
+  
+  private void parseAttribs(Object object, JSONObject attribs, String ignore) throws ParserException {
+    for(String attrib : attribs.keySet()) {
+      if(attrib.equals(ignore)) {
+        continue;
+      }
+      
+      switch(attrib.toLowerCase()) {
+        case "type": break;
+        case "controls":
+          if(!(object instanceof Control)) {
+            parseAttrib(object, attrib, attribs.get(attrib));
+            break;
+          }
+          
+          try {
+            _parser.parseControls((Control<?>)object, attribs.getJSONObject(attrib));
+          } catch(JSONException e) {
+            throw new ParserException.SyntaxException(e);
+          }
+          
+          break;
+          
+        case "events":
+          if(_parser._events == null) {
+            parseAttrib(object, attrib, attribs.get(attrib));
+            break;
+          }
+          
+          if(!(object instanceof Control)) {
+            parseAttrib(object, attrib, attribs.get(attrib));
+            break;
+          }
+          
+          try {
+            parseEvents((Control<?>)object, attribs.getJSONObject(attrib));
+          } catch(JSONException e) {
+            throw new ParserException.SyntaxException(e);
+          }
+          
+          break;
+          
+        default:
+          parseAttrib(object, attrib, attribs.get(attrib));
+          break;
+      }
+    }
+  }
+  
+  private void parseAttrib(Object obj, String attrib, Object value) throws ParserException {
+    // Deduce type
+    Class<?> type = value.getClass();
+    if(type == Integer.class) { type = int.class; }
+    if(type == Boolean.class) { type = boolean.class; }
+    
+    Member member = findMethodOrFieldByName(obj.getClass(), snakeToCamel(attrib), type);
+    
+    /*
+     * Should only use setters here?
+     */
+    
+    if(member != null) {
+      if(type == String.class) {
+        String s = (String)value;
+        if(s.startsWith("@")) {
+          _assignLater.add(new AssignLater(obj, member, memberFromPath(s, true, true)));
+          return;
+        }
+        
+        if(s.startsWith("#")) {
+          String path = s.substring(1).replace('.', '/') + ".png";
+          value = TextureBuilder.getInstance().getTexture(path);
+          type = Texture.class;
+        }
+      }
+      
+      assignValue(obj, member, value);
+    } else {
+      throw new ParserException.NoSuchMemberException(obj, attrib, null);
+    }
   }
 }
