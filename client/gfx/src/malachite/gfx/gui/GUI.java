@@ -6,7 +6,6 @@ import java.util.concurrent.ConcurrentLinkedDeque;
 import malachite.gfx.Context;
 import malachite.gfx.Loader;
 import malachite.gfx.Matrix;
-import malachite.gfx.gui.parser.ParserException;
 import malachite.gfx.textures.TextureBuilder;
 
 import org.lwjgl.input.Keyboard;
