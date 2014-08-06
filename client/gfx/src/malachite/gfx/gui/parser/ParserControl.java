@@ -106,13 +106,13 @@ public class ParserControl {
     }
   }
   
-  private void parseAttrib(Object obj, String attrib, Object value) throws ParserException {
+  private void parseAttrib(Object object, String attrib, Object value) throws ParserException {
     // Deduce type
     Class<?> type = value.getClass();
     if(type == Integer.class) { type = int.class; }
     if(type == Boolean.class) { type = boolean.class; }
     
-    Member member = findMethodOrFieldByName(obj.getClass(), snakeToCamel(attrib), type);
+    Member member = findMethodOrFieldByName(object.getClass(), snakeToCamel(attrib), type);
     
     /*
      * Should only use setters here?
@@ -122,7 +122,7 @@ public class ParserControl {
       if(type == String.class) {
         String s = (String)value;
         if(s.startsWith("@")) {
-          _assignLater.add(new AssignLater(obj, member, memberFromPath(s, true, true)));
+          _assignLater.add(new AssignLater(object, member, memberFromPath(s, true, true)));
           return;
         }
         
@@ -133,9 +133,9 @@ public class ParserControl {
         }
       }
       
-      assignValue(obj, member, value);
+      assignValue(object, member, value);
     } else {
-      throw new ParserException.NoSuchMemberException(obj, attrib, null);
+      throw new ParserException.NoSuchMemberException(object, attrib, null);
     }
   }
 }
