@@ -19,6 +19,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import malachite.gfx.gui.parser.ParserException;
 import malachite.gfx.textures.Texture;
 import malachite.gfx.textures.TextureBuilder;
 
@@ -60,13 +61,13 @@ public class GUIParser {
               try {
                 parseControls(_gui.controls(), json.getJSONObject("controls"));
               } catch(JSONException e) {
-                throw new GUIParserException.SyntaxException(e);
+                throw new ParserException.SyntaxException(e);
               }
             }
           }
           
           processLateAssignment();
-        } catch(GUIParserException e) {
+        } catch(ParserException e) {
           e.printStackTrace();
         }
       }
@@ -84,7 +85,7 @@ public class GUIParser {
     return _gui;
   }
   
-  private void parseControls(ControlList controls, JSONObject json) throws GUIParserException {
+  private void parseControls(ControlList controls, JSONObject json) throws ParserException {
     for(String name : json.keySet()) {
       JSONObject attribs = json.getJSONObject(name);
       
@@ -103,9 +104,9 @@ public class GUIParser {
       try {
         c = Class.forName("malachite.gfx.gui.control." + controlType).asSubclass(Control.class).newInstance();
       } catch(InstantiationException | IllegalAccessException e) {
-        throw new GUIParserException.EngineException(e);
+        throw new ParserException.EngineException(e);
       } catch(ClassNotFoundException e) {
-        throw new GUIParserException.NoSuchControlException(controlType, e);
+        throw new ParserException.NoSuchControlException(controlType, e);
       }
       
       controls.add(c);
@@ -115,7 +116,7 @@ public class GUIParser {
     }
   }
   
-  private void parseEvents(Control<?> control, JSONObject events) throws GUIParserException {
+  private void parseEvents(Control<?> control, JSONObject events) throws ParserException {
     for(String name : events.keySet()) {
       Event event = parseEventString(events.getString(name));
       
@@ -123,11 +124,11 @@ public class GUIParser {
       Method callback     = findMethodByName(_events         .getClass(), snakeToCamel(event.name), ControlEvents.EventData.class);
       
       if(controlEvent == null) {
-        throw new GUIParserException.InvalidCallbackException(name, control.getClass().getName(), null);
+        throw new ParserException.InvalidCallbackException(name, control.getClass().getName(), null);
       }
       
       if(callback == null) {
-        throw new GUIParserException.NoEventListenerException(event.name, control.getClass().getName(), null);
+        throw new ParserException.NoEventListenerException(event.name, control.getClass().getName(), null);
       }
       
       callback.setAccessible(true);
@@ -153,12 +154,12 @@ public class GUIParser {
       try {
         controlEvent.invoke(control.events(), o);
       } catch(IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-        throw new GUIParserException.EngineException(e);
+        throw new ParserException.EngineException(e);
       }
     }
   }
   
-  private Event parseEventString(String eventString) throws GUIParserException {
+  private Event parseEventString(String eventString) throws ParserException {
     Matcher matcher = _eventParser.matcher(eventString);
     
     String        fn   = null;
@@ -178,13 +179,13 @@ public class GUIParser {
         }
       }
     } else {
-      throw new GUIParserException.SyntaxException("Invalid event syntax", null);
+      throw new ParserException.SyntaxException("Invalid event syntax", null);
     }
     
     return new Event(fn, args);
   }
   
-  private void parseAttribs(Object c, JSONObject attribs) throws GUIParserException {
+  private void parseAttribs(Object c, JSONObject attribs) throws ParserException {
     for(String attrib : attribs.keySet()) {
       switch(attrib.toLowerCase()) {
         case "type": break;
@@ -197,7 +198,7 @@ public class GUIParser {
           try {
             parseControls(((Control<?>)c).controls(), attribs.getJSONObject(attrib));
           } catch(JSONException e) {
-            throw new GUIParserException.SyntaxException(e);
+            throw new ParserException.SyntaxException(e);
           }
           
           break;
@@ -215,7 +216,7 @@ public class GUIParser {
           try {
             parseEvents((Control<?>)c, attribs.getJSONObject(attrib));
           } catch(JSONException e) {
-            throw new GUIParserException.SyntaxException(e);
+            throw new ParserException.SyntaxException(e);
           }
           
           break;
@@ -227,7 +228,7 @@ public class GUIParser {
     }
   }
   
-  private void parseAttrib(Object obj, String attrib, Object value) throws GUIParserException {
+  private void parseAttrib(Object obj, String attrib, Object value) throws ParserException {
     // Deduce type
     Class<?> type = value.getClass();
     if(type == Integer.class) { type = int.class; }
@@ -252,15 +253,15 @@ public class GUIParser {
       
       assignValue(obj, member, value);
     } else {
-      throw new GUIParserException.NoSuchMemberException(obj, attrib, null);
+      throw new ParserException.NoSuchMemberException(obj, attrib, null);
     }
   }
   
-  private void assignValue(Object obj, Member member, Object... value) throws GUIParserException {
+  private void assignValue(Object obj, Member member, Object... value) throws ParserException {
     try {
       if(member instanceof Field) {
         if(!(value[0] instanceof JSONObject)) { //TODO
-          throw new GUIParserException.SyntaxException("Value of " + obj + "'s " + member + " should be a JSON object, but was " + value + " instead.", null);
+          throw new ParserException.SyntaxException("Value of " + obj + "'s " + member + " should be a JSON object, but was " + value + " instead.", null);
         }
         
         parseAttribs(((Field)member).get(obj), (JSONObject)value[0]); //TODO
@@ -271,20 +272,20 @@ public class GUIParser {
     } catch(IllegalArgumentException e) {
       System.out.println(member);
       System.out.println(value);
-      throw new GUIParserException.EngineException(e);
+      throw new ParserException.EngineException(e);
     } catch(IllegalAccessException | InvocationTargetException e) {
-      throw new GUIParserException.EngineException(e);
+      throw new ParserException.EngineException(e);
     }
   }
   
-  private void processLateAssignment() throws GUIParserException {
+  private void processLateAssignment() throws ParserException {
     for(AssignLater late : _assignLater) {
       Object[] value = valuesFromMembers(late.value);
       assignValue(late.member.obj, late.member.member, (Object[])value);
     }
   }
   
-  private BoundMember memberFromPath(String path, boolean withGets, boolean withSets) throws GUIParserException {
+  private BoundMember memberFromPath(String path, boolean withGets, boolean withSets) throws ParserException {
     String[] parts = path.substring(1).split("\\.");
     
     Member member = null;
@@ -304,7 +305,7 @@ public class GUIParser {
     return new BoundMember(value, member);
   }
   
-  private Object[] valuesFromMembers(BoundMember... member) throws GUIParserException {
+  private Object[] valuesFromMembers(BoundMember... member) throws ParserException {
     Object[] ret = new Object[member.length];
     for(int i = 0; i < member.length; i++) {
       ret[i] = valueFromMember(member[i]);
@@ -313,11 +314,11 @@ public class GUIParser {
     return ret;
   }
   
-  private Object valueFromMember(BoundMember member) throws GUIParserException {
+  private Object valueFromMember(BoundMember member) throws ParserException {
     return valueFromMember(member.obj, member.member);
   }
   
-  private Object valueFromMember(Object obj, Member member) throws GUIParserException {
+  private Object valueFromMember(Object obj, Member member) throws ParserException {
     try {
       if(member instanceof Method) {
         return ((Method)member).invoke(obj);
@@ -325,7 +326,7 @@ public class GUIParser {
         return ((Field)member).get(obj);
       }
     } catch(IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-      throw new GUIParserException.EngineException(e);
+      throw new ParserException.EngineException(e);
     }
     
     return null;
