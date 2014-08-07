@@ -30,13 +30,14 @@ public class ReflectionUtils {
       if(member != null) { return member; }
     }
     
-    System.err.println("No member by name of " + name + '.');
+    System.err.println("No member by name of " + name + " in " + c + '.');
     return null;
   }
   
   public static Field findFieldByName(Class<?> c, String name) {
     for(Field f : c.getFields()) {
       if(f.getName().equalsIgnoreCase(name)) {
+        f.setAccessible(true);
         return f;
       }
     }
@@ -47,7 +48,9 @@ public class ReflectionUtils {
   public static Method findMethodByName(Class<?> c, String name, Class<?>... argHint) {
     if(argHint != null) {
       try {
-        return c.getMethod(name, argHint);
+        Method m = c.getMethod(name, argHint);
+        m.setAccessible(true);
+        return m;
       } catch(NoSuchMethodException e) {
         //System.out.println("No " + name + " with " + argHint);
       } catch(SecurityException e) {
@@ -94,6 +97,7 @@ public class ReflectionUtils {
     }
     
     if(mostAccurate != null) {
+      mostAccurate.method.setAccessible(true);
       return mostAccurate.method;
     }
     
