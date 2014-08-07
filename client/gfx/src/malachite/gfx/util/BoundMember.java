@@ -18,7 +18,28 @@ public class BoundMember {
     this.member = Objects.requireNonNull(member);
   }
   
-  public BoundMember(Object object, String path, boolean allowAccessorsInChain, boolean allowMutatorsInChain, boolean allowAccessorsAtEnd, boolean allowMutatorsAtEnd) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+  public BoundMember(Object object, String path, Type type) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+    BoundMember bm = null;
+    
+    switch(type) {
+      case ACCESSOR:
+        bm = set(object, path, true, false, true, false);
+        break;
+        
+      case MUTATOR:
+        bm = set(object, path, true, false, false, true);
+        break;
+        
+      case NEITHER:
+        bm = set(object, path, true, false, false, false);
+        break;
+    }
+    
+    this.object = bm.object;
+    this.member = bm.member;
+  }
+  
+  private BoundMember set(Object object, String path, boolean allowAccessorsInChain, boolean allowMutatorsInChain, boolean allowAccessorsAtEnd, boolean allowMutatorsAtEnd) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
     String[] parts = path.split("\\.");
     
     BoundMember bm = null;
@@ -40,8 +61,7 @@ public class BoundMember {
       bm = new BoundMember(o, findMethodOrFieldByName(o.getClass(), snakeToCamel(part), accessors, mutators));
     }
     
-    this.object = bm.object;
-    this.member = bm.member;
+    return bm;
   }
   
   public Object getValue(Object... params) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
@@ -64,5 +84,9 @@ public class BoundMember {
       Field field = (Field)member;
       field.set(object, params[0]);
     }
+  }
+  
+  public enum Type {
+    ACCESSOR, MUTATOR, NEITHER;
   }
 }
