@@ -56,8 +56,8 @@ public class BoundMemberTest {
     SimpleObject object = new SimpleObject();
     
     try {
-      BoundMember get = new BoundMember(object, "int", true, false, true, false);
-      BoundMember set = new BoundMember(object, "int", true, false, false, true);
+      BoundMember get = new BoundMember(object, "int", BoundMember.Type.ACCESSOR);
+      BoundMember set = new BoundMember(object, "int", BoundMember.Type.MUTATOR);
       
       set.setValue(1);
       Assert.assertEquals("Value should have been 1", 1, get.getValue());
@@ -72,7 +72,7 @@ public class BoundMemberTest {
     SimpleObject object = new SimpleObject();
     
     try {
-      BoundMember list = new BoundMember(object, "list.size", true, false, true, false);
+      BoundMember list = new BoundMember(object, "list.size", BoundMember.Type.NEITHER);
       Assert.assertEquals("List length should have been 0", 0, list.getValue());
     } catch(IllegalAccessException | IllegalArgumentException | InvocationTargetException e1) {
       // TODO Auto-generated catch block
