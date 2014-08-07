@@ -74,9 +74,6 @@ public class BoundMemberTest {
     try {
       BoundMember list = new BoundMember(object, "list.size", true, false, true, false);
       Assert.assertEquals("List length should have been 0", 0, list.getValue());
-      
-      BoundMember array = new BoundMember(object, "array.length", true, false, true, false);
-      Assert.assertEquals("Array length should have been 0", 0, array.getValue());
     } catch(IllegalAccessException | IllegalArgumentException | InvocationTargetException e1) {
       // TODO Auto-generated catch block
       e1.printStackTrace();
@@ -85,7 +82,6 @@ public class BoundMemberTest {
   
   private class SimpleObject {
     public List<Object> list = new ArrayList<>();
-    public Object[] array = new Object[0];
     
     public boolean testField;
     
