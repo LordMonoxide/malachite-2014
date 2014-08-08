@@ -23,6 +23,7 @@ public class ParserControl {
     String type = getClassNameFromAttribs(attribs);
     Control<?> control = createControlInstance(type);
     parent.controls().add(control);
+    parseAttribs(control, attribs, "type");
   }
   
   private String getClassNameFromAttribs(JSONObject attribs) throws ParserException {
@@ -58,14 +59,22 @@ public class ParserControl {
     return control;
   }
   
-  private void parseAttribs(Object object, JSONObject attribs, String ignore) throws ParserException {
+  private void parseAttribs(Object object, JSONObject attribs, String... ignores) throws ParserException {
     for(String attrib : attribs.keySet()) {
-      if(attrib.equals(ignore)) {
+      boolean skip = false;
+      
+      for(String ignore : ignores) {
+        if(attrib.equals(ignore)) {
+          skip = true;
+          break;
+        }
+      }
+      
+      if(skip) {
         continue;
       }
       
       switch(attrib.toLowerCase()) {
-        case "type": break;
         case "controls":
           if(!(object instanceof Control)) {
             parseAttrib(object, attrib, attribs.get(attrib));
