@@ -4,8 +4,8 @@ import static malachite.gfx.util.ReflectionUtils.findMethodOrFieldByName;
 import static malachite.gfx.util.StringUtils.snakeToCamel;
 import static malachite.gfx.util.StringUtils.snakeToProper;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Member;
-import java.util.Arrays;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -13,6 +13,7 @@ import org.json.JSONObject;
 import malachite.gfx.gui.Control;
 import malachite.gfx.textures.Texture;
 import malachite.gfx.textures.TextureBuilder;
+import malachite.gfx.util.BoundMember;
 
 public class ParserControl {
   private Parser _parser;
@@ -101,7 +102,7 @@ public class ParserControl {
           }
           
           try {
-            parseEvents((Control<?>)object, attribs.getJSONObject(attrib));
+            ///////////parseEvents((Control<?>)object, attribs.getJSONObject(attrib));
           } catch(JSONException e) {
             throw new ParserException.SyntaxException(e);
           }
@@ -123,6 +124,16 @@ public class ParserControl {
     
     Member member = findMethodOrFieldByName(object.getClass(), snakeToCamel(attrib), type);
     
+    BoundMember bm = null;
+    
+    try {
+      bm = new BoundMember(object, attrib, BoundMember.Type.MUTATOR);
+    } catch(IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+      e.printStackTrace();
+    }
+    
+    System.out.println(bm);
+    
     /*
      * Should only use setters here?
      */
@@ -131,7 +142,7 @@ public class ParserControl {
       if(type == String.class) {
         String s = (String)value;
         if(s.startsWith("@")) {
-          _assignLater.add(new AssignLater(object, member, memberFromPath(s, true, true)));
+          ////////_assignLater.add(new AssignLater(object, member, memberFromPath(s, true, true)));
           return;
         }
         
@@ -142,7 +153,7 @@ public class ParserControl {
         }
       }
       
-      assignValue(object, member, value);
+      //////////assignValue(object, member, value);
     } else {
       throw new ParserException.NoSuchMemberException(object, attrib, null);
     }
