@@ -10,6 +10,10 @@ import java.lang.reflect.Method;
 import java.util.Objects;
 
 public class BoundMember {
+  @Override public String toString() {
+    return member + " - bound to " + object;
+  }
+  
   public final Object object;
   public final Member member;
   
