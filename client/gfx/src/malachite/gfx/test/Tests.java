@@ -5,7 +5,7 @@ import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
 @RunWith(Suite.class)
-@SuiteClasses({BoundMemberTest.class})
+@SuiteClasses({BoundMemberTest.class, ParserTest.class})
 public class Tests {
   
 }
