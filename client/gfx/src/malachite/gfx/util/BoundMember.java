@@ -17,12 +17,12 @@ public class BoundMember {
   public final Object object;
   public final Member member;
   
-  public BoundMember(Object object, Member member) {
+  public BoundMember(Object object, Member member) throws NullPointerException {
     this.object = Objects.requireNonNull(object);
     this.member = Objects.requireNonNull(member);
   }
   
-  public BoundMember(Object object, String path, Type type) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+  public BoundMember(Object object, String path, Type type) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException {
     BoundMember bm = null;
     
     switch(type) {
@@ -43,7 +43,7 @@ public class BoundMember {
     this.member = bm.member;
   }
   
-  private BoundMember set(Object object, String path, boolean allowAccessorsInChain, boolean allowMutatorsInChain, boolean allowAccessorsAtEnd, boolean allowMutatorsAtEnd) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+  private BoundMember set(Object object, String path, boolean allowAccessorsInChain, boolean allowMutatorsInChain, boolean allowAccessorsAtEnd, boolean allowMutatorsAtEnd) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException {
     String[] parts = path.split("\\.");
     
     BoundMember bm = null;
@@ -62,7 +62,12 @@ public class BoundMember {
       }
       
       Object o = bm != null ? bm.getValue() : object;
-      bm = new BoundMember(o, findMethodOrFieldByName(o.getClass(), snakeToCamel(part), accessors, mutators));
+      
+      try {
+        bm = new BoundMember(o, findMethodOrFieldByName(o.getClass(), snakeToCamel(part), accessors, mutators));
+      } catch(NullPointerException e) {
+        throw new NoSuchMethodException("Could not find the member or field \"" + part + "\" of \"" + path + "\" in object " + o + ".");
+      }
     }
     
     return bm;
