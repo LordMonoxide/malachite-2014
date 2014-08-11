@@ -163,7 +163,7 @@ public class ParserControl {
     } catch(IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
       e.printStackTrace();
     } catch(NoSuchMethodException e) {
-      e.printStackTrace();
+      throw new ParserException.NoSuchMemberException(object, attrib, null);
     }
   }
 }
