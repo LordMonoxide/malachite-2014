@@ -143,23 +143,24 @@ public class ParserControl {
     */
     
     BoundMember bm = null;
+    Object val = value;
     
     try {
       bm = new BoundMember(object, attrib, BoundMember.Type.MUTATOR);
       
-      if(value instanceof String) {
-        String s = (String)value;
+      if(val instanceof String) {
+        String s = (String)val;
         
         if(s.startsWith("@")) {
           ////////_assignLater.add(new AssignLater(object, member, memberFromPath(s, true, true)));
           return;
         } else if(s.startsWith("#")) {
           String path = s.substring(1).replace('.', '/') + ".png";
-          value = TextureBuilder.getInstance().getTexture(path);
+          val = TextureBuilder.getInstance().getTexture(path);
         }
       }
       
-      bm.setValue(value);
+      bm.setValue(val);
     } catch(IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
       e.printStackTrace();
     } catch(NoSuchMethodException e) {
