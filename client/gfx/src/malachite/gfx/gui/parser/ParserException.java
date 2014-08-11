@@ -23,7 +23,7 @@ public class ParserException extends Exception {
   public static class NoSuchMemberException extends ParserException {
     private static final long serialVersionUID = 1L;
     NoSuchMemberException(Object object, String member, Throwable cause) {
-      super("There is member of \"" + object + "\" by the name of \"" + member + "\"", cause);
+      super("There is no member of \"" + object + "\" by the name of \"" + member + "\"", cause);
     }
   }
   
