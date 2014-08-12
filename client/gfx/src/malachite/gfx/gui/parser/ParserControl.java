@@ -3,6 +3,8 @@ package malachite.gfx.gui.parser;
 import static malachite.gfx.util.StringUtils.snakeToProper;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -13,13 +15,18 @@ import malachite.gfx.util.BoundMember;
 
 public class ParserControl {
   private Parser _parser;
+  private Control<?> _control;
   
-  ParserControl(Parser parser, Control<?> parent, JSONObject attribs) throws ParserException {
+  private List<LateAssignment> _lateAssignments = new ArrayList<>();
+  
+  ParserControl(Parser parser, Control<?> parent, String name, JSONObject attribs) throws ParserException {
     _parser = parser;
     
     String type = getClassNameFromAttribs(attribs);
     Control<?> control = createControlInstance(type);
     parent.controls().add(control);
+    _control = control;
+    _parser._controls.put(name, this);
     parseAttribs(control, attribs, "type");
   }
   
@@ -113,35 +120,6 @@ public class ParserControl {
   }
   
   private void parseAttrib(Object object, String attrib, Object value) throws ParserException {
-    /*
-    // Deduce type
-    Class<?> type = value.getClass();
-    if(type == Integer.class) { type = int.class; }
-    if(type == Boolean.class) { type = boolean.class; }
-    
-    Member member = findMethodOrFieldByName(object.getClass(), snakeToCamel(attrib), type);
-    
-    if(member != null) {
-      if(type == String.class) {
-        String s = (String)value;
-        if(s.startsWith("@")) {
-          ////////_assignLater.add(new AssignLater(object, member, memberFromPath(s, true, true)));
-          return;
-        }
-        
-        if(s.startsWith("#")) {
-          String path = s.substring(1).replace('.', '/') + ".png";
-          value = TextureBuilder.getInstance().getTexture(path);
-          type = Texture.class;
-        }
-      }
-      
-      //////////assignValue(object, member, value);
-    } else {
-      throw new ParserException.NoSuchMemberException(object, attrib, null);
-    }
-    */
-    
     BoundMember bm = null;
     Object val = value;
     
@@ -152,7 +130,7 @@ public class ParserControl {
         String s = (String)val;
         
         if(s.startsWith("@")) {
-          ////////_assignLater.add(new AssignLater(object, member, memberFromPath(s, true, true)));
+          _lateAssignments.add(new LateAssignment(bm, boundMemberFromMemberPath(s)));
           return;
         } else if(s.startsWith("#")) {
           String path = s.substring(1).replace('.', '/') + ".png";
@@ -161,10 +139,29 @@ public class ParserControl {
       }
       
       bm.setValue(val);
-    } catch(IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+    } catch(IllegalAccessException e) {
+      //TODO
+      e.printStackTrace();
+    } catch(IllegalArgumentException e) {
+      //TODO
+      e.printStackTrace();
+    } catch(InvocationTargetException e) {
+      //TODO
       e.printStackTrace();
     } catch(NoSuchMethodException e) {
       throw new ParserException.NoSuchMemberException(object, attrib, null);
+    }
+  }
+  
+  private BoundMember boundMemberFromMemberPath(String path) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException {
+    String name = path.substring(1, path.indexOf('.'));
+    Control<?> control = _parser._controls.get(name)._control;
+    return new BoundMember(control, path.substring(path.indexOf('.') + 1), BoundMember.Type.ACCESSOR);
+  }
+  
+  public void processLateAssignments() throws ParserException {
+    for(LateAssignment late : _lateAssignments) {
+      late.assign();
     }
   }
 }

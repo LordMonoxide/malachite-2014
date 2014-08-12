@@ -16,7 +16,7 @@ public class Parser {
   Control<?> _root;
   Object     _events;
   
-  private Map<String, ParserControl> _controls = new HashMap<>();
+  Map<String, ParserControl> _controls = new HashMap<>();
   
   public GUI loadFromFile(Path f) throws IOException { return loadFromFile(f, null); }
   public GUI loadFromFile(Path f, Object gateway) throws IOException {
@@ -36,6 +36,7 @@ public class Parser {
       @Override protected void load() {
         try {
           parseGUIAttribs(json);
+          processLateAssignments();
         } catch(ParserException e) {
           e.printStackTrace();
         }
@@ -80,7 +81,13 @@ public class Parser {
   
   void parseControls(Control<?> parent, JSONObject controls) throws ParserException {
     for(String name : controls.keySet()) {
-      _controls.put(name, new ParserControl(this, parent, controls.getJSONObject(name)));
+      new ParserControl(this, parent, name, controls.getJSONObject(name));
+    }
+  }
+  
+  private void processLateAssignments() throws ParserException {
+    for(ParserControl control : _controls.values()) {
+      control.processLateAssignments();
     }
   }
 }
