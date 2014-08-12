@@ -1,5 +1,7 @@
 package malachite.gfx.gui.parser;
 
+import malachite.gfx.util.BoundMember;
+
 public class ParserException extends Exception {
   private static final long serialVersionUID = 1L;
   ParserException(String message, Throwable cause) {
@@ -49,6 +51,27 @@ public class ParserException extends Exception {
     private static final long serialVersionUID = 1L;
     NoEventListenerException(String event, String control, Throwable cause) {
       super("The event \"" + event + "\" for control \"" + control + "\" is not being listened for.", cause);
+    }
+  }
+  
+  public static class LateAssignmentException extends ParserException {
+    private static final long serialVersionUID = 1L;
+    LateAssignmentException(String message, Throwable cause) {
+      super(message, cause);
+    }
+  }
+  
+  public static class ErrorGettingValueException extends LateAssignmentException {
+    private static final long serialVersionUID = 1L;
+    ErrorGettingValueException(BoundMember bm, Throwable cause) {
+      super("An error occurred while getting the value for a late assignment.", cause);
+    }
+  }
+  
+  public static class ErrorSettingValueException extends LateAssignmentException {
+    private static final long serialVersionUID = 1L;
+    ErrorSettingValueException(BoundMember bm, Throwable cause) {
+      super("An error occurred while setting the value for a late assignment.", cause);
     }
   }
 }
