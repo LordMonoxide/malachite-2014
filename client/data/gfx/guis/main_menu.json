@@ -36,7 +36,7 @@
           bounds.xy.bind: @login_password.bounds.br,
           
           events: {
-            on_click: "login(@login_email.text,@login_password.text,@login_submit.bounds)"
+            on_click: "login(@login_email.text,@login_password.text)"
           }
         }
       }
