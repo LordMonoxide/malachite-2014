@@ -1,9 +1,5 @@
 package malachite.gfx.test;
 
-import static org.junit.Assert.*;
-
-import java.io.IOException;
-
 import malachite.gfx.Context;
 import malachite.gfx.ContextListenerAdapter;
 import malachite.gfx.Manager;
@@ -11,7 +7,6 @@ import malachite.gfx.gui.GUI;
 import malachite.gfx.gui.parser.Parser;
 
 import org.json.JSONObject;
-import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
