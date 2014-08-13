@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.concurrent.ConcurrentLinkedDeque;
 
+import malachite.gfx.gui.parser.Parser;
+
 public class GUIManager {
   protected ConcurrentLinkedDeque<GUI> _gui = new ConcurrentLinkedDeque<>();
 
@@ -135,7 +137,7 @@ public class GUIManager {
   }
   
   public GUI loadFromFile(String file, Object events) throws IOException {
-    GUIParser parser = new GUIParser();
+    Parser parser = new Parser();
     return parser.loadFromFile(Paths.get("../data/gfx/guis/" + file + ".json"), events);
   }
 }
