@@ -4,58 +4,37 @@
       type: window,
       text: ~menu.login.title,
       icon: "#gui.icons.key",
-      bounds: {
-        x: 490,
-        y: 260,
-        w: 300,
-        h: 200
-      },
+      bounds.x: 490,
+      bounds.y: 260,
+      bounds.w: 300,
+      bounds.h: 200,
       
       controls: {
         login_email: {
           type: textbox,
           placeholder: ~menu.login.email,
-          bounds: {
-            wh: {
-              bind_x: @login.content_bounds.wh
-            },
-            
-            x: 4,
-            y: 4,
-            w: -8,
-            h: 20
-          }
+          bounds.wh.bind_x: @login.content_bounds.wh,
+          bounds.x: 4,
+          bounds.y: 4,
+          bounds.w: -8,
+          bounds.h: 20
         },
         
         login_password: {
           type: textbox,
           placeholder: ~menu.login.password,
           masked: true,
-          bounds: {
-            xy: {
-              bind_x: @login_email.bounds.bl,
-              bind_y: @login_email.bounds.bl
-            },
-            
-            wh: {
-              bind_x: @login_email.bounds.wh,
-              bind_y: @login_email.bounds.wh
-            },
-            
-            y: 8
-          }
+          bounds.xy.bind: @login_email.bounds.bl,
+          bounds.wh.bind: @login_email.bounds.wh,
+          bounds.y: 8
         },
         
         login_submit: {
           type: button,
           auto_size: true,
           text: ~menu.login.submit,
-          bounds: {
-            xy: {
-              bind_x: @login_password.bounds.br,
-              bind_y: @login_password.bounds.br
-            }
-          },
+          bounds.xy.bind: @login_password.bounds.br,
+          
           events: {
             on_click: "login(@login_email.text,@login_password.text,@login_submit.bounds)"
           }
