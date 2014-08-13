@@ -47,6 +47,7 @@ public class ParserTest {
     _context.run();
   }
   
+  @Ignore
   @Test
   public void loadJSONWithLateAssignment() {
     String json = 
@@ -86,6 +87,60 @@ public class ParserTest {
         @Override public void onRun() {
           Parser parser = new Parser();
           GUI gui = parser.load(new JSONObject(json));
+          gui.push();
+        }
+      });
+    });
+    
+    _context.run();
+  }
+  
+  @Test
+  public void loadJSONWithLateAssignmentAndEvents() {
+    String json = 
+      "{" +
+        "controls: {" +
+          "login: {" +
+            "type: window," +
+            "text: ~menu.login.title," +
+            "icon: \"#gui.icons.key\"," +
+            "bounds.x: 490," +
+            "bounds.y: 260," +
+            "bounds.w: 300," +
+            "bounds.h: 200," +
+            
+            "controls: {" +
+              "textbox: {" +
+                "type: textbox," +
+                "placeholder: Test," +
+                "bounds.wh.bind_x: @login.content_bounds.wh," +
+                "bounds.x: 4," +
+                "bounds.y: 4," +
+                "bounds.w: -8," +
+                "bounds.h: 20," +
+                "events: {" +
+                  "on_change: \"change(@textbox.text)\"" +
+                "}" +
+              "}" +
+            "}" +
+          "}" +
+        "}" +
+      "}";
+    
+    Manager.registerContext(malachite.gfx.gl21.Context.class);
+    
+    Context _context = Manager.create(ctx -> {
+      ctx.setResizable(true);
+      ctx.setWH(1280, 720);
+      ctx.setFPSTarget(60);
+      ctx.setContextListener(new ContextListenerAdapter() {
+        @Override public void onRun() {
+          Parser parser = new Parser();
+          GUI gui = parser.load(new JSONObject(json), new Object() {
+            public void change(String text) {
+              System.out.println(text);
+            }
+          });
           gui.push();
         }
       });
