@@ -115,7 +115,7 @@ public class ParserControl {
           }
           
           try {
-            ///////////parseEvents((Control<?>)object, attribs.getJSONObject(attrib));
+            parseEvents((Control<?>)object, attribs.getJSONObject(attrib));
           } catch(JSONException e) {
             throw new ParserException.SyntaxException(e);
           }
@@ -163,10 +163,15 @@ public class ParserControl {
     }
   }
   
-  private BoundMember boundMemberFromMemberPath(String path) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException {
+  private BoundMember boundMemberFromMemberPath(String path) throws ParserException.EventException {
     String name = path.substring(1, path.indexOf('.'));
     Control<?> control = _parser._controls.get(name)._control;
-    return new BoundMember(control, path.substring(path.indexOf('.') + 1), BoundMember.Type.ACCESSOR);
+    
+    try {
+      return new BoundMember(control, path.substring(path.indexOf('.') + 1), BoundMember.Type.ACCESSOR);
+    } catch(IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException e) {
+      throw new ParserException.ErrorParsingEventPathException(e);
+    }
   }
   
   public void processLateAssignments() throws ParserException {
