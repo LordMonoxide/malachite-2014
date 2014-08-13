@@ -14,19 +14,19 @@ import org.json.JSONObject;
 public class Parser {
   GUI        _gui;
   Control<?> _root;
-  Object     _events;
+  GUIEvents  _events;
   
   Map<String, ParserControl> _controls = new HashMap<>();
   
   public GUI loadFromFile(Path f) throws IOException { return loadFromFile(f, null); }
-  public GUI loadFromFile(Path f, Object gateway) throws IOException {
+  public GUI loadFromFile(Path f, GUIEvents events) throws IOException {
     byte[] raw = Files.readAllBytes(f);
     String data = new String(raw);
-    return load(new JSONObject(data), gateway);
+    return load(new JSONObject(data), events);
   }
   
   public GUI load(JSONObject json) { return load(json, null); }
-  public GUI load(JSONObject json, Object events) {
+  public GUI load(JSONObject json, GUIEvents events) {
     class ParserGUI extends GUI {
       private ParserGUI() {
         _root = _control;
@@ -36,6 +36,14 @@ public class Parser {
       @Override protected void load() {
         try {
           parseGUIAttribs(json);
+          
+          Map<String, Control<?>> controls = new HashMap<>(_controls.size());
+          for(Map.Entry<String, ParserControl> e : _controls.entrySet()) {
+            controls.put(e.getKey(), e.getValue().control);
+          }
+          
+          events.registerControls(controls);
+          
           parseAttribs();
           processLateAssignments();
         } catch(ParserException e) {

@@ -23,7 +23,7 @@ import malachite.gfx.util.BoundMember;
 
 public class ParserControl {
   private Parser _parser;
-  private Control<?> _control;
+  public final Control<?> control;
   private JSONObject _attribs;
   
   private List<LateAssignment> _lateAssignments = new ArrayList<>();
@@ -36,7 +36,7 @@ public class ParserControl {
     String type = getClassNameFromAttribs(attribs);
     Control<?> control = createControlInstance(type);
     parent.controls().add(control);
-    _control = control;
+    this.control = control;
     _parser._controls.put(name, this);
     _attribs = attribs;
     parseControls();
@@ -77,7 +77,7 @@ public class ParserControl {
   
   private void parseControls() throws ParserException {
     if(_attribs.has("controls")) {
-      _parser.parseControls(_control, _attribs.getJSONObject("controls"));
+      _parser.parseControls(control, _attribs.getJSONObject("controls"));
     }
   }
   
@@ -127,7 +127,7 @@ public class ParserControl {
     Object val = value;
     
     try {
-      bm = new BoundMember(_control, attrib, BoundMember.Type.MUTATOR, val.getClass());
+      bm = new BoundMember(control, attrib, BoundMember.Type.MUTATOR, val.getClass());
       
       if(val instanceof String) {
         String s = (String)val;
@@ -152,13 +152,13 @@ public class ParserControl {
       //TODO
       e.printStackTrace();
     } catch(NoSuchMethodException e) {
-      throw new ParserException.NoSuchMemberException(_control, attrib, null);
+      throw new ParserException.NoSuchMemberException(control, attrib, null);
     }
   }
   
   private BoundMember boundMemberFromMemberPath(String path) throws ParserException.EventException {
     String name = path.substring(1, path.indexOf('.'));
-    Control<?> control = _parser._controls.get(name)._control;
+    Control<?> control = _parser._controls.get(name).control;
     
     try {
       return new BoundMember(control, path.substring(path.indexOf('.') + 1), BoundMember.Type.ACCESSOR);
@@ -177,15 +177,15 @@ public class ParserControl {
     for(String name : events.keySet()) {
       Event event = parseEventString(events.getString(name));
       
-      Method controlEvent = findMethodByName(_control.events().getClass(), snakeToCamel(name),       ControlEvents.Event.class);
-      Method callback     = findMethodByName(_parser._events  .getClass(), snakeToCamel(event.name), ControlEvents.EventData.class);
+      Method controlEvent = findMethodByName(control.events().getClass(), snakeToCamel(name),       ControlEvents.Event.class);
+      Method callback     = findMethodByName(_parser._events .getClass(), snakeToCamel(event.name), ControlEvents.EventData.class);
       
       if(controlEvent == null) {
-        throw new ParserException.InvalidCallbackException(name, _control.getClass().getName(), null);
+        throw new ParserException.InvalidCallbackException(name, control.getClass().getName(), null);
       }
       
       if(callback == null) {
-        throw new ParserException.NoEventListenerException(event.name, _control.getClass().getName(), null);
+        throw new ParserException.NoEventListenerException(event.name, control.getClass().getName(), null);
       }
       
       callback.setAccessible(true);
@@ -209,7 +209,7 @@ public class ParserControl {
       });
       
       try {
-        controlEvent.invoke(_control.events(), o);
+        controlEvent.invoke(control.events(), o);
       } catch(IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
         throw new ParserException.EngineException(e);
       }
