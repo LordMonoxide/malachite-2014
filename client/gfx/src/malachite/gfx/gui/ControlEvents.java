@@ -148,7 +148,7 @@ public class ControlEvents {
     }
   }
   
-  protected interface Event <T extends EventData> {
+  public interface Event <T extends EventData> {
     public void event(T data);
   }
   
@@ -163,7 +163,7 @@ public class ControlEvents {
   public interface ResizeEvent  extends Event<ResizeEventData>  { }
   public interface VisibleEvent extends Event<VisibleEventData> { }
   
-  protected abstract class EventData {
+  public abstract class EventData {
     public final Control<? extends ControlEvents> control;
     
     protected EventData(Control<? extends ControlEvents> control) {

@@ -1,15 +1,23 @@
 package malachite.gfx.gui.parser;
 
+import static malachite.gfx.util.ReflectionUtils.findMethodByName;
+import static malachite.gfx.util.StringUtils.snakeToCamel;
 import static malachite.gfx.util.StringUtils.snakeToProper;
 
+import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import malachite.gfx.gui.Control;
+import malachite.gfx.gui.ControlEvents;
 import malachite.gfx.textures.TextureBuilder;
 import malachite.gfx.util.BoundMember;
 
@@ -18,6 +26,8 @@ public class ParserControl {
   private Control<?> _control;
   
   private List<LateAssignment> _lateAssignments = new ArrayList<>();
+  
+  private Pattern _eventParser = Pattern.compile("^(\\w+)(?:\\(((?:@[\\w\\.]+,? ?)+)\\))?$");
   
   ParserControl(Parser parser, Control<?> parent, String name, JSONObject attribs) throws ParserException {
     _parser = parser;
@@ -162,6 +172,85 @@ public class ParserControl {
   public void processLateAssignments() throws ParserException {
     for(LateAssignment late : _lateAssignments) {
       late.assign();
+    }
+  }
+  
+  private void parseEvents(Control<?> control, JSONObject events) throws ParserException {
+    for(String name : events.keySet()) {
+      Event event = parseEventString(events.getString(name));
+      
+      Method controlEvent = findMethodByName(control.events().getClass(), snakeToCamel(name),       ControlEvents.Event.class);
+      Method callback     = findMethodByName(_parser._events .getClass(), snakeToCamel(event.name), ControlEvents.EventData.class);
+      
+      if(controlEvent == null) {
+        throw new ParserException.InvalidCallbackException(name, control.getClass().getName(), null);
+      }
+      
+      if(callback == null) {
+        throw new ParserException.NoEventListenerException(event.name, control.getClass().getName(), null);
+      }
+      
+      callback.setAccessible(true);
+      Class<?> type = controlEvent.getParameters()[0].getType();
+      
+      Object o = Proxy.newProxyInstance(getClass().getClassLoader(), new Class[] { type }, new InvocationHandler() {
+        @Override public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+          if(event.arguments == null) {
+            callback.invoke(_parser._events, args);
+          } else {
+            Object[] objs = new Object[event.arguments.length];
+            for(int i = 0; i < event.arguments.length; i++) {
+              objs[i] = event.arguments[i].getValue();
+            }
+            
+            callback.invoke(_parser._events, objs);
+          }
+          
+          return null;
+        }
+      });
+      
+      try {
+        controlEvent.invoke(control.events(), o);
+      } catch(IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+        throw new ParserException.EngineException(e);
+      }
+    }
+  }
+  
+  private Event parseEventString(String eventString) throws ParserException {
+    Matcher matcher = _eventParser.matcher(eventString);
+    
+    String        fn   = null;
+    BoundMember[] args = null;
+    
+    System.out.println(eventString);
+    if(matcher.find()) {
+      fn = matcher.group(1);
+      
+      String a = matcher.group(2);
+      if(a != null) {
+        String[] a2 = a.split(", ?");
+        args = new BoundMember[a2.length];
+        
+        for(int i = 0; i < a2.length; i++) {
+          args[i] = boundMemberFromMemberPath(a2[i]);
+        }
+      }
+    } else {
+      throw new ParserException.SyntaxException("Invalid event syntax", null);
+    }
+    
+    return new Event(fn, args);
+  }
+  
+  private class Event {
+    public String name;
+    public BoundMember[] arguments;
+    
+    public Event(String name, BoundMember[] arguments) {
+      this.name = name;
+      this.arguments = arguments;
     }
   }
 }
