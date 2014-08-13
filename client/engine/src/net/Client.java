@@ -46,20 +46,20 @@ public class Client {
   }
   
   public void setTimeout(int timeout) {
-    _bootstrap.option(ChannelOption.CONNECT_TIMEOUT_MILLIS, timeout);
+    _bootstrap.option(ChannelOption.CONNECT_TIMEOUT_MILLIS, Integer.valueOf(timeout));
   }
   
   public void setNoDelay(boolean noDelay) {
-    _bootstrap.option(ChannelOption.TCP_NODELAY, noDelay);
+    _bootstrap.option(ChannelOption.TCP_NODELAY, Boolean.valueOf(noDelay));
   }
   
   public void setKeepAlive(boolean keepAlive) {
-    _bootstrap.option(ChannelOption.SO_KEEPALIVE, keepAlive);
+    _bootstrap.option(ChannelOption.SO_KEEPALIVE, Boolean.valueOf(keepAlive));
   }
   
   public void connect(Events.Event callback) {
     _bootstrap.connect().addListener(new ChannelFutureListener() {
-      public void operationComplete(ChannelFuture future) throws Exception {
+      @Override public void operationComplete(ChannelFuture future) throws Exception {
         _channel = future.channel();
         
         if(callback != null) {
@@ -72,7 +72,7 @@ public class Client {
   public void close(Events.Event callback) {
     if(_channel != null) {
       _channel.close().addListener(new ChannelFutureListener() {
-        public void operationComplete(ChannelFuture future) throws Exception {
+        @Override public void operationComplete(ChannelFuture future) throws Exception {
           _channel = null;
           
           if(callback != null) {
@@ -92,11 +92,11 @@ public class Client {
   }
   
   private class Handler extends SimpleChannelInboundHandler<Packet> {
-    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
+    @Override public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
       throw new Exception(cause);
     }
     
-    public void messageReceived(ChannelHandlerContext ctx, Packet msg) throws Exception {
+    @Override protected void channelRead0(ChannelHandlerContext ctx, Packet msg) throws Exception {
       events.raisePacket(msg);
     }
   }

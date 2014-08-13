@@ -51,15 +51,15 @@ public class Server {
   }
   
   public void setBacklog(int backlog) {
-    _bootstrap.option(ChannelOption.SO_BACKLOG, new Integer(backlog));
+    _bootstrap.option(ChannelOption.SO_BACKLOG, Integer.valueOf(backlog));
   }
   
   public void setNoDelay(boolean noDelay) {
-    _bootstrap.childOption(ChannelOption.TCP_NODELAY, new Boolean(noDelay));
+    _bootstrap.childOption(ChannelOption.TCP_NODELAY, Boolean.valueOf(noDelay));
   }
   
   public void setKeepAlive(boolean keepAlive) {
-    _bootstrap.childOption(ChannelOption.SO_KEEPALIVE, new Boolean(keepAlive));
+    _bootstrap.childOption(ChannelOption.SO_KEEPALIVE, Boolean.valueOf(keepAlive));
   }
   
   public void bind(Events.Event callback) {
@@ -141,7 +141,7 @@ public class Server {
       events.raiseDisconnect(_connection.remove(ctx.channel()));
     }
     
-    @Override protected void messageReceived(ChannelHandlerContext ctx, Packet msg) throws Exception {
+    @Override protected void channelRead0(ChannelHandlerContext ctx, Packet msg) throws Exception {
       super.channelRead(ctx, msg);
       events.raisePacket(msg);
     }
