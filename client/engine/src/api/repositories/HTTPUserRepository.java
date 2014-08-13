@@ -21,10 +21,10 @@ public class HTTPUserRepository implements IUserRepository {
     HTTP.dispatch(Routes.Auth.Login, data, resp -> {
       try {
         if(resp.succeeded()) {
-          callback.success();
+          //callback.success();
         } else {
           if(resp.response().status().code() == 409) {
-            callback.invalid(resp.toJSON());
+            //callback.invalid(resp.toJSON());
           } else {
             HTTP.checkGeneric(resp, callback);
           }
