@@ -39,7 +39,7 @@ public class ParserControl {
     _control = control;
     _parser._controls.put(name, this);
     _attribs = attribs;
-    parseAttribs();
+    parseControls();
   }
   
   private String getClassNameFromAttribs(JSONObject attribs) throws ParserException {
@@ -75,8 +75,14 @@ public class ParserControl {
     return control;
   }
   
+  private void parseControls() throws ParserException {
+    if(_attribs.has("controls")) {
+      _parser.parseControls(_control, _attribs.getJSONObject("controls"));
+    }
+  }
+  
   public void parseAttribs() throws ParserException {
-    parseAttribs("type");
+    parseAttribs("type", "controls");
   }
   
   private void parseAttribs(String... ignores) throws ParserException {
@@ -95,15 +101,6 @@ public class ParserControl {
       }
       
       switch(attrib.toLowerCase()) {
-        case "controls":
-          try {
-            _parser.parseControls(_control, _attribs.getJSONObject(attrib));
-          } catch(JSONException e) {
-            throw new ParserException.SyntaxException(e);
-          }
-          
-          break;
-          
         case "events":
           if(_parser._events == null) {
             parseAttrib(attrib, _attribs.get(attrib));
@@ -225,7 +222,6 @@ public class ParserControl {
     String        fn   = null;
     BoundMember[] args = null;
     
-    System.out.println(eventString);
     if(matcher.find()) {
       fn = matcher.group(1);
       

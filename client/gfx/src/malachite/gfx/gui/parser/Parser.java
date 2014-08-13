@@ -36,6 +36,7 @@ public class Parser {
       @Override protected void load() {
         try {
           parseGUIAttribs(json);
+          parseAttribs();
           processLateAssignments();
         } catch(ParserException e) {
           e.printStackTrace();
@@ -82,6 +83,12 @@ public class Parser {
   void parseControls(Control<?> parent, JSONObject controls) throws ParserException {
     for(String name : controls.keySet()) {
       new ParserControl(this, parent, name, controls.getJSONObject(name));
+    }
+  }
+  
+  private void parseAttribs() throws ParserException {
+    for(ParserControl control : _controls.values()) {
+      control.parseAttribs();
     }
   }
   
