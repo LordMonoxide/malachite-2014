@@ -76,7 +76,7 @@ public class ReflectionUtils {
         total -= java.lang.Math.abs(argHint.length - m.getParameterCount()) * 5;
         
         for(int i = 0; i < java.lang.Math.min(argHint.length, m.getParameterCount()); i++) {
-          if(argHint[i] != m.getParameterTypes()[i] && argHint[i].isAssignableFrom(m.getParameterTypes()[i])) {
+          if(argHint[i] != m.getParameterTypes()[i] && m.getParameterTypes()[i].isAssignableFrom(argHint[i])) {
             total -= 2;
           }
         }
