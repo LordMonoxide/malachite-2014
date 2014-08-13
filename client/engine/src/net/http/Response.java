@@ -13,11 +13,11 @@ public class Response {
   public String       content () { return _content;  }
   
   public boolean succeeded() {
-    return _response.getStatus().code() >= 200 && _response.getStatus().code() <= 299;
+    return _response.status().code() >= 200 && _response.status().code() <= 299;
   }
   
   public boolean failed() {
-    return _response.getStatus().code() >= 400 && _response.getStatus().code() <= 499;
+    return _response.status().code() >= 400 && _response.status().code() <= 499;
   }
   
   public JSONObject toJSON() {
@@ -30,6 +30,6 @@ public class Response {
   
   @Override
   public String toString() {
-    return _response.getStatus().code() + (' ' + _response.getStatus().reasonPhrase() + '\n' + _content);
+    return _response.status().code() + (' ' + _response.status().reasonPhrase() + '\n' + _content);
   }
 }

@@ -87,14 +87,12 @@ public class Request {
     .handler(new ChannelInitializer<SocketChannel>() {
       private boolean _chunked;
       
-      @Override
-      protected void initChannel(SocketChannel ch) throws Exception {
+      @Override protected void initChannel(SocketChannel ch) throws Exception {
         ChannelPipeline pipeline = ch.pipeline();
         pipeline.addLast(new HttpClientCodec(), new SimpleChannelInboundHandler<HttpObject>() {
           private Response r;
           
-          @Override
-          protected void messageReceived(ChannelHandlerContext ctx, HttpObject msg) throws Exception {
+          @Override protected void channelRead0(ChannelHandlerContext ctx, HttpObject msg) throws Exception {
             if(msg instanceof HttpResponse) {
               HttpResponse response = (HttpResponse)msg;
               
@@ -140,8 +138,8 @@ public class Request {
                 }
               }
               
-              if(response.getStatus().code() >= 200 &&
-                 response.getStatus().code() <= 299 &&
+              if(response.status().code() >= 200 &&
+                 response.status().code() <= 299 &&
                  HttpHeaders.isTransferEncodingChunked(response)) {
                 _chunked = true;
               }
@@ -160,8 +158,7 @@ public class Request {
             }
           }
           
-          @Override
-          public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
+          @Override public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
             cause.printStackTrace();
             ctx.channel().close();
           }
@@ -194,8 +191,7 @@ public class Request {
   
   public void dispatch(Callback cb) {
     _bootstrap.connect(URL, 80).addListener(new ChannelFutureListener() {
-      @Override
-      public void operationComplete(ChannelFuture future) throws Exception {
+      @Override public void operationComplete(ChannelFuture future) throws Exception {
         Channel ch = future.channel();
         
         HttpRequest request = null;
