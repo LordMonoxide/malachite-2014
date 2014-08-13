@@ -23,7 +23,7 @@ public class HTTPUserRepository implements IUserRepository {
         if(resp.succeeded()) {
           callback.success();
         } else {
-          if(resp.response().getStatus().code() == 409) {
+          if(resp.response().status().code() == 409) {
             callback.invalid(resp.toJSON());
           } else {
             HTTP.checkGeneric(resp, callback);

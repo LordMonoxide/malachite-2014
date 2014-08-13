@@ -37,7 +37,7 @@ public final class HTTP {
   }
   
   public static void checkGeneric(Response resp, IGenericResponse cb) {
-    if(resp.response().getStatus().code() == 401) {
+    if(resp.response().status().code() == 401) {
       JSONObject j = resp.toJSON();
       switch(j.getString(NOT_AUTHED_SHOW)) {
         case NOT_AUTHED_SHOW_LOGIN: cb.loginRequired(); break;
