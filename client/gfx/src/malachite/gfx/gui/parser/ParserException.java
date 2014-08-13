@@ -74,4 +74,18 @@ public class ParserException extends Exception {
       super("An error occurred while setting the value for a late assignment.", cause);
     }
   }
+  
+  public static class EventException extends ParserException {
+    private static final long serialVersionUID = 1L;
+    EventException(String message, Throwable cause) {
+      super(message, cause);
+    }
+  }
+  
+  public static class ErrorParsingEventPathException extends EventException {
+    private static final long serialVersionUID = 1L;
+    ErrorParsingEventPathException(Throwable cause) {
+      super("An error occurred while parsing an event path.", cause);
+    }
+  }
 }
