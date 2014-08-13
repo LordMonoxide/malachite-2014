@@ -1,9 +1,13 @@
 package malachite.gfx.test;
 
+import java.util.Map;
+
 import malachite.gfx.Context;
 import malachite.gfx.ContextListenerAdapter;
 import malachite.gfx.Manager;
+import malachite.gfx.gui.Control;
 import malachite.gfx.gui.GUI;
+import malachite.gfx.gui.parser.GUIEvents;
 import malachite.gfx.gui.parser.Parser;
 
 import org.json.JSONObject;
@@ -136,7 +140,11 @@ public class ParserTest {
       ctx.setContextListener(new ContextListenerAdapter() {
         @Override public void onRun() {
           Parser parser = new Parser();
-          GUI gui = parser.load(new JSONObject(json), new Object() {
+          GUI gui = parser.load(new JSONObject(json), new GUIEvents() {
+            @Override public void registerControls(Map<String, Control<?>> controls) {
+              
+            }
+            
             public void change(String text) {
               System.out.println(text);
             }
