@@ -127,7 +127,7 @@ public class ParserControl {
     Object val = value;
     
     try {
-      bm = new BoundMember(_control, attrib, BoundMember.Type.MUTATOR);
+      bm = new BoundMember(_control, attrib, BoundMember.Type.MUTATOR, val.getClass());
       
       if(val instanceof String) {
         String s = (String)val;
