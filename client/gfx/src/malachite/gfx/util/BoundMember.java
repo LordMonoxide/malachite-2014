@@ -22,20 +22,20 @@ public class BoundMember {
     this.member = Objects.requireNonNull(member);
   }
   
-  public BoundMember(Object object, String path, Type type) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException {
+  public BoundMember(Object object, String path, Type type, Class<?>... argHints) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException {
     BoundMember bm = null;
     
     switch(type) {
       case ACCESSOR:
-        bm = set(object, path, true, false, true, false);
+        bm = set(object, path, true, false, true, false, argHints);
         break;
         
       case MUTATOR:
-        bm = set(object, path, true, false, false, true);
+        bm = set(object, path, true, false, false, true, argHints);
         break;
         
       case NEITHER:
-        bm = set(object, path, true, false, false, false);
+        bm = set(object, path, true, false, false, false, argHints);
         break;
     }
     
@@ -43,7 +43,7 @@ public class BoundMember {
     this.member = bm.member;
   }
   
-  private BoundMember set(Object object, String path, boolean allowAccessorsInChain, boolean allowMutatorsInChain, boolean allowAccessorsAtEnd, boolean allowMutatorsAtEnd) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException {
+  private BoundMember set(Object object, String path, boolean allowAccessorsInChain, boolean allowMutatorsInChain, boolean allowAccessorsAtEnd, boolean allowMutatorsAtEnd, Class<?>... argHints) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException {
     String[] parts = path.split("\\.");
     
     BoundMember bm = null;
@@ -64,7 +64,7 @@ public class BoundMember {
       Object o = bm != null ? bm.getValue() : object;
       
       try {
-        bm = new BoundMember(o, findMethodOrFieldByName(o.getClass(), snakeToCamel(part), accessors, mutators));
+        bm = new BoundMember(o, findMethodOrFieldByName(o.getClass(), snakeToCamel(part), accessors, mutators, argHints));
       } catch(NullPointerException e) {
         throw new NoSuchMethodException("Could not find the member or field \"" + part + "\" of \"" + path + "\" in object " + o + ".");
       }
