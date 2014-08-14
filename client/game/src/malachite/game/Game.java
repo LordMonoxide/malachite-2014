@@ -1,19 +1,26 @@
 package malachite.game;
 
 import java.io.IOException;
-import java.util.Objects;
 
+import malachite.engine.Engine;
+import malachite.engine.EngineBuilder;
 import malachite.gfx.Context;
 import malachite.gfx.ContextListenerAdapter;
 import malachite.gfx.Manager;
 import malachite.gfx.gui.GUI;
-import malachite.gfx.gui.parser.GUIEvents;
+import malachite.gfx.gui.GUIManager;
 
-public class Game {
+public abstract class Game {
   private Context _context;
   private GUI     _menu;
   
-  public void init(String gui, GUIEvents guiEventHandler) {
+  protected final Engine engine;
+  
+  public Game() {
+    EngineBuilder e = new EngineBuilder();
+    setupEngine(e);
+    engine = e.build();
+    
     Manager.registerContext(malachite.gfx.gl21.Context.class);
     
     _context = Manager.create(ctx -> {
@@ -23,7 +30,7 @@ public class Game {
       ctx.setContextListener(new ContextListenerAdapter() {
         @Override public void onRun() {
           try {
-            _menu = ctx.GUIs().loadFromFile(gui, guiEventHandler);
+            _menu = createInitialGUI(ctx.GUIs());
           } catch(IOException e) {
             e.printStackTrace();
           }
@@ -34,9 +41,10 @@ public class Game {
     });
   }
   
+  protected abstract GUI createInitialGUI(GUIManager guis) throws IOException;
+  protected abstract void setupEngine(EngineBuilder engine);
+  
   public void run() {
-    Objects.requireNonNull(_context, this + " must be initialized before it is run.");
-    
     _context.run();
   }
 }
