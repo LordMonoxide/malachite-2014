@@ -1,30 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
-	<classpathentry kind="lib" path="lib/lwjgl-2.9.1/jar/lwjgl_util.jar" sourcepath="lib/lwjgl-2.9.1/lwjgl-source-2.9.1.zip">
+	<classpathentry kind="src" output="target/classes" path="src">
 		<attributes>
-			<attribute name="javadoc_location" value="jar:platform:/resource/gfx/lib/lwjgl-2.9.1/lwjgl-docs-2.9.1.zip!/javadoc"/>
-			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="gfx/lib/lwjgl-2.9.1/native/windows"/>
+			<attribute name="optional" value="true"/>
+			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="lib/lwjgl-2.9.1/jar/lwjgl.jar" sourcepath="lib/lwjgl-2.9.1/lwjgl-source-2.9.1.zip">
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8">
 		<attributes>
-			<attribute name="javadoc_location" value="jar:platform:/resource/gfx/lib/lwjgl-2.9.1/lwjgl-docs-2.9.1.zip!/javadoc"/>
-			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="gfx/lib/lwjgl-2.9.1/native/windows"/>
+			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="lib/PNGDecoder/PNGDecoder.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/mson"/>
-	<classpathentry kind="lib" path="lib/hamcrest-core-1.3.jar" sourcepath="lib/hamcrest-core-1.3-sources.jar">
+	<classpathentry kind="con" path="org.eclipse.m2e.MAVEN2_CLASSPATH_CONTAINER">
 		<attributes>
-			<attribute name="javadoc_location" value="jar:platform:/resource/gfx/lib/hamcrest-core-1.3-javadoc.jar!/"/>
+			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="lib/junit-4.12-beta-1.jar" sourcepath="lib/junit-4.12-beta-1-sources.jar">
-		<attributes>
-			<attribute name="javadoc_location" value="jar:platform:/resource/gfx/lib/junit-4.12-beta-1-javadoc.jar!/"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="output" path="bin"/>
+	<classpathentry kind="output" path="target/classes"/>
 </classpath>
