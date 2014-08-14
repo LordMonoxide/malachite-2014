@@ -17,6 +17,23 @@
       </plugin>
     </plugins>
   </build>
+  
+  <repositories>
+    <repository>
+      <id>timboudreau-builds</id>
+      <name>timboudreau.com builds</name>
+      <url>http://timboudreau.com/builds/plugin/repository/everything/</url>
+      <releases>
+        <enabled>true</enabled>
+        <updatePolicy>never</updatePolicy>
+      </releases>
+      <snapshots>
+        <enabled>true</enabled>
+        <updatePolicy>never</updatePolicy>
+      </snapshots>
+    </repository>
+  </repositories>
+  
   <dependencies>
   	<dependency>
   		<groupId>malachite</groupId>
@@ -27,6 +44,11 @@
   		<groupId>io.netty</groupId>
   		<artifactId>netty-all</artifactId>
   		<version>4.1.0.Beta1</version>
+  	</dependency>
+  	<dependency>
+  		<groupId>com.mastfrog</groupId>
+  		<artifactId>netty-http-client</artifactId>
+  		<version>1.4.17</version>
   	</dependency>
   </dependencies>
 </project>
