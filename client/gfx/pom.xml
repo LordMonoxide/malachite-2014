@@ -45,25 +45,6 @@
 	        </archive>
 	      </configuration>
 	    </plugin>
-	    
-	    <plugin>
-	      <artifactId>maven-assembly-plugin</artifactId>
-	      <version>2.2.1</version>
-	      <executions>
-	        <execution>
-	          <id>bundle-project-sources</id>
-	          <phase>package</phase>
-	          <goals>
-	            <goal>single</goal>
-	          </goals>
-	          <configuration>
-	            <descriptors>
-	              <descriptor>src/META-INF/assembly.xml</descriptor>
-	            </descriptors>
-	          </configuration>
-	        </execution>
-	      </executions>
-	    </plugin>
 		</plugins>
 		<pluginManagement>
 			<plugins>
