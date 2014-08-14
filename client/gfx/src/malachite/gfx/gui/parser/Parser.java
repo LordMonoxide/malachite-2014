@@ -3,6 +3,7 @@ package malachite.gfx.gui.parser;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -42,7 +43,7 @@ public class Parser {
             controls.put(e.getKey(), e.getValue().control);
           }
           
-          events.registerControls(controls);
+          events.registerControls(Collections.unmodifiableMap(controls));
           
           parseAttribs();
           processLateAssignments();
