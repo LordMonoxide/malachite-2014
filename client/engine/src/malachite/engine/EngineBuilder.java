@@ -1,6 +1,6 @@
 package malachite.engine;
 
-import malachite.engine.providers.DefaultGatewayProvider;
+import malachite.engine.providers.HTTPGatewayProvider;
 import malachite.engine.providers.GatewayProviderInterface;
 
 public final class EngineBuilder {
@@ -12,7 +12,7 @@ public final class EngineBuilder {
   private GatewayProviderInterface _gatewayProvider;
   
   public EngineBuilder() {
-    _gatewayProvider = new DefaultGatewayProvider();
+    _gatewayProvider = new HTTPGatewayProvider();
   }
   
   public EngineBuilder withGatewayProvider(GatewayProviderInterface gatewayProvider) {
