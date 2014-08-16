@@ -15,7 +15,9 @@ public class HTTPAccountGateway implements AccountGatewayInterface {
   
   @Override public void login(String email, String password) {
     _http.put()
-     .setURL("http://local.malachite.monoxidedesign.com/api/auth/login")
+     .setURL("http://local.malachite.monoxidedesign.com/api/login")
+     .addQueryPair("email", email)
+     .addQueryPair("password", password)
      .execute(new ResponseHandler<String>(String.class) {
        @Override protected void receive(HttpResponseStatus status, HttpHeaders headers, String response) {
          System.out.println("Here's the response: '" + response + '\'');
