@@ -27,6 +27,6 @@ public class MainMenuEvents implements GUIEvents {
   }
   
   public void login(String email, String password) {
-    
+    _gateway.login(email, password);
   }
 }
