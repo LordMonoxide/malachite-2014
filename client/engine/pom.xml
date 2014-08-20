@@ -50,5 +50,17 @@
   		<artifactId>netty-http-client</artifactId>
   		<version>1.4.17</version>
   	</dependency>
+  	<dependency>
+      <groupId>mysql</groupId>
+      <artifactId>mysql-connector-java</artifactId>
+      <version>5.1.32</version>
+      <optional>true</optional>
+  	</dependency>
+  	<dependency>
+      <groupId>com.jolbox</groupId>
+      <artifactId>bonecp</artifactId>
+      <version>0.8.0.RELEASE</version>
+      <optional>true</optional>
+  	</dependency>
   </dependencies>
 </project>
