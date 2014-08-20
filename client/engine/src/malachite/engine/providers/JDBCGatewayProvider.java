@@ -26,7 +26,7 @@ public class JDBCGatewayProvider implements GatewayProviderInterface {
     return _account;
   }
   
-  interface JDBCInitializer {
+  public interface JDBCInitializer {
     String buildConnectionString();
   }
   
