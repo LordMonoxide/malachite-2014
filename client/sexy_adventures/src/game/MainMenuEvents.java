@@ -26,7 +26,7 @@ public class MainMenuEvents implements GUIEvents {
     btnSubmit   = (Button) controls.get("login_submit");
   }
   
-  public void login(String email, String password) {
+  public void login(String email, String password) throws Exception {
     _gateway.login(email, password);
   }
 }

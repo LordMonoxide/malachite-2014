@@ -1,6 +1,10 @@
 package malachite.engine.providers;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.jolbox.bonecp.BoneCP;
 import com.jolbox.bonecp.BoneCPConfig;
@@ -13,6 +17,8 @@ public class JDBCGatewayProvider implements GatewayProviderInterface {
   
   private BoneCP _pool;
   
+  private List<PreparedStatement> _statements = new ArrayList<>();
+  
   public JDBCGatewayProvider(JDBCInitializer initializer) throws SQLException {
     BoneCPConfig config = new BoneCPConfig();
     config.setJdbcUrl(initializer.buildConnectionString());
@@ -22,8 +28,23 @@ public class JDBCGatewayProvider implements GatewayProviderInterface {
   }
   
   @Override public AccountGatewayInterface accountGateway() {
-    if(_account == null) { _account = new JDBCAccountGateway(this); }
+    try {
+      if(_account == null) { _account = new JDBCAccountGateway(this); }
+    } catch(SQLException e) {
+      throw new RuntimeException(e);
+    }
+    
     return _account;
+  }
+  
+  public Connection getConnection() throws SQLException {
+    return _pool.getConnection();
+  }
+  
+  public PreparedStatement prepareStatement(String sql) throws SQLException {
+    PreparedStatement statement = getConnection().prepareStatement(sql);
+    _statements.add(statement);
+    return statement;
   }
   
   public interface JDBCInitializer {

@@ -60,5 +60,10 @@
       <artifactId>bonecp</artifactId>
       <version>0.8.0.RELEASE</version>
   	</dependency>
+  	<dependency>
+      <groupId>org.mindrot</groupId>
+      <artifactId>jbcrypt</artifactId>
+      <version>0.3m</version>
+    </dependency>
   </dependencies>
 </project>
