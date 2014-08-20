@@ -7,3 +7,5 @@ composer.lock
 .env.php
 .DS_Store
 Thumbs.db
+
+php_errors.log
