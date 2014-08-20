@@ -13,7 +13,7 @@ class EloquentAccountGateway implements AccountGatewayInterface {
   public function login($email, $password) {
     $validator = validateLogin($email, $password);
     
-    if($validator === true && Auth::attempt(['email' => Input::get('email'), 'password' => Input::get('password')])) {
+    if($validator === true && Auth::attempt(['email' => $email, 'password' => $password])) {
       return true;
     }
     
