@@ -103,6 +103,7 @@ return array(
 		'Providers\ErrorServiceProvider',
 		'Providers\EventServiceProvider',
 		'Providers\FilterServiceProvider',
+    'Providers\GatewayServiceProvider',
 		'Providers\LogServiceProvider',
 		'Providers\RouteServiceProvider',
 
