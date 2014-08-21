@@ -19,12 +19,12 @@ public class JDBCAccountGateway implements AccountGatewayInterface {
   
   private final PreparedStatement _login;
   
-  public JDBCAccountGateway(GatewayProviderInterface provider, HasherInterface hasher) throws SQLException {
+  public JDBCAccountGateway(GatewayProviderInterface provider, HasherInterface hasher) {
     _provider = provider;
     _hasher = hasher;
     
     try {
-      _prepareStatement = _provider.getClass().getMethod("prepareStatement", String.class);
+      _prepareStatement = _provider.getClass().getMethod("prepareStatement", String.class); //$NON-NLS-1$
     } catch(NoSuchMethodException | SecurityException e) {
       throw new RuntimeException(e);
     }
@@ -45,20 +45,16 @@ public class JDBCAccountGateway implements AccountGatewayInterface {
     
     try(ResultSet r = _login.executeQuery()) {
       if(r.next()) {
-        if(_hasher.check(password, r.getString("password"))) {
-          
-        } else {
-          throw new AccountException.InvalidLoginCredentials();
+        if(_hasher.check(password, r.getString(User.DB_PASSWORD))) {
+          return userFromResultSet(r);
         }
-      } else {
-        //error
       }
     }
     
-    return null;
+    throw new AccountException.InvalidLoginCredentials();
   }
   
-  private User userFromResultSet(ResultSet r) {
-    return null;
+  private User userFromResultSet(ResultSet r) throws SQLException {
+    return new User(r.getString(User.DB_EMAIL));
   }
 }

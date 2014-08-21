@@ -33,11 +33,7 @@ public class JDBCGatewayProvider implements GatewayProviderInterface {
   }
   
   @Override public AccountGatewayInterface accountGateway() {
-    try {
-      if(_account == null) { _account = new JDBCAccountGateway(this, _engine.providers.security.hasher()); }
-    } catch(SQLException e) {
-      throw new RuntimeException(e);
-    }
+    if(_account == null) { _account = new JDBCAccountGateway(this, _engine.providers.security.hasher()); }
     
     return _account;
   }
