@@ -1,5 +1,6 @@
 package malachite.engine.gateways;
 
+import malachite.engine.models.User;
 import io.netty.handler.codec.http.HttpResponseStatus;
 import io.netty.handler.codec.http.HttpHeaders;
 
@@ -14,7 +15,7 @@ public class HTTPAccountGateway implements AccountGatewayInterface {
     _http = http;
   }
   
-  @Override public void login(String email, String password) {
+  @Override public User login(String email, String password) {
     System.out.println("Logging in");
     _http.put()
      .setURL("http://local.malachite.monoxidedesign.com/api/login")
@@ -30,5 +31,7 @@ public class HTTPAccountGateway implements AccountGatewayInterface {
          System.out.println(status + "\n" + content);
        }
      });
+    
+    return null;
   }
 }

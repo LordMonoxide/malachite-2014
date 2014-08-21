@@ -1,5 +1,8 @@
 package malachite.engine.gateways;
 
+import malachite.engine.exceptions.AccountException;
+import malachite.engine.models.User;
+
 public interface AccountGatewayInterface {
-  public void login(String email, String password) throws Exception;
+  public User login(String email, String password) throws AccountException, Exception;
 }

@@ -3,7 +3,6 @@ package malachite.game;
 import java.io.IOException;
 
 import malachite.engine.Engine;
-import malachite.engine.EngineBuilder;
 import malachite.gfx.Context;
 import malachite.gfx.ContextListenerAdapter;
 import malachite.gfx.Manager;
@@ -17,9 +16,9 @@ public abstract class Game {
   protected final Engine engine;
   
   public Game() {
-    EngineBuilder e = new EngineBuilder();
-    setupEngine(e);
-    engine = e.build();
+    engine = new Engine();
+    
+    System.out.println(engine);
     
     Manager.registerContext(malachite.gfx.gl21.Context.class);
     
@@ -42,7 +41,6 @@ public abstract class Game {
   }
   
   protected abstract GUI createInitialGUI(GUIManager guis) throws IOException;
-  protected abstract void setupEngine(EngineBuilder engine);
   
   public void run() {
     _context.run();

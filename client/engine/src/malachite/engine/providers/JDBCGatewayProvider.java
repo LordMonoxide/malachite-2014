@@ -9,19 +9,24 @@ import java.util.List;
 import com.jolbox.bonecp.BoneCP;
 import com.jolbox.bonecp.BoneCPConfig;
 
+import malachite.engine.Engine;
 import malachite.engine.gateways.AccountGatewayInterface;
 import malachite.engine.gateways.JDBCAccountGateway;
+import malachite.engine.jdbc.JDBCInitializer;
 
 public class JDBCGatewayProvider implements GatewayProviderInterface {
   private AccountGatewayInterface _account;
+  private Engine _engine;
   
   private BoneCP _pool;
   
   private List<PreparedStatement> _statements = new ArrayList<>();
   
-  public JDBCGatewayProvider(JDBCInitializer initializer) throws SQLException {
+  public JDBCGatewayProvider(Engine engine) throws SQLException {
+    _engine = engine;
+    
     BoneCPConfig config = new BoneCPConfig();
-    config.setJdbcUrl(initializer.buildConnectionString());
+    config.setJdbcUrl(new JDBCInitializer(engine.config.db).buildConnectionString());
     config.setPartitionCount(4);
     
     _pool = new BoneCP(config);
@@ -29,7 +34,7 @@ public class JDBCGatewayProvider implements GatewayProviderInterface {
   
   @Override public AccountGatewayInterface accountGateway() {
     try {
-      if(_account == null) { _account = new JDBCAccountGateway(this); }
+      if(_account == null) { _account = new JDBCAccountGateway(this, _engine.providers.security.hasher()); }
     } catch(SQLException e) {
       throw new RuntimeException(e);
     }
@@ -45,32 +50,5 @@ public class JDBCGatewayProvider implements GatewayProviderInterface {
     PreparedStatement statement = getConnection().prepareStatement(sql);
     _statements.add(statement);
     return statement;
-  }
-  
-  public interface JDBCInitializer {
-    String buildConnectionString();
-  }
-  
-  public static class MySQLInitializer implements JDBCInitializer {
-    static {
-      try {
-        Class.forName("com.mysql.jdbc.Driver"); //$NON-NLS-1$
-      } catch(ClassNotFoundException e) {
-        throw new RuntimeException(e);
-      }
-    }
-    
-    private final String _host, _database, _username, _password;
-    
-    public MySQLInitializer(String host, String database, String username, String password) {
-      _host     = host;
-      _database = database;
-      _username = username;
-      _password = password;
-    }
-    
-    @Override public String buildConnectionString() {
-      return "jdbc:mysql://" + _host + '/' + _database + "?user=" + _username + "&password=" + _password; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-    }
   }
 }
