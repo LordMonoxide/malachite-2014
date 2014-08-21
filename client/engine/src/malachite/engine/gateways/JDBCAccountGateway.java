@@ -43,15 +43,16 @@ public class JDBCAccountGateway implements AccountGatewayInterface {
   @Override public User login(String email, String password) throws AccountException, SQLException {
     _login.setString(1, email);
     
-    ResultSet r = _login.executeQuery();
-    if(r.next()) {
-      if(_hasher.check(password, r.getString("password"))) {
-        
+    try(ResultSet r = _login.executeQuery()) {
+      if(r.next()) {
+        if(_hasher.check(password, r.getString("password"))) {
+          
+        } else {
+          throw new AccountException.InvalidLoginCredentials();
+        }
       } else {
-        throw new AccountException.InvalidLoginCredentials();
+        //error
       }
-    } else {
-      //error
     }
     
     return null;
