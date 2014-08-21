@@ -38,6 +38,69 @@
           events: {
             on_click: "login(@login_email.text,@login_password.text)"
           }
+        },
+        
+        show_register: {
+          type: button,
+          auto_size: true,
+          text: ~menu.register.title,
+          bounds.xy.bind: @login_submit.bounds.bl,
+          
+          events: {
+            on_click: "show_register_click"
+          }
+        }
+      }
+    },
+    
+    register: {
+      type: window,
+      text: ~menu.register.title,
+      icon: "#gui.icons.hat",
+      visible: false,
+      bounds.x: 490,
+      bounds.y: 260,
+      bounds.w: 300,
+      bounds.h: 200,
+      
+      controls: {
+        register_email: {
+          type: textbox,
+          placeholder: ~menu.register.email,
+          bounds.wh.bind_x: @register.content_bounds.wh,
+          bounds.x: 4,
+          bounds.y: 4,
+          bounds.w: -8,
+          bounds.h: 20
+        },
+        
+        register_password: {
+          type: textbox,
+          placeholder: ~menu.register.password,
+          masked: true,
+          bounds.xy.bind: @register_email.bounds.bl,
+          bounds.wh.bind: @register_email.bounds.wh,
+          bounds.y: 8
+        },
+        
+        register_password_confirm: {
+          type: textbox,
+          placeholder: ~menu.register_confirm.password,
+          masked: true,
+          bounds.xy.bind: @register_password.bounds.bl,
+          bounds.wh.bind: @register_password.bounds.wh,
+          bounds.y: 8
+        },
+        
+        register_submit: {
+          type: button,
+          auto_size: true,
+          text: ~menu.register.submit,
+          bounds.xy.bind: @register_password_confirm.bounds.br,
+          
+          events: {
+            on_click: "register(@register_email.text,@register_password.text,@register_password_confirm.text)"
+          }
         }
       }
     }
