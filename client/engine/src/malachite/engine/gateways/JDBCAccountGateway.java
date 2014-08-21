@@ -1,5 +1,7 @@
 package malachite.engine.gateways;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -7,20 +9,35 @@ import java.sql.SQLException;
 import malachite.engine.exceptions.AccountException;
 import malachite.engine.models.User;
 import malachite.engine.providers.GatewayProviderInterface;
-import malachite.engine.providers.JDBCGatewayProvider;
 import malachite.engine.security.HasherInterface;
 
 public class JDBCAccountGateway implements AccountGatewayInterface {
-  private GatewayProviderInterface _provider;
-  private HasherInterface _hasher;
+  private final GatewayProviderInterface _provider;
+  private final HasherInterface _hasher;
   
-  private PreparedStatement _login;
+  private final Method _prepareStatement;
+  
+  private final PreparedStatement _login;
   
   public JDBCAccountGateway(GatewayProviderInterface provider, HasherInterface hasher) throws SQLException {
     _provider = provider;
     _hasher = hasher;
     
-    //_login = _provider.prepareStatement("SELECT * FROM users WHERE email=? LIMIT 1"); //$NON-NLS-1$
+    try {
+      _prepareStatement = _provider.getClass().getMethod("prepareStatement", String.class);
+    } catch(NoSuchMethodException | SecurityException e) {
+      throw new RuntimeException(e);
+    }
+    
+    _login = prepareStatement("SELECT * FROM users WHERE email=? LIMIT 1"); //$NON-NLS-1$
+  }
+  
+  private PreparedStatement prepareStatement(String sql) {
+    try {
+      return (PreparedStatement)_prepareStatement.invoke(_provider, sql);
+    } catch(IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+      throw new RuntimeException(e);
+    }
   }
   
   @Override public User login(String email, String password) throws AccountException, SQLException {
