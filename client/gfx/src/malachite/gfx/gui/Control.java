@@ -236,6 +236,14 @@ public abstract class Control<T extends ControlEvents> {
   public boolean isHidden() {
     return !_visible;
   }
+  
+  public void setVisible(boolean visible) {
+    if(visible) {
+      show();
+    } else {
+      hide();
+    }
+  }
 
   public void setFocus(boolean focus) {
     if(_focus != focus) {
