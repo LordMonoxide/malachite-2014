@@ -158,7 +158,13 @@ public class ParserControl {
   
   private BoundMember boundMemberFromMemberPath(String path) throws ParserException.EventException {
     String name = path.substring(1, path.indexOf('.'));
-    Control<?> control = _parser._controls.get(name).control;
+    
+    ParserControl p = _parser._controls.get(name);
+    if(p == null) {
+      throw new ParserException.NoSuchControlInEventException(name, null);
+    }
+    
+    Control<?> control = p.control;
     
     try {
       return new BoundMember(control, path.substring(path.indexOf('.') + 1), BoundMember.Type.ACCESSOR);

@@ -88,4 +88,11 @@ public class ParserException extends Exception {
       super("An error occurred while parsing an event path.", cause);
     }
   }
+  
+  public static class NoSuchControlInEventException extends EventException {
+    private static final long serialVersionUID = 1L;
+    NoSuchControlInEventException(String name, Throwable cause) {
+      super("There is no control by the name of \"" + name + "\"", cause);
+    }
+  }
 }
