@@ -35,7 +35,7 @@ public class HTTPAccountGateway implements AccountGatewayInterface {
     return null;
   }
   
-  @Override public User register(String email, String password, String passwordConfirmation) {
+  @Override public User register(String email, String password) {
     return null;
   }
 }

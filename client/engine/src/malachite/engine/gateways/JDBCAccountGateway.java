@@ -6,6 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import yesql.YeSQL;
 import malachite.engine.exceptions.AccountException;
 import malachite.engine.models.User;
 import malachite.engine.providers.GatewayProviderInterface;
@@ -18,6 +19,7 @@ public class JDBCAccountGateway implements AccountGatewayInterface {
   private final Method _prepareStatement;
   
   private final PreparedStatement _login;
+  private final PreparedStatement _exists;
   
   public JDBCAccountGateway(GatewayProviderInterface provider, HasherInterface hasher) {
     _provider = provider;
@@ -29,7 +31,10 @@ public class JDBCAccountGateway implements AccountGatewayInterface {
       throw new RuntimeException(e);
     }
     
-    _login = prepareStatement("SELECT * FROM users WHERE email=? LIMIT 1"); //$NON-NLS-1$
+    YeSQL yes = new YeSQL();
+    
+    _login  = prepareStatement(yes.table(User.TABLE).select().where(User.DB_EMAIL).equals().limit(1).build());
+    _exists = prepareStatement(yes.table(User.TABLE).count ().where(User.DB_EMAIL).equals().limit(1).build());
   }
   
   private PreparedStatement prepareStatement(String sql) {
@@ -54,7 +59,19 @@ public class JDBCAccountGateway implements AccountGatewayInterface {
     throw new AccountException.InvalidLoginCredentials();
   }
   
-  @Override public User register(String email, String password, String passwordConfirmation) throws AccountException, SQLException {
+  @Override public User register(String email, String password) throws AccountException, SQLException {
+    _exists.setString(1, email);
+    
+    try(ResultSet r = _exists.executeQuery()) {
+      r.next();
+      
+      if(r.getInt(1) != 0) {
+        throw new AccountException.AccountAlreadyExists();
+      }
+    }
+    
+    //TODO: register
+    
     return null;
   }
   
