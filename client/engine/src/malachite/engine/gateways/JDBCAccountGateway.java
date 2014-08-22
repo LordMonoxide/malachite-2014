@@ -54,6 +54,10 @@ public class JDBCAccountGateway implements AccountGatewayInterface {
     throw new AccountException.InvalidLoginCredentials();
   }
   
+  @Override public User register(String email, String password, String passwordConfirmation) throws AccountException, SQLException {
+    return null;
+  }
+  
   private User userFromResultSet(ResultSet r) throws SQLException {
     return new User(r.getString(User.DB_EMAIL));
   }

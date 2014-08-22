@@ -5,4 +5,5 @@ import malachite.engine.models.User;
 
 public interface AccountGatewayInterface {
   public User login(String email, String password) throws AccountException, Exception;
+  public User register(String email, String password, String passwordConfirmation) throws AccountException, Exception;
 }
