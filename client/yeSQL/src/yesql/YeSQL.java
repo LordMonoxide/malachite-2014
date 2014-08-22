@@ -19,7 +19,11 @@ public class YeSQL {
     }
     
     public Select select(String... columns) {
-      return new Select(columns);
+      return new Select(false, columns);
+    }
+    
+    public Select count() {
+      return new Select(true, "*");
     }
     
     public abstract class Query {
@@ -53,11 +57,13 @@ public class YeSQL {
     }
     
     public class Select extends Query {
+      private final boolean _count;
       private final String[] _columns;
       private int _limit;
       
-      private Select(String... columns) {
+      private Select(boolean count, String... columns) {
         super("SELECT");
+        _count   = count;
         _columns = columns;
       }
       
@@ -74,7 +80,15 @@ public class YeSQL {
       
       @Override public String build() {
         StringBuilder sql = new StringBuilder();
-        sql.append(_type).append(' ').append(String.join(",", _columns)).append(" FROM ").append(_name);
+        sql.append(_type).append(' ');
+          
+        if(_count) {
+          sql.append("COUNT(").append(String.join(",", _columns)).append(')');
+        } else {
+          sql.append(String.join(",", _columns));
+        }
+        
+        sql.append(" FROM ").append(_name);
         
         if(_where.size() != 0) {
           sql.append(buildWheres());
