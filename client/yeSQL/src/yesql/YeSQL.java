@@ -1,6 +1,8 @@
 package yesql;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class YeSQL {
   public Table table(String name) {
@@ -12,6 +14,10 @@ public class YeSQL {
     
     private Table(String name) {
       _name = name;
+    }
+    
+    public Insert insert() {
+      return new Insert();
     }
     
     public Select select() {
@@ -56,6 +62,52 @@ public class YeSQL {
       public abstract String build();
     }
     
+    public class Insert {
+      private Map<String, String> _values = new LinkedHashMap<>();
+      
+      private Insert() { }
+      
+      public Insert value(String column, String value) {
+        _values.put(column, '\'' + value + '\'');
+        return this;
+      }
+      
+      public Insert value(String column, Number value) {
+        _values.put(column, value.toString());
+        return this;
+      }
+      
+      public Insert value(String column) {
+        _values.put(column, "?");
+        return this;
+      }
+      
+      public String build() {
+        StringBuilder sql = new StringBuilder();
+        sql.append("INSERT INTO ").append(_name).append('(');
+        
+        int i = 0;
+        for(String column : _values.keySet()) {
+          sql.append(column);
+          if(++i != _values.size()) {
+            sql.append(',');
+          }
+        }
+        
+        sql.append(") VALUES (");
+        
+        i = 0;
+        for(String value : _values.values()) {
+          sql.append(value);
+          if(++i != _values.size()) {
+            sql.append(',');
+          }
+        }
+        
+        return sql.append(");").toString();
+      }
+    }
+    
     public class Select extends Query {
       private final boolean _count;
       private final String[] _columns;
@@ -81,7 +133,7 @@ public class YeSQL {
       @Override public String build() {
         StringBuilder sql = new StringBuilder();
         sql.append(_type).append(' ');
-          
+        
         if(_count) {
           sql.append("COUNT(").append(String.join(",", _columns)).append(')');
         } else {
