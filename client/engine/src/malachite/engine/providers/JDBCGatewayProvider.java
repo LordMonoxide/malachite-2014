@@ -43,7 +43,11 @@ public class JDBCGatewayProvider implements GatewayProviderInterface {
   }
   
   public PreparedStatement prepareStatement(String sql) throws SQLException {
-    PreparedStatement statement = getConnection().prepareStatement(sql);
+    return prepareStatement(sql, false);
+  }
+  
+  public PreparedStatement prepareStatement(String sql, boolean retreiveID) throws SQLException {
+    PreparedStatement statement = getConnection().prepareStatement(sql, retreiveID ? PreparedStatement.RETURN_GENERATED_KEYS : PreparedStatement.NO_GENERATED_KEYS);
     _statements.add(statement);
     return statement;
   }
