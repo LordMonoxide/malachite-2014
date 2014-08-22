@@ -111,6 +111,12 @@ public class YeSQL {
         return _query;
       }
       
+      public T equals() {
+        _op    = "=";
+        _value = "?";
+        return _query;
+      }
+      
       private String build() {
         return _column + _op + _value;
       }
