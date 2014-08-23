@@ -16,9 +16,14 @@ public class MainMenuEvents implements GUIEvents {
   private AccountGatewayInterface _gateway;
   
   private Window<?> login, register;
-  private Textbox txtEmail;
-  private Textbox txtPassword;
-  private Button  btnSubmit;
+  private Textbox loginEmail;
+  private Textbox loginPassword;
+  private Button  loginSubmit;
+  
+  private Textbox registerEmail;
+  private Textbox registerPassword;
+  private Textbox registerPassword2;
+  private Button  registerSubmit;
   
   public MainMenuEvents(AccountGatewayInterface gateway) {
     _gateway = Objects.requireNonNull(gateway, "Account gateway must not be null");
@@ -28,9 +33,16 @@ public class MainMenuEvents implements GUIEvents {
     login    = (Window<?>)controls.get("login");
     register = (Window<?>)controls.get("register");
     
-    txtEmail    = (Textbox)controls.get("login_email");
-    txtPassword = (Textbox)controls.get("login_password");
-    btnSubmit   = (Button) controls.get("login_submit");
+    loginEmail    = (Textbox)controls.get("login_email");
+    loginPassword = (Textbox)controls.get("login_password");
+    loginSubmit   = (Button) controls.get("login_submit");
+    
+    registerEmail     = (Textbox)controls.get("register_email");
+    registerPassword  = (Textbox)controls.get("register_password");
+    registerPassword2 = (Textbox)controls.get("register_password_confirm");
+    registerSubmit    = (Button) controls.get("register_submit");
+    
+    loginEmail.setFocus(true);
   }
   
   public void showRegisterClick(ControlEvents.ClickEventData e) {
@@ -46,7 +58,11 @@ public class MainMenuEvents implements GUIEvents {
   }
   
   public void register(String email, String password, String passwordConfirm) throws Exception {
+    if(!password.equals(passwordConfirm)) {
+      System.err.println("Passwords don't match");
+    }
     
+    _gateway.register(email, password);
   }
   
   public void showRegister() {
