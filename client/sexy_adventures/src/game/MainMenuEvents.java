@@ -11,6 +11,7 @@ import malachite.gfx.gui.control.Button;
 import malachite.gfx.gui.control.Textbox;
 import malachite.gfx.gui.control.Window;
 import malachite.gfx.gui.parser.GUIEvents;
+import malachite.validator.Validator.ValidatorException;
 
 public class MainMenuEvents implements GUIEvents {
   private AccountGatewayInterface _gateway;
@@ -54,6 +55,8 @@ public class MainMenuEvents implements GUIEvents {
       _gateway.login(email, password);
     } catch(AccountException.InvalidLoginCredentials e) {
       System.err.println("Invalid email/password");
+    } catch(ValidatorException e) {
+      System.err.println(e.getMessage());
     }
   }
   
@@ -62,7 +65,11 @@ public class MainMenuEvents implements GUIEvents {
       System.err.println("Passwords don't match");
     }
     
-    _gateway.register(email, password);
+    try {
+      _gateway.register(email, password);
+    } catch(ValidatorException e) {
+      System.err.println(e.getMessage());
+    }
   }
   
   public void showRegister() {
