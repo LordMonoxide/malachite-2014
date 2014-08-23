@@ -73,13 +73,17 @@ public class JDBCAccountGateway implements AccountGatewayInterface {
     }
     
     _register.setString(1, email);
-    _register.setString(2, password);
-    //TODO: Execute, get keys
+    _register.setString(2, _hasher.make(password));
+    _register.executeUpdate();
     
-    return null;
+    try(ResultSet r = _register.getGeneratedKeys()) {
+      r.next();
+      
+      return new User(r.getInt(1), email);
+    }
   }
   
   private User userFromResultSet(ResultSet r) throws SQLException {
-    return new User(r.getString(User.DB_EMAIL));
+    return new User(r.getInt(User.DB_ID), r.getString(User.DB_EMAIL));
   }
 }
