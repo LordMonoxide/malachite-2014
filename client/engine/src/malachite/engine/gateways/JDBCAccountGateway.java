@@ -11,6 +11,8 @@ import malachite.engine.exceptions.AccountException;
 import malachite.engine.models.User;
 import malachite.engine.providers.GatewayProviderInterface;
 import malachite.engine.security.HasherInterface;
+import malachite.validator.Validator;
+import malachite.validator.Validator.ValidatorException;
 
 public class JDBCAccountGateway implements AccountGatewayInterface {
   private final GatewayProviderInterface _provider;
@@ -61,7 +63,11 @@ public class JDBCAccountGateway implements AccountGatewayInterface {
     throw new AccountException.InvalidLoginCredentials();
   }
   
-  @Override public User register(String email, String password) throws AccountException, SQLException {
+  @Override public User register(String email, String password) throws AccountException, ValidatorException, SQLException {
+    Validator validator = new Validator();
+    validator.check(email,    "email")
+             .check(password, "password");
+    
     _exists.setString(1, email);
     
     try(ResultSet r = _exists.executeQuery()) {
