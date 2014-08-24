@@ -8,6 +8,7 @@ import java.sql.SQLException;
 
 import yesql.YeSQL;
 import malachite.engine.exceptions.AccountException;
+import malachite.engine.models.JDBCUser;
 import malachite.engine.models.User;
 import malachite.engine.providers.GatewayProviderInterface;
 import malachite.engine.security.HasherInterface;
@@ -43,13 +44,13 @@ public class JDBCAccountGateway implements AccountGatewayInterface {
   
   private PreparedStatement prepareStatement(String sql, boolean retreiveKeys) {
     try {
-      return (PreparedStatement)_prepareStatement.invoke(_provider, sql, retreiveKeys);
+      return (PreparedStatement)_prepareStatement.invoke(_provider, sql, Boolean.valueOf(retreiveKeys));
     } catch(IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
       throw new RuntimeException(e);
     }
   }
   
-  @Override public User login(String email, String password) throws AccountException, ValidatorException, SQLException {
+  @Override public User<?> login(String email, String password) throws AccountException, ValidatorException, SQLException {
     new Validator()
       .check(email,    "email")
       .check(password, "password");
@@ -59,7 +60,7 @@ public class JDBCAccountGateway implements AccountGatewayInterface {
     try(ResultSet r = _login.executeQuery()) {
       if(r.next()) {
         if(_hasher.check(password, r.getString(User.DB_PASSWORD))) {
-          return userFromResultSet(r);
+          return new JDBCUser(r);
         }
       }
     }
@@ -67,7 +68,7 @@ public class JDBCAccountGateway implements AccountGatewayInterface {
     throw new AccountException.InvalidLoginCredentials();
   }
   
-  @Override public User register(String email, String password) throws AccountException, ValidatorException, SQLException {
+  @Override public User<?> register(String email, String password) throws AccountException, ValidatorException, SQLException {
     new Validator()
       .check(email,    "email")
       .check(password, "password");
@@ -89,11 +90,14 @@ public class JDBCAccountGateway implements AccountGatewayInterface {
     try(ResultSet r = _register.getGeneratedKeys()) {
       r.next();
       
-      return new User(r.getInt(1), email);
+      return new JDBCUser(r.getInt(1), email);
     }
   }
   
-  private User userFromResultSet(ResultSet r) throws SQLException {
-    return new User(r.getInt(User.DB_ID), r.getString(User.DB_EMAIL));
+  @Override public Character[] getCharacters(User<?> u) throws AccountException, SQLException {
+    JDBCUser user = (JDBCUser)u;
+    
+    
+    return null;
   }
 }
