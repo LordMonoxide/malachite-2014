@@ -5,6 +5,7 @@ import java.util.Objects;
 
 import malachite.engine.exceptions.AccountException;
 import malachite.engine.gateways.AccountGatewayInterface;
+import malachite.engine.models.User;
 import malachite.gfx.gui.Control;
 import malachite.gfx.gui.ControlEvents;
 import malachite.gfx.gui.control.Button;
@@ -15,6 +16,8 @@ import malachite.validator.Validator.ValidatorException;
 
 public class MainMenuEvents implements GUIEvents {
   private AccountGatewayInterface _gateway;
+  
+  private User _user;
   
   private Window<?> login, register;
   private Textbox loginEmail;
@@ -52,7 +55,8 @@ public class MainMenuEvents implements GUIEvents {
   
   public void login(String email, String password) throws Exception {
     try {
-      _gateway.login(email, password);
+      _user = _gateway.login(email, password);
+      login.hide();
     } catch(AccountException.InvalidLoginCredentials e) {
       System.err.println("Invalid email/password");
     } catch(ValidatorException e) {
@@ -66,7 +70,8 @@ public class MainMenuEvents implements GUIEvents {
     }
     
     try {
-      _gateway.register(email, password);
+      _user = _gateway.register(email, password);
+      register.hide();
     } catch(ValidatorException e) {
       System.err.println(e.getMessage());
     }
