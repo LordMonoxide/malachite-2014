@@ -1,6 +1,7 @@
 package malachite.engine.gateways;
 
 import malachite.engine.exceptions.AccountException;
+import malachite.engine.models.Character;
 import malachite.engine.models.User;
 
 public interface AccountGatewayInterface {

@@ -8,6 +8,7 @@ import java.sql.SQLException;
 
 import yesql.YeSQL;
 import malachite.engine.exceptions.AccountException;
+import malachite.engine.models.Character;
 import malachite.engine.models.JDBCUser;
 import malachite.engine.models.User;
 import malachite.engine.providers.GatewayProviderInterface;
@@ -60,7 +61,7 @@ public class JDBCAccountGateway implements AccountGatewayInterface {
     try(ResultSet r = _login.executeQuery()) {
       if(r.next()) {
         if(_hasher.check(password, r.getString(User.DB_PASSWORD))) {
-          return new JDBCUser(r);
+          return new JDBCUser(this, r);
         }
       }
     }
@@ -90,12 +91,13 @@ public class JDBCAccountGateway implements AccountGatewayInterface {
     try(ResultSet r = _register.getGeneratedKeys()) {
       r.next();
       
-      return new JDBCUser(r.getInt(1), email);
+      return new JDBCUser(this, r.getInt(1), email);
     }
   }
   
   @Override public Character[] getCharacters(User<?> u) throws AccountException, SQLException {
     JDBCUser user = (JDBCUser)u;
+    
     
     
     return null;
