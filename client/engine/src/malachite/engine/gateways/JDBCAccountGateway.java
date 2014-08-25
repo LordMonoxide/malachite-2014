@@ -9,6 +9,7 @@ import java.sql.SQLException;
 import yesql.YeSQL;
 import malachite.engine.exceptions.AccountException;
 import malachite.engine.models.Character;
+import malachite.engine.models.JDBCCharacter;
 import malachite.engine.models.JDBCUser;
 import malachite.engine.models.User;
 import malachite.engine.providers.GatewayProviderInterface;
@@ -25,6 +26,7 @@ public class JDBCAccountGateway implements AccountGatewayInterface {
   private final PreparedStatement _exists;
   private final PreparedStatement _login;
   private final PreparedStatement _register;
+  private final PreparedStatement _chars;
   
   public JDBCAccountGateway(GatewayProviderInterface provider, HasherInterface hasher) {
     _provider = provider;
@@ -38,9 +40,15 @@ public class JDBCAccountGateway implements AccountGatewayInterface {
     
     YeSQL yes = new YeSQL();
     
-    _exists   = prepareStatement(yes.table(User.TABLE).count ().where(User.DB_EMAIL).equals().limit(1).build(), false);
-    _login    = prepareStatement(yes.table(User.TABLE).select().where(User.DB_EMAIL).equals().limit(1).build(), false);
-    _register = prepareStatement(yes.table(User.TABLE).insert().value(User.DB_EMAIL).value(User.DB_PASSWORD).build(), true);
+    _exists   = prepareStatement(yes.table(JDBCUser.TABLE).count ().where(JDBCUser.DB_EMAIL).equals().limit(1).build());
+    _login    = prepareStatement(yes.table(JDBCUser.TABLE).select().where(JDBCUser.DB_EMAIL).equals().limit(1).build());
+    _register = prepareStatement(yes.table(JDBCUser.TABLE).insert().value(JDBCUser.DB_EMAIL).value(JDBCUser.DB_PASSWORD).build(), true);
+    
+    _chars    = prepareStatement(yes.table(JDBCCharacter.TABLE).select().where(JDBCCharacter.DB_USER_ID).equals().build());
+  }
+  
+  private PreparedStatement prepareStatement(String sql) {
+    return prepareStatement(sql, false);
   }
   
   private PreparedStatement prepareStatement(String sql, boolean retreiveKeys) {
@@ -51,7 +59,7 @@ public class JDBCAccountGateway implements AccountGatewayInterface {
     }
   }
   
-  @Override public User<?> login(String email, String password) throws AccountException, ValidatorException, SQLException {
+  @Override public User login(String email, String password) throws AccountException, ValidatorException, SQLException {
     new Validator()
       .check(email,    "email")
       .check(password, "password");
@@ -60,7 +68,7 @@ public class JDBCAccountGateway implements AccountGatewayInterface {
     
     try(ResultSet r = _login.executeQuery()) {
       if(r.next()) {
-        if(_hasher.check(password, r.getString(User.DB_PASSWORD))) {
+        if(_hasher.check(password, r.getString(JDBCUser.DB_PASSWORD))) {
           return new JDBCUser(this, r);
         }
       }
@@ -69,7 +77,7 @@ public class JDBCAccountGateway implements AccountGatewayInterface {
     throw new AccountException.InvalidLoginCredentials();
   }
   
-  @Override public User<?> register(String email, String password) throws AccountException, ValidatorException, SQLException {
+  @Override public User register(String email, String password) throws AccountException, ValidatorException, SQLException {
     new Validator()
       .check(email,    "email")
       .check(password, "password");
@@ -95,7 +103,7 @@ public class JDBCAccountGateway implements AccountGatewayInterface {
     }
   }
   
-  @Override public Character[] getCharacters(User<?> u) throws AccountException, SQLException {
+  @Override public Character[] getCharacters(User u) throws AccountException, SQLException {
     JDBCUser user = (JDBCUser)u;
     
     
