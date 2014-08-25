@@ -9,8 +9,8 @@ CREATE TABLE users (
 CREATE UNIQUE INDEX unique_users_email ON users (email);
 
 CREATE TABLE characters (
-  user_id INT UNSIGNED NOT NULL,
   id INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  user_id INT UNSIGNED NOT NULL,
   name VARCHAR(20) NOT NULL,
   
   CONSTRAINT pk_characters_id PRIMARY KEY (id),
