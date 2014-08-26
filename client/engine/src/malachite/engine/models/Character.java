@@ -2,7 +2,7 @@ package malachite.engine.models;
 
 import malachite.engine.gateways.AccountGatewayInterface;
 
-public class abstract Character {
+public abstract class Character {
   private final AccountGatewayInterface _gateway;
   
   public final String name;
