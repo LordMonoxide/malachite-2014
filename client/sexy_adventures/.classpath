@@ -20,5 +20,6 @@
 	</classpathentry>
 	<classpathentry combineaccessrules="false" kind="src" path="/overloader"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/validator"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/engine"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>
