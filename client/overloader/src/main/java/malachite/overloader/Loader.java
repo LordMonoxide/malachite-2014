@@ -14,6 +14,9 @@ import malachite.overloader.rewriter.ClassRewriter;
 public class Loader extends ClassLoader {
   private final Logger logger = LoggerFactory.getLogger(this.getClass());
   
+  private static final String CLASS = ".class"; //$NON-NLS-1$
+  private static final String JAVA  = ".java";  //$NON-NLS-1$
+  
   private Map<String, String> _override = new HashMap<>();
   
   public Loader(ClassLoader parent) {
@@ -65,14 +68,14 @@ public class Loader extends ClassLoader {
   }
   
   private Class<?> getClass(String name, String override) throws IOException {
-    String file = (override != null ? override : name).replace('.', '/') + ".class";
+    String file = (override != null ? override : name).replace('.', '/') + CLASS;
     byte[] b = null;
     
     if(override != null) {
       ClassRewriter r = new ClassRewriter(getClass().getClassLoader().getResourceAsStream(file));
       r.parse();
       r.rewrite(override.replace('.', '/'), name.replace('.', '/'));
-      r.rewrite(override.substring(override.lastIndexOf('.') + 1) + ".java", name.substring(name.lastIndexOf('.') + 1) + ".java");
+      r.rewrite(override.substring(override.lastIndexOf('.') + 1) + JAVA, name.substring(name.lastIndexOf('.') + 1) + JAVA);
       b = r.commit();
     } else {
       b = loadClassData(file);
