@@ -5,6 +5,8 @@ import java.lang.reflect.Method;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import yesql.YeSQL;
 import malachite.engine.exceptions.AccountException;
@@ -106,8 +108,17 @@ public class JDBCAccountGateway implements AccountGatewayInterface {
   @Override public Character[] getCharacters(User u) throws AccountException, SQLException {
     JDBCUser user = (JDBCUser)u;
     
+    List<Character> chars = new ArrayList<>();
     
+    _chars.setInt(1, user.id);
     
-    return null;
+    try(ResultSet r = _chars.executeQuery()) {
+      while(r.next()) {
+        chars.add(new JDBCCharacter(this, user, r));
+      }
+    }
+    
+    Character[] c = new Character[chars.size()];
+    return chars.toArray(c);
   }
 }
