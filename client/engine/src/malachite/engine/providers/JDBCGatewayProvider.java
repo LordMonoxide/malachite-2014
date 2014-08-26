@@ -3,6 +3,7 @@ package malachite.engine.providers;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -47,7 +48,7 @@ public class JDBCGatewayProvider implements GatewayProviderInterface {
   }
   
   public PreparedStatement prepareStatement(String sql, boolean retreiveID) throws SQLException {
-    PreparedStatement statement = getConnection().prepareStatement(sql, retreiveID ? PreparedStatement.RETURN_GENERATED_KEYS : PreparedStatement.NO_GENERATED_KEYS);
+    PreparedStatement statement = getConnection().prepareStatement(sql, retreiveID ? Statement.RETURN_GENERATED_KEYS : Statement.NO_GENERATED_KEYS);
     _statements.add(statement);
     return statement;
   }
