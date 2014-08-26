@@ -1,5 +1,7 @@
 package malachite.engine.gateways;
 
+import malachite.engine.exceptions.AccountException;
+import malachite.engine.models.Character;
 import malachite.engine.models.User;
 import io.netty.handler.codec.http.HttpResponseStatus;
 import io.netty.handler.codec.http.HttpHeaders;
@@ -36,6 +38,10 @@ public class HTTPAccountGateway implements AccountGatewayInterface {
   }
   
   @Override public User register(String email, String password) {
+    return null;
+  }
+  
+  @Override public Character[] getCharacters(User user) throws AccountException, Exception {
     return null;
   }
 }
