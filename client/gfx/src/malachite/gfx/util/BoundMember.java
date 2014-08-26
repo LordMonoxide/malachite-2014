@@ -11,7 +11,7 @@ import java.util.Objects;
 
 public class BoundMember {
   @Override public String toString() {
-    return member + " - bound to " + object;
+    return member + " - bound to " + object; //$NON-NLS-1$
   }
   
   public final Object object;
@@ -44,7 +44,7 @@ public class BoundMember {
   }
   
   private BoundMember set(Object object, String path, boolean allowAccessorsInChain, boolean allowMutatorsInChain, boolean allowAccessorsAtEnd, boolean allowMutatorsAtEnd, Class<?>... argHints) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException {
-    String[] parts = path.split("\\.");
+    String[] parts = path.split("\\."); //$NON-NLS-1$
     
     BoundMember bm = null;
     for(int i = 0; i < parts.length; i++) {
@@ -66,7 +66,7 @@ public class BoundMember {
       try {
         bm = new BoundMember(o, findMethodOrFieldByName(o.getClass(), snakeToCamel(part), accessors, mutators, argHints));
       } catch(NullPointerException e) {
-        throw new NoSuchMethodException("Could not find the member or field \"" + part + "\" of \"" + path + "\" in object " + o + ".");
+        throw new NoSuchMethodException("Could not find the member or field \"" + part + "\" of \"" + path + "\" in object " + o + "."); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
       }
     }
     

@@ -5,7 +5,6 @@ public class Bounds {
   private VAlign _vAlign = VAlign.ALIGN_TOP;
   
   private boolean _maintainSize = true;
-  private boolean _lock = false;
   
   public void maintainSize() { _maintainSize = true; }
   public void dontMaintainSize() { _maintainSize = false; }
@@ -70,8 +69,6 @@ public class Bounds {
   };
   
   private void updateSubpoints() {
-    _lock = true;
-    
     float x = 0, y = 0;
     switch(_hAlign) {
       case ALIGN_LEFT:   x = 0; break;
@@ -94,7 +91,6 @@ public class Bounds {
     ml.set(Points.mean(tl, bl));
     mr.set(tr.getX(), ml.getY());
     mm.set(tm.getX(), ml.getY());
-    _lock = false;
   }
   
   protected void updateXY() { }
@@ -112,17 +108,17 @@ public class Bounds {
   
   @Override public String toString() {
     StringBuilder s = new StringBuilder();
-    s.append("XY: ").append(xy).append('\n')
-     .append("WH: ").append(wh).append('\n')
-     .append("TL: ").append(tl).append('\n')
-     .append("TM: ").append(tm).append('\n')
-     .append("TR: ").append(tr).append('\n')
-     .append("ML: ").append(ml).append('\n')
-     .append("MM: ").append(mm).append('\n')
-     .append("MR: ").append(mr).append('\n')
-     .append("BL: ").append(bl).append('\n')
-     .append("BM: ").append(bm).append('\n')
-     .append("BR: ").append(br);
+    s.append("XY: ").append(xy).append('\n') //$NON-NLS-1$
+     .append("WH: ").append(wh).append('\n') //$NON-NLS-1$
+     .append("TL: ").append(tl).append('\n') //$NON-NLS-1$
+     .append("TM: ").append(tm).append('\n') //$NON-NLS-1$
+     .append("TR: ").append(tr).append('\n') //$NON-NLS-1$
+     .append("ML: ").append(ml).append('\n') //$NON-NLS-1$
+     .append("MM: ").append(mm).append('\n') //$NON-NLS-1$
+     .append("MR: ").append(mr).append('\n') //$NON-NLS-1$
+     .append("BL: ").append(bl).append('\n') //$NON-NLS-1$
+     .append("BM: ").append(bm).append('\n') //$NON-NLS-1$
+     .append("BR: ").append(br); //$NON-NLS-1$
     return s.toString();
   }
 }

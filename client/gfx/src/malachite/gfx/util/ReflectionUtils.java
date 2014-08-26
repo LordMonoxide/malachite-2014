@@ -6,9 +6,14 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import static malachite.gfx.util.StringUtils.*;
 
 public class ReflectionUtils {
+  private static final Logger logger = LoggerFactory.getLogger(ReflectionUtils.class);
+  
   public static Member findMethodOrFieldByName(Class<?> c, String name, Class<?>... argHint) {
     return findMethodOrFieldByName(c, name, true, true, argHint);
   }
@@ -30,7 +35,7 @@ public class ReflectionUtils {
       if(member != null) { return member; }
     }
     
-    System.err.println("No member by name of " + name + " in " + c + '.');
+    logger.debug("No member by name of {} in {}.", name , c); //$NON-NLS-1$
     return null;
   }
   
@@ -54,7 +59,7 @@ public class ReflectionUtils {
       } catch(NoSuchMethodException e) {
         //System.out.println("No " + name + " with " + argHint);
       } catch(SecurityException e) {
-        e.printStackTrace();
+        logger.error("Security exception for method " + name + " of " + c, e); //$NON-NLS-1$ //$NON-NLS-2$
       }
     }
     

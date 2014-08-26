@@ -11,9 +11,14 @@ import java.nio.ByteBuffer;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import malachite.gfx.util.Time;
 
 public class TextureBuilder {
+  private static final Logger logger = LoggerFactory.getLogger(TextureBuilder.class);
+  
   private static TextureBuilder _instance = new TextureBuilder();
   public static TextureBuilder getInstance() { return _instance; }
   
@@ -25,14 +30,14 @@ public class TextureBuilder {
     double t = Time.get();
 
     if(_textures.containsKey(name)) {
-      //System.out.println("Textures \"" + name + "\" already loaded."); //$NON-NLS-1$ //$NON-NLS-2$
+      logger.trace("Texture \"{}\" already loaded.", name); //$NON-NLS-1$
       return _textures.get(name);
     }
 
     Texture texture = new Texture(name, w, h, data);
     _textures.put(name, texture);
 
-    System.out.println("Texture \"" + name + "\" (" + w + 'x' + h + ") loaded. (" + (Time.get() - t) + ')'); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+    logger.info("Texture \"{}\" ({}x{}) loaded. ({}ms)", name, Integer.valueOf(w), Integer.valueOf(h), Double.valueOf(Time.get() - t)); //$NON-NLS-1$
 
     return texture;
   }
@@ -41,7 +46,7 @@ public class TextureBuilder {
     double t = Time.get();
 
     if(_textures.containsKey(file)) {
-      //System.out.println("Textures \"" + file + "\" already loaded."); //$NON-NLS-1$ //$NON-NLS-2$
+      logger.trace("Textures \"{}\" already loaded.", file); //$NON-NLS-1$
       return _textures.get(file);
     }
 
@@ -63,18 +68,17 @@ public class TextureBuilder {
         data.flip();
       }
     } catch(FileNotFoundException e) {
-      System.err.println("Couldn't find texture \"" + file + '\"'); //$NON-NLS-1$
+      logger.error("Couldn't find texture \"" + file + '\"', e); //$NON-NLS-1$
       return null;
     } catch(IOException e) {
-      System.err.println("Error loading texture \"" + file + '\"'); //$NON-NLS-1$
-      e.printStackTrace();
+      logger.error("Error loading texture \"" + file + '\"', e); //$NON-NLS-1$
       return null;
     }
 
     Texture texture = new Texture(file, w, h, data);
     _textures.put(file, texture);
 
-    System.out.println("Texture \"" + file + "\" (" + w + 'x' + h +") loaded. (" + (Time.get() - t) + ')'); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+    logger.info("Texture \"{}\" ({}x{}) loaded. ({}ms)", file, Integer.valueOf(w), Integer.valueOf(h), Double.valueOf(Time.get() - t)); //$NON-NLS-1$
 
     return texture;
   }
