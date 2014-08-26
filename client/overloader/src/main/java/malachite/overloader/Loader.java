@@ -45,13 +45,13 @@ public class Loader extends ClassLoader {
           e.printStackTrace();
         }
       } else {
-        logger.debug("Using cached overridden class '{}'", name); //$NON-NLS-1$
+        logger.trace("Using cached overridden class '{}'", name); //$NON-NLS-1$
       }
       
       return c;
     }
     
-    logger.debug("Loading class '{}'", name); //$NON-NLS-1$
+    logger.trace("Loading class '{}'", name); //$NON-NLS-1$
     
     //TODO
     //if(name.startsWith("java") || name.startsWith("sun.")) {
