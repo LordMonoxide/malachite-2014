@@ -1,5 +1,6 @@
 package game;
 
+import java.util.Arrays;
 import java.util.Map;
 import java.util.Objects;
 
@@ -57,6 +58,7 @@ public class MainMenuEvents implements GUIEvents {
     try {
       _user = _gateway.login(email, password);
       login.hide();
+      showChars();
     } catch(AccountException.InvalidLoginCredentials e) {
       System.err.println("Invalid email/password");
     } catch(ValidatorException e) {
@@ -72,6 +74,7 @@ public class MainMenuEvents implements GUIEvents {
     try {
       _user = _gateway.register(email, password);
       register.hide();
+      showChars();
     } catch(ValidatorException e) {
       System.err.println(e.getMessage());
     }
@@ -80,5 +83,9 @@ public class MainMenuEvents implements GUIEvents {
   public void showRegister() {
     login.hide();
     register.show();
+  }
+  
+  public void showChars() throws AccountException, Exception {
+    System.out.println(Arrays.toString(_user.characters()));
   }
 }
