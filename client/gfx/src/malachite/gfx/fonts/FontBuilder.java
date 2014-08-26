@@ -12,12 +12,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import malachite.gfx.Context;
 import malachite.gfx.Loader;
 import malachite.gfx.textures.TextureBuilder;
 import malachite.gfx.util.Math;
 
 public class FontBuilder {
+  private static final Logger logger = LoggerFactory.getLogger(FontBuilder.class);
+  
   private static FontBuilder _instance = new FontBuilder();
   public static FontBuilder getInstance() { return _instance; }
   
@@ -57,7 +62,7 @@ public class FontBuilder {
       f.load(regular, bold, italic);
       _fonts.put(fullName, f);
       
-      System.out.println("Font \"" + fullName + "\" created.");
+      logger.info("Font \"{}\" created.", fullName); //$NON-NLS-1$
     });
     
     return f;
@@ -132,7 +137,9 @@ public class FontBuilder {
     return f;
   }
   
-  private int addGlyph(int i, java.awt.Font font, FontRenderContext rendCont, List<Metrics> metrics, int highIndex) {
+  private int addGlyph(int i, java.awt.Font font, FontRenderContext rendCont, List<Metrics> metrics, int high) {
+    int highIndex = high;
+    
     if(!Character.isValidCodePoint(i)) { return highIndex; }
     
     char[] character = Character.toChars(i);
