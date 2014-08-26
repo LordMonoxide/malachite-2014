@@ -53,6 +53,7 @@ public class Loader extends ClassLoader {
     
     logger.debug("Loading class '%s'", name); //$NON-NLS-1$
     
+    //TODO
     //if(name.startsWith("java") || name.startsWith("sun.")) {
     if(!(name.startsWith("malachite.") || name.startsWith("game."))) {
       return super.loadClass(name, false);
