@@ -20,13 +20,13 @@ import malachite.gfx.util.Math;
 public class FontBuilder {
   private static FontBuilder _instance = new FontBuilder();
   public static FontBuilder getInstance() { return _instance; }
-
+  
   private TextureBuilder _textures = TextureBuilder.getInstance();
   private Map<String, Font> _fonts = new HashMap<>();
-
+  
   private Font _default = getFont("Verdana");
   public Font getDefault() { return _default; }
-
+  
   private FontBuilder() { }
   
   public Font getFont(String name) {
@@ -37,7 +37,7 @@ public class FontBuilder {
     return getFont(name, size, 0x20, 0x3FF, 0x2022, 0x25B2, 0x25BA, 0x25BC, 0x25C4);
     // Extra = Bullet, Triangle up, right, down, left
   }
-
+  
   public Font getFont(String name, int size, int startGlyph, int endGlyph, int... extraGlyphs) {
     String fullName = name + '.' + size;
     if(_fonts.containsKey(fullName)) {
@@ -131,35 +131,35 @@ public class FontBuilder {
     
     return f;
   }
-
+  
   private int addGlyph(int i, java.awt.Font font, FontRenderContext rendCont, List<Metrics> metrics, int highIndex) {
     if(!Character.isValidCodePoint(i)) { return highIndex; }
-
+    
     char[] character = Character.toChars(i);
-
+    
     Rectangle2D bounds = font.getStringBounds(character, 0, character.length, rendCont);
     int w = (int)bounds.getWidth();
     int h = (int)bounds.getHeight();
-
+    
     if(w == 0) {
       return highIndex;
     }
-
+    
     BufferedImage bi = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
-
+    
     Graphics2D g = (Graphics2D)bi.getGraphics();
     g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
     g.setFont(font);
     g.drawString(new String(character), 0, (int)(bounds.getHeight() - bounds.getMaxY()));
-
+    
     int[] argb = null;
     argb = bi.getData().getPixels(0, 0, w, h, argb);
-
+    
     byte[] argbByte = new byte[argb.length];
     for(int n = 0; n < argb.length; n++) {
       argbByte[n] = (byte)argb[n];
     }
-
+    
     Metrics m = new Metrics(i);
     m.w = w;
     m.h = h;
@@ -167,11 +167,11 @@ public class FontBuilder {
     m.h2 = Math.nextPowerOfTwo(m.h);
     m.argb = argbByte;
     metrics.add(m);
-
+    
     if(i > highIndex) { highIndex = i; }
     return highIndex;
   }
-
+  
   private static class Metrics {
     private Metrics(int code) { this.code = code; }
     private int code;

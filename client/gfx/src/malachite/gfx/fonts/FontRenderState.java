@@ -9,7 +9,7 @@ class FontRenderState {
   float[] c;
   
   Matrix matrix;
-
+  
   FontRenderState(Font.Face face, int x, int y, int w, int h, int mask, Matrix matrix) {
     this.face = face;
     this.x = x;

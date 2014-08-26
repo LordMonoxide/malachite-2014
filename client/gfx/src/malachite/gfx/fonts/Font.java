@@ -139,14 +139,14 @@ public class Font {
       return text.length();
     }
   }
-
+  
   protected static class Glyph {
     protected Drawable sprite;
     protected int code;
     protected int  w,  h;
     protected int tx, ty;
     protected int tw, th;
-
+    
     protected void create(Texture texture) {
       sprite = Context.newDrawable();
       sprite.setTexture(texture);
@@ -154,7 +154,7 @@ public class Font {
       sprite.setTXYWH(tx, ty, tw, th);
       sprite.createQuad();
     }
-
+    
     protected void setColour(float[] c) {
       sprite.setColour(c);
       sprite.createQuad();
@@ -164,36 +164,36 @@ public class Font {
       sprite.setColour(r, g, b, a);
       sprite.createQuad();
     }
-
+    
     public void draw() {
       sprite.draw();
     }
   }
-
+  
   public static class Events {
     private Deque<Event> _load = new ConcurrentLinkedDeque<>();
-
+    
     private Font _this;
-
+    
     public Events(Font font) {
       _this = font;
     }
-
+    
     public void addLoadHandler(Event e) {
       _load.add(e);
-
+      
       if(_this._loaded) {
         raiseLoad();
       }
     }
-
+    
     public void raiseLoad() {
       Event e = null;
       while((e = _load.poll()) != null) {
         e.run();
       }
     }
-
+    
     public interface Event {
       void run();
     }
