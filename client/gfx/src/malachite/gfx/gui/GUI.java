@@ -9,8 +9,12 @@ import malachite.gfx.Matrix;
 import malachite.gfx.textures.TextureBuilder;
 
 import org.lwjgl.input.Keyboard;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public abstract class GUI {
+  private static final Logger logger = LoggerFactory.getLogger(GUI.class);
+  
   private static final float[] _clearColour = {0.0f, 0.0f, 0.0f, 1.1f};
 
   protected Matrix _matrix = Context.getMatrix();
@@ -163,7 +167,7 @@ public abstract class GUI {
         _selectControl.handleMouseDown(x - (int)_selectControl.calculateTotalX(), y - (int)_selectControl.calculateTotalY(), button);
         handled = true;
       } else {
-        System.err.println("Found no controls of this colour"); //$NON-NLS-1$
+        logger.error("Found no controls of colour ({}, {}, {})", Integer.valueOf(pixel[0]), Integer.valueOf(pixel[1]), Integer.valueOf(pixel[2])); //$NON-NLS-1$
       }
     }
 
@@ -251,9 +255,9 @@ public abstract class GUI {
       _forceSelect = !_forceSelect;
 
       if(_forceSelect) {
-        System.out.println("Switching GUI render mode to select"); //$NON-NLS-1$
+        logger.trace("Switching GUI render mode to select"); //$NON-NLS-1$
       } else {
-        System.out.println("Switching GUI render mode to normal"); //$NON-NLS-1$
+        logger.trace("Switching GUI render mode to normal"); //$NON-NLS-1$
       }
     }
 

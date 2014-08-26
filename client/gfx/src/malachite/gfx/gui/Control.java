@@ -8,8 +8,12 @@ import malachite.gfx.util.HAlign;
 import malachite.gfx.util.VAlign;
 
 import org.lwjgl.input.Keyboard;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public abstract class Control<T extends ControlEvents> {
+  private static final Logger logger = LoggerFactory.getLogger(Control.class);
+  
   protected Matrix _matrix = Context.getMatrix();
 
   protected Drawable _background;
@@ -184,7 +188,7 @@ public abstract class Control<T extends ControlEvents> {
     _controlList.enable();
     
     if(_disabled < 0) {
-      System.err.println("You screwed up and enabled " + this + " more times than it was disabled."); //$NON-NLS-1$ //$NON-NLS-2$
+      logger.error("You screwed up and enabled {} more times than it was disabled.", this); //$NON-NLS-1$
     }
   }
 
@@ -434,7 +438,7 @@ public abstract class Control<T extends ControlEvents> {
   public void drawSelect() {
     if(_visible && _disabled == 0) {
       if(_needsUpdate) {
-        System.out.println("Updating " + this);
+        logger.trace("Updating {}", this); //$NON-NLS-1$
         updateSize();
       }
 
