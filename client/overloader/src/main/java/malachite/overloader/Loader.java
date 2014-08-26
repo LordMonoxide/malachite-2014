@@ -37,7 +37,7 @@ public class Loader extends ClassLoader {
     if(override != null) {
       Class<?> c = findLoadedClass(override);
       if(c == null) {
-        logger.debug("Overriding class '%s'", name); //$NON-NLS-1$
+        logger.debug("Overriding class '{}'", name); //$NON-NLS-1$
         
         try {
           c = getClass(name, override);
@@ -45,13 +45,13 @@ public class Loader extends ClassLoader {
           e.printStackTrace();
         }
       } else {
-        logger.debug("Using cached overridden class '%s'", name); //$NON-NLS-1$
+        logger.debug("Using cached overridden class '{}'", name); //$NON-NLS-1$
       }
       
       return c;
     }
     
-    logger.debug("Loading class '%s'", name); //$NON-NLS-1$
+    logger.debug("Loading class '{}'", name); //$NON-NLS-1$
     
     //TODO
     //if(name.startsWith("java") || name.startsWith("sun.")) {
