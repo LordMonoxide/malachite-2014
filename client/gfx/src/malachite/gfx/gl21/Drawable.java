@@ -36,7 +36,7 @@ public class Drawable extends malachite.gfx.Drawable {
     if(_program != null) {
       _program.use();
     } else {
-      Program.clear();
+      malachite.gfx.Program.clear();
     }
     
     GL11.glBegin(_renderMode);
