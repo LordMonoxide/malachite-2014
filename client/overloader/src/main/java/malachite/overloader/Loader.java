@@ -87,12 +87,14 @@ public class Loader extends ClassLoader {
   }
   
   private byte[] loadClassData(String name) throws IOException {
-    InputStream stream = getClass().getClassLoader().getResourceAsStream(name);
-    int size = stream.available();
-    byte buff[] = new byte[size];
-    DataInputStream in = new DataInputStream(stream);
-    in.readFully(buff);
-    in.close();
-    return buff;
+    try(InputStream stream = getClass().getClassLoader().getResourceAsStream(name)) {
+      int size = stream.available();
+      byte buff[] = new byte[size];
+      
+      try(DataInputStream in = new DataInputStream(stream)) {
+        in.readFully(buff);
+        return buff;
+      }
+    }
   }
 }
