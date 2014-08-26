@@ -6,9 +6,14 @@ import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import malachite.overloader.rewriter.ClassRewriter;
 
 public class Loader extends ClassLoader {
+  private final Logger logger = LoggerFactory.getLogger(this.getClass());
+  
   private Map<String, String> _override = new HashMap<>();
   
   public Loader(ClassLoader parent) {
@@ -29,7 +34,7 @@ public class Loader extends ClassLoader {
     if(override != null) {
       Class<?> c = findLoadedClass(override);
       if(c == null) {
-        System.out.println("Overriding class '" + name + '\'');
+        logger.debug("Overriding class '%s'", name); //$NON-NLS-1$
         
         try {
           c = getClass(name, override);
@@ -37,13 +42,13 @@ public class Loader extends ClassLoader {
           e.printStackTrace();
         }
       } else {
-        System.out.println("Using cached overridden class '" + name + '\'');
+        logger.debug("Using cached overridden class '%s'", name); //$NON-NLS-1$
       }
       
       return c;
     }
     
-    System.out.println("Loading class '" + name + '\'');
+    logger.debug("Loading class '%s'", name); //$NON-NLS-1$
     
     //if(name.startsWith("java") || name.startsWith("sun.")) {
     if(!(name.startsWith("malachite.") || name.startsWith("game."))) {
