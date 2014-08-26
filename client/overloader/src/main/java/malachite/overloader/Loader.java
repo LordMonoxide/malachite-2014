@@ -64,7 +64,7 @@ public class Loader extends ClassLoader {
     return null;
   }
   
-  private Class<?> getClass(String name, String override) throws ClassNotFoundException, IOException {
+  private Class<?> getClass(String name, String override) throws IOException {
     String file = (override != null ? override : name).replace('.', '/') + ".class";
     byte[] b = null;
     
