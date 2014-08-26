@@ -9,8 +9,12 @@ import java.util.Map;
 
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL20;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ShaderBuilder {
+  private static final Logger logger = LoggerFactory.getLogger(ShaderBuilder.class);
+  
   private static Map<String, Shader> _programs = new HashMap<>();
   private static Map<String, Integer> _shaders = new HashMap<>();
   
@@ -33,7 +37,7 @@ public class ShaderBuilder {
     if(GL20.glGetShaderi(shaderID, GL20.GL_COMPILE_STATUS) == GL11.GL_FALSE) {
       int size = GL20.glGetShaderi(shaderID, GL20.GL_INFO_LOG_LENGTH);
       String error = GL20.glGetShaderInfoLog(shaderID, size);
-      System.err.println("Error compiling shader:\n" + shader + '\n' + error);
+      logger.error("Error compiling shader:\n{}\n{}", shader, error); //$NON-NLS-1$
       return 0;
     }
     
@@ -42,11 +46,11 @@ public class ShaderBuilder {
   
   private static int loadShaderFile(String file, int type) {
     if(_shaders.containsKey(file)) {
-      System.out.println("Shader \"" + file + "\" already loaded.");
+      logger.trace("Shader \"{}\n already loaded.", file); //$NON-NLS-1$
       return _shaders.get(file).intValue();
     }
     
-    System.out.println("Shader \"" + file + "\" loading...");
+    logger.info("Shader \"{}\" loading...", file); //$NON-NLS-1$
     
     StringBuilder shaderSource = new StringBuilder();
     
@@ -57,8 +61,7 @@ public class ShaderBuilder {
       }
       reader.close();
     } catch(IOException e) {
-      System.err.println("Could not read file.");
-      e.printStackTrace();
+      logger.error("Could not read file", e); //$NON-NLS-1$
       return 0;
     }
     
@@ -69,11 +72,11 @@ public class ShaderBuilder {
     String file = vertexShader + '|' + fragmentShader;
     
     if(_programs.containsKey(file)) {
-      System.out.println("Program \"" + file + "\" already loaded.");
+      logger.trace("Program \"{}\" already loaded.", file); //$NON-NLS-1$
       return _programs.get(file);
     }
     
-    System.out.println("Program \"" + file + "\" loading...");
+    logger.trace("Program \"{}\" loading...", file); //$NON-NLS-1$
     
     int vsh  = loadShaderFile(vertexShader,   GL20.GL_VERTEX_SHADER);
     int fsh  = loadShaderFile(fragmentShader, GL20.GL_FRAGMENT_SHADER);
@@ -90,7 +93,7 @@ public class ShaderBuilder {
     if(GL20.glGetProgrami(prog, GL20.GL_LINK_STATUS) == GL11.GL_FALSE) {
       int size = GL20.glGetProgrami(prog, GL20.GL_INFO_LOG_LENGTH);
       String error = GL20.glGetProgramInfoLog(prog, size);
-      System.err.println("Error linking shader " + file + ":\n" + error);
+      logger.error("Error linking shader {}:\n{}", file, error); //$NON-NLS-1$
       return null;
     }
     
