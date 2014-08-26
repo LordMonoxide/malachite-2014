@@ -8,8 +8,12 @@ import java.io.IOException;
 
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL20;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class Shader extends malachite.gfx.Shader {
+  private static final Logger logger = LoggerFactory.getLogger(Shader.class);
+  
   @Override public boolean load(String file, int type) {
     StringBuilder src = new StringBuilder();
     File f = new File("gfx/shaders/legacy/" + file);
@@ -20,12 +24,10 @@ public class Shader extends malachite.gfx.Shader {
         src.append(line).append('\n');
       }
     } catch(FileNotFoundException e) {
-      System.err.println("Legacy shader " + file + " not found");
-      e.printStackTrace();
+      logger.error("Legacy shader " + file + " not found", e); //$NON-NLS-1$ //$NON-NLS-2$
       return false;
     } catch(IOException e) {
-      System.err.println("Error loading legacy shader " + file);
-      e.printStackTrace();
+      logger.error("Error loading legacy shader " + file, e); //$NON-NLS-1$
       return false;
     }
     
@@ -40,7 +42,7 @@ public class Shader extends malachite.gfx.Shader {
     if(GL20.glGetShaderi(_id, GL20.GL_COMPILE_STATUS) == GL11.GL_FALSE) {
       int size = GL20.glGetShaderi(_id, GL20.GL_INFO_LOG_LENGTH);
       String error = GL20.glGetShaderInfoLog(_id, size);
-      System.err.println("Error compiling shader " + name + ":\n" + error);
+      logger.error("Error compiling shader {}:\n{}", name, error); //$NON-NLS-1$
       return false;
     }
     
