@@ -7,6 +7,10 @@ import malachite.engine.gateways.AccountGatewayInterface;
 import malachite.engine.gateways.HTTPAccountGateway;
 
 public class HTTPGatewayProvider implements GatewayProviderInterface {
+  @Override public String toString() {
+    return "HTTPGatewayProvider (" + super.toString() + ')'; //$NON-NLS-1$
+  }
+  
   private AccountGatewayInterface _account;
   
   private HttpClient _http;

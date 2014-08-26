@@ -16,6 +16,10 @@ import malachite.engine.gateways.JDBCAccountGateway;
 import malachite.engine.jdbc.JDBCInitializer;
 
 public class JDBCGatewayProvider implements GatewayProviderInterface {
+  @Override public String toString() {
+    return "JDBCGatewayProvider (" + super.toString() + ')'; //$NON-NLS-1$
+  }
+  
   private AccountGatewayInterface _account;
   private Engine _engine;
   
