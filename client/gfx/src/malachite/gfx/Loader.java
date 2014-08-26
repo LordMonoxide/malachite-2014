@@ -2,9 +2,14 @@ package malachite.gfx;
 
 import java.util.concurrent.ConcurrentLinkedDeque;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import malachite.gfx.util.Time;
 
 public class Loader {
+  private static final Logger logger = LoggerFactory.getLogger(Loader.class);
+  
   Thread _thread;
   
   private boolean _running;
@@ -22,7 +27,7 @@ public class Loader {
     if(_thread != null) { return; }
     
     _thread = new Thread(() -> {
-      System.out.println("Loader thread started."); //$NON-NLS-1$
+      logger.info("Loader thread started."); //$NON-NLS-1$
       
       _running = true;
       _fps = 120;
@@ -57,7 +62,7 @@ public class Loader {
         _thread.notifyAll();
       }
       
-      System.out.println("Loader thread finished."); //$NON-NLS-1$
+      logger.info("Loader thread finished."); //$NON-NLS-1$
     });
 
     _thread.setPriority(Thread.MIN_PRIORITY);

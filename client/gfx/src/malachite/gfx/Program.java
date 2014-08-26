@@ -2,8 +2,12 @@ package malachite.gfx;
 
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL20;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public abstract class Program {
+  private static final Logger logger = LoggerFactory.getLogger(Program.class);
+  
   private static int _current;
   public static void clear() {
     if(_current != 0) {
@@ -25,7 +29,7 @@ public abstract class Program {
       
       int error = GL11.glGetError();
       if(error != GL11.GL_NO_ERROR) {
-        System.out.println("Error using shader " + error + ":\n" + getError());
+        logger.error("Error using shader {}:\n{}", Integer.valueOf(error), getError()); //$NON-NLS-1$
       }
     }
   }

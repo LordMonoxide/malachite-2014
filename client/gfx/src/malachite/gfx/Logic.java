@@ -3,8 +3,12 @@ package malachite.gfx;
 import malachite.gfx.util.Time;
 
 import org.lwjgl.input.Keyboard;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 class Logic {
+  private static final Logger logger = LoggerFactory.getLogger(Logic.class);
+  
   private Context _context;
 
   private Thread _thread;
@@ -28,7 +32,7 @@ class Logic {
     if(_thread != null) { return; }
     
     _thread = new Thread(() -> {
-      System.out.println("Logic thread started."); //$NON-NLS-1$
+      logger.info("Logic thread started."); //$NON-NLS-1$
       
       _running = true;
       _fps = 120;
@@ -62,7 +66,7 @@ class Logic {
 
       _finished = true;
 
-      System.out.println("Logic thread finished."); //$NON-NLS-1$
+      logger.info("Logic thread finished."); //$NON-NLS-1$
     });
     
     _thread.start();

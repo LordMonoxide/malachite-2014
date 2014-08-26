@@ -3,7 +3,12 @@ package malachite.gfx;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public final class Manager {
+  private static final Logger logger = LoggerFactory.getLogger(Manager.class);
+  
   private static final List<Class<? extends Context>> _contexts = new ArrayList<>();
   
   private static Context _context;
@@ -31,6 +36,7 @@ public final class Manager {
         
         return _context;
       } catch(InstantiationException | IllegalAccessException e) {
+        logger.error("Error creating context", e); //$NON-NLS-1$
         e.printStackTrace();
       }
     }
