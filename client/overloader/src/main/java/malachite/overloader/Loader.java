@@ -21,7 +21,7 @@ public class Loader extends ClassLoader {
   }
   
   @SuppressWarnings("unchecked")
-  public <T> T create(String className) throws InstantiationException, IllegalAccessException, ClassNotFoundException, IOException {
+  public <T> T create(String className) throws InstantiationException, IllegalAccessException, IOException {
     return (T)getClass(className, null).newInstance();
   }
   
