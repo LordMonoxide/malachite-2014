@@ -15,7 +15,7 @@ import org.slf4j.LoggerFactory;
 public abstract class GUI {
   private static final Logger logger = LoggerFactory.getLogger(GUI.class);
   
-  private static final float[] _clearColour = {0.0f, 0.0f, 0.0f, 1.1f};
+  private static final float[] _clearColour = {0.0f, 0.0f, 0.0f, 1.0f};
 
   protected Matrix _matrix = Context.getMatrix();
   protected TextureBuilder _textures = TextureBuilder.getInstance();
