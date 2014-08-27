@@ -18,8 +18,8 @@
 			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry combineaccessrules="false" kind="src" path="/overloader"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/validator"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/engine"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/overloader"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>
