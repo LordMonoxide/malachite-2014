@@ -82,20 +82,28 @@ public class Loader extends ClassLoader {
       b = loadClassData(file);
     }
     
-    Class<?> c = defineClass(name, b, 0, b.length);
-    resolveClass(c);
-    return c;
+    if(b != null) {
+      Class<?> c = defineClass(name, b, 0, b.length);
+      resolveClass(c);
+      return c;
+    } else {
+      return null;
+    }
   }
   
   private byte[] loadClassData(String name) throws IOException {
     try(InputStream stream = getClass().getClassLoader().getResourceAsStream(name)) {
-      int size = stream.available();
-      byte buff[] = new byte[size];
-      
-      try(DataInputStream in = new DataInputStream(stream)) {
-        in.readFully(buff);
-        return buff;
+      if(stream != null) {
+        int size = stream.available();
+        byte buff[] = new byte[size];
+        
+        try(DataInputStream in = new DataInputStream(stream)) {
+          in.readFully(buff);
+          return buff;
+        }
       }
     }
+    
+    return null;
   }
 }
