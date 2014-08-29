@@ -103,6 +103,29 @@
           }
         }
       }
+    },
+    
+    chars: {
+      type: window,
+      text: ~menu.chars.title,
+      icon: "#gui.icons.woodshield",
+      visible: false,
+      bounds.x: 490,
+      bounds.y: 260,
+      bounds.w: 300,
+      bounds.h: 200,
+      
+      controls: {
+        chars_list: {
+          type: list,
+          bounds.wh.bind_x: @chars.content_bounds.wh,
+          bounds.wh.bind_y: @chars.content_bounds.wh,
+          bounds.x: 4,
+          bounds.y: 4,
+          bounds.w: -8,
+          bounds.h: -8
+        }
+      }
     }
   }
 }

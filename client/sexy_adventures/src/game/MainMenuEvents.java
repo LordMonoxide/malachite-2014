@@ -6,10 +6,12 @@ import java.util.Objects;
 
 import malachite.engine.exceptions.AccountException;
 import malachite.engine.gateways.AccountGatewayInterface;
+import malachite.engine.models.Character;
 import malachite.engine.models.User;
 import malachite.gfx.gui.Control;
 import malachite.gfx.gui.ControlEvents;
 import malachite.gfx.gui.control.Button;
+import malachite.gfx.gui.control.List;
 import malachite.gfx.gui.control.Textbox;
 import malachite.gfx.gui.control.Window;
 import malachite.gfx.gui.parser.GUIEvents;
@@ -20,7 +22,7 @@ public class MainMenuEvents implements GUIEvents {
   
   private User _user;
   
-  private Window<?> login, register;
+  private Window<?> login, register, chars;
   private Textbox loginEmail;
   private Textbox loginPassword;
   private Button  loginSubmit;
@@ -30,6 +32,8 @@ public class MainMenuEvents implements GUIEvents {
   private Textbox registerPassword2;
   private Button  registerSubmit;
   
+  private List<Character> charsList;
+  
   public MainMenuEvents(AccountGatewayInterface gateway) {
     _gateway = Objects.requireNonNull(gateway, "Account gateway must not be null");
   }
@@ -37,6 +41,7 @@ public class MainMenuEvents implements GUIEvents {
   @Override public void registerControls(Map<String, Control<?>> controls) {
     login    = (Window<?>)controls.get("login");
     register = (Window<?>)controls.get("register");
+    chars    = (Window<?>)controls.get("chars");
     
     loginEmail    = (Textbox)controls.get("login_email");
     loginPassword = (Textbox)controls.get("login_password");
@@ -46,6 +51,8 @@ public class MainMenuEvents implements GUIEvents {
     registerPassword  = (Textbox)controls.get("register_password");
     registerPassword2 = (Textbox)controls.get("register_password_confirm");
     registerSubmit    = (Button) controls.get("register_submit");
+    
+    charsList = (List<Character>)controls.get("chars_list");
     
     loginEmail.setFocus(true);
   }
@@ -86,6 +93,10 @@ public class MainMenuEvents implements GUIEvents {
   }
   
   public void showChars() throws AccountException, Exception {
-    System.out.println(Arrays.toString(_user.characters()));
+    for(Character character : _user.characters()) {
+      charsList.add(character.name, character);
+    }
+    
+    chars.show();
   }
 }
