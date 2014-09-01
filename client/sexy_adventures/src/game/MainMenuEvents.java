@@ -1,9 +1,13 @@
 package game;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.Objects;
 
+import org.json.JSONException;
+
+import malachite.engine.conf.Conf;
 import malachite.engine.exceptions.AccountException;
 import malachite.engine.gateways.AccountGatewayInterface;
 import malachite.engine.models.Character;
@@ -19,6 +23,8 @@ import malachite.validator.Validator.ValidatorException;
 
 public class MainMenuEvents implements GUIEvents {
   private AccountGatewayInterface _gateway;
+  
+  private Conf _conf;
   
   private User _user;
   
@@ -36,6 +42,13 @@ public class MainMenuEvents implements GUIEvents {
   
   public MainMenuEvents(AccountGatewayInterface gateway) {
     _gateway = Objects.requireNonNull(gateway, "Account gateway must not be null");
+    
+    try {
+      _conf = new Conf("../menu.conf");
+    } catch(JSONException | IOException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
   }
   
   @Override public void registerControls(Map<String, Control<?>> controls) {
@@ -55,6 +68,7 @@ public class MainMenuEvents implements GUIEvents {
     charsList = (List<Character>)controls.get("chars_list");
     
     loginEmail.setFocus(true);
+    loginEmail.setText((String)_conf.get("account.email"));
   }
   
   public void showRegisterClick(ControlEvents.ClickEventData e) {
