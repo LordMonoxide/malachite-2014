@@ -43,7 +43,7 @@ public class MainMenuEvents implements GUIEvents {
     _gateway = Objects.requireNonNull(gateway, "Account gateway must not be null");
     
     try {
-      _conf = new Conf("../menu.conf");
+      _conf = new Conf("../account.conf");
     } catch(JSONException | IOException e) {
       // TODO Auto-generated catch block
       e.printStackTrace();
