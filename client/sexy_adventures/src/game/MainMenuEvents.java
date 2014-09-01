@@ -1,7 +1,6 @@
 package game;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.Map;
 import java.util.Objects;
 
@@ -77,6 +76,9 @@ public class MainMenuEvents implements GUIEvents {
   
   public void login(String email, String password) throws Exception {
     try {
+      _conf.set("account.email", email);
+      _conf.save();
+      
       _user = _gateway.login(email, password);
       login.hide();
       showChars();
