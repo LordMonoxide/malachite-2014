@@ -369,7 +369,7 @@ public class JSONTokener {
         if(this.next() == '*') {
           for(;;) {
             if(this.skipTo('*') == 0) {
-              this.syntaxError("Unterminated comment block"); //$NON-NLS-1$
+              throw this.syntaxError("Unterminated comment block"); //$NON-NLS-1$
             } else {
               if(this.next() == '/') {
                 c = this.nextClean();
