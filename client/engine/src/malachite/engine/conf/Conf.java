@@ -45,6 +45,10 @@ public class Conf {
     Files.write(_file, _root.toString(2).getBytes(StandardCharsets.UTF_8));
   }
   
+  public boolean delete() throws IOException {
+    return Files.deleteIfExists(_file);
+  }
+  
   public String[] tokenize(String key) {
     return key.split("\\.");
   }
