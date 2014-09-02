@@ -132,12 +132,15 @@ public class ParserControl {
       if(val instanceof String) {
         String s = (String)val;
         
-        if(s.startsWith("@")) {
-          _lateAssignments.add(new LateAssignment(bm, boundMemberFromMemberPath(s)));
-          return;
-        } else if(s.startsWith("#")) {
-          String path = s.substring(1).replace('.', '/') + ".png";
-          val = TextureBuilder.getInstance().getTexture(path);
+        switch(s.charAt(0)) {
+          case '@':
+            _lateAssignments.add(new LateAssignment(bm, boundMemberFromMemberPath(s)));
+            return;
+            
+          case '#':
+            String path = s.substring(1).replace('.', '/') + ".png";
+            val = TextureBuilder.getInstance().getTexture(path);
+            break;
         }
       }
       
