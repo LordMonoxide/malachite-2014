@@ -145,9 +145,8 @@ public abstract class Context {
     
     if(Display.isCreated()) {
       updateSize();
+      _gui.resize();
     }
-    
-    _gui.resize();
   }
   
   public void setFPSTarget(int fpsTarget) { _fpsTarget = fpsTarget; }
