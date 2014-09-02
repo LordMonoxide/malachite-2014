@@ -22,7 +22,7 @@ public abstract class Game {
     
     Manager.registerContext(malachite.gfx.gl21.Context.class);
     
-    _context = Manager.create(ctx -> {
+    _context = Manager.create(engine, ctx -> {
       ctx.setResizable(true);
       ctx.setWH(1280, 720);
       ctx.setFPSTarget(60);

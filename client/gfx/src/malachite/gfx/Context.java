@@ -1,5 +1,6 @@
 package malachite.gfx;
 
+import malachite.engine.Engine;
 import malachite.gfx.fonts.FontBuilder;
 import malachite.gfx.gui.GUIManager;
 import malachite.gfx.util.Point;
@@ -90,7 +91,8 @@ public abstract class Context {
   
   private ContextListener _listener;
   
-  GUIManager _gui = new GUIManager();
+  private Engine _engine;
+  GUIManager _gui;
   private Loader _loader = new Loader();
   private Logic  _logic  = new Logic(this);
   private ConcurrentLinkedDeque<Loader.Callback> _loaderCallbacks = new ConcurrentLinkedDeque<>();
@@ -156,7 +158,10 @@ public abstract class Context {
   protected abstract void updateSize();
   protected abstract void cleanup();
   
-  protected final boolean create() {
+  protected final boolean create(Engine engine) {
+    _engine = engine;
+    _gui = new GUIManager(_engine);
+    
     if(!Display.isCreated()) {
       try {
         Display.setInitialBackground(_backColour[0], _backColour[1], _backColour[2]);

@@ -4,12 +4,19 @@ import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.concurrent.ConcurrentLinkedDeque;
 
+import malachite.engine.Engine;
 import malachite.gfx.gui.parser.GUIEvents;
 import malachite.gfx.gui.parser.Parser;
 
 public class GUIManager {
+  private final Engine _engine;
+  
   protected ConcurrentLinkedDeque<GUI> _gui = new ConcurrentLinkedDeque<>();
 
+  public GUIManager(Engine engine) {
+    _engine = engine;
+  }
+  
   public void push(GUI gui) {
     _gui.push(gui);
   }
@@ -138,7 +145,7 @@ public class GUIManager {
   }
   
   public GUI loadFromFile(String file, GUIEvents events) throws IOException {
-    Parser parser = new Parser();
+    Parser parser = new Parser(_engine);
     return parser.loadFromFile(Paths.get("../data/gfx/guis/" + file + ".json"), events);
   }
 }
