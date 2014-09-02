@@ -15,6 +15,9 @@ public class SexyAdventures extends Game {
     loader.bind("malachite.engine.jdbc.JDBCInitializer", "malachite.engine.jdbc.MySQLInitializer");
     
     loader.bind("malachite.engine.providers.SecurityProvider", "malachite.engine.providers.DefaultSecurityProvider");
+    
+    loader.bind("malachite.engine.providers.LangProvider", "malachite.engine.providers.ConfLangProvider");
+    
     loader.create("game.SexyAdventures");
   }
   
