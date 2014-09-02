@@ -141,6 +141,10 @@ public class ParserControl {
             String path = s.substring(1).replace('.', '/') + ".png";
             val = TextureBuilder.getInstance().getTexture(path);
             break;
+            
+          case '~':
+            val = _parser._lang.get(s.substring(1));
+            break;
         }
       }
       
