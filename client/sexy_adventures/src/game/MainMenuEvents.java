@@ -67,6 +67,8 @@ public class MainMenuEvents implements GUIEvents {
     
     charsList = (List<Character>)controls.get("chars_list");
     
+    registerEvents();
+    
     loginEmail.setText((String)_conf.get("account.email"));
     
     if(loginEmail.hasText()) {
@@ -74,6 +76,27 @@ public class MainMenuEvents implements GUIEvents {
     } else {
       loginEmail.setFocus(true);
     }
+  }
+  
+  private void registerEvents() {
+    ControlEvents.KeyEvent login = ev -> {
+      if(ev.key == 28) {
+        
+      }
+    };
+    
+    ControlEvents.KeyEvent register = ev -> {
+      if(ev.key == 28) {
+        
+      }
+    };
+    
+    loginEmail.events().onKeyDown(login);
+    loginPassword.events().onKeyDown(login);
+    
+    registerEmail.events().onKeyDown(register);
+    registerPassword.events().onKeyDown(register);
+    registerPassword2.events().onKeyDown(register);
   }
   
   public void showRegisterClick(ControlEvents.ClickEventData e) {
