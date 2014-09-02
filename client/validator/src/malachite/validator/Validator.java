@@ -15,7 +15,7 @@ public class Validator {
     addRule("password", new Password()); //$NON-NLS-1$
   }
   
-  public Validator check(Object value, String... rules) throws ValidatorException {
+  public Validator check(Object value, String name, String... rules) throws ValidatorException {
     for(String rule : rules) {
       Rule r = _rules.get(rule);
       
@@ -24,7 +24,7 @@ public class Validator {
       }
       
       if(!r.check(value)) {
-        throw new ValidatorException.ValidationFailure(r, value);
+        throw new ValidatorException.ValidationFailure(r, name, value);
       }
     }
     
@@ -89,8 +89,15 @@ public class Validator {
     public static class ValidationFailure extends ValidatorException {
       private static final long serialVersionUID = 1L;
       
-      public ValidationFailure(Rule rule, Object value) {
-        super("The validation of " + value + " failed on rule " + rule.getClass().getSimpleName()); //$NON-NLS-1$ //$NON-NLS-2$
+      public final Rule   rule;
+      public final String name;
+      public final Object value;
+      
+      public ValidationFailure(Rule rule, String name, Object value) {
+        super("The validation of \"" + name + "\" failed on rule " + rule.getClass().getSimpleName() + " for value \"" + value + '\"'); //$NON-NLS-1$ //$NON-NLS-2$
+        this.rule  = rule;
+        this.name  = name;
+        this.value = value;
       }
     }
     

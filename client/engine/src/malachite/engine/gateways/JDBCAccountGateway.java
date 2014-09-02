@@ -63,8 +63,8 @@ public class JDBCAccountGateway implements AccountGatewayInterface {
   
   @Override public User login(String email, String password) throws AccountException, ValidatorException, SQLException {
     new Validator()
-      .check(email,    "email")
-      .check(password, "password");
+      .check(email,    "email",    "email")
+      .check(password, "password", "password");
     
     _login.setString(1, email);
     
@@ -81,8 +81,8 @@ public class JDBCAccountGateway implements AccountGatewayInterface {
   
   @Override public User register(String email, String password) throws AccountException, ValidatorException, SQLException {
     new Validator()
-      .check(email,    "email")
-      .check(password, "password");
+      .check(email,    "email",    "email")
+      .check(password, "password", "password");
     
     _exists.setString(1, email);
     
