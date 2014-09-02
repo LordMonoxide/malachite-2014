@@ -89,7 +89,7 @@
         
         register_password_confirm: {
           type: textbox,
-          placeholder: ~menu.register_confirm.password,
+          placeholder: ~menu.register.password_confirm,
           masked: true,
           bounds.xy.bind: @register_password.bounds.bl,
           bounds.wh.bind: @register_password.bounds.wh,
