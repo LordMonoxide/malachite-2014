@@ -33,7 +33,9 @@
           type: button,
           auto_size: true,
           text: ~menu.login.submit,
-          bounds.xy.bind: @login_password.bounds.br,
+          /*bounds.xy.bind: @login_password.bounds.br,*/
+          bounds.xy.bind_y: @login_password.bounds.bl,
+          bounds.y: 8,
           
           events: {
             on_click: "login(@login_email.text,@login_password.text)"
@@ -44,7 +46,9 @@
           type: button,
           auto_size: true,
           text: ~menu.register.title,
-          bounds.xy.bind: @login_submit.bounds.bl,
+          /*bounds.xy.bind: @login_submit.bounds.bl,*/
+          bounds.xy.bind_y: @login_submit.bounds.bl,
+          /*bounds.y: 4,*/
           
           events: {
             on_click: "show_register_click"
