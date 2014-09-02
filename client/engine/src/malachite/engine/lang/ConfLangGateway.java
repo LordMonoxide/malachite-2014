@@ -6,10 +6,20 @@ import java.util.Map;
 
 import org.json.JSONException;
 
+import malachite.engine.Config;
 import malachite.engine.conf.Conf;
 
 public class ConfLangGateway implements LangGatewayInterface {
   private final Map<String, Lang> _lang = new HashMap<>();
+  private final Config _config;
+  
+  public ConfLangGateway(Config config) {
+    _config = config;
+  }
+  
+  @Override public Lang get() throws JSONException, IOException {
+    return get(_config.lang.locale);
+  }
   
   @Override public Lang get(String name) throws JSONException, IOException {
     Lang lang = _lang.get(name);

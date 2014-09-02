@@ -1,7 +1,14 @@
 package malachite.engine;
 
 public final class Config {
-  public final DB db = new DB();
+  public final Lang lang = new Lang();
+  public final DB   db   = new DB();
+  
+  public final class Lang {
+    private Lang() { }
+    
+    public final String locale = "en-CA";
+  }
   
   public final class DB {
     private DB() { }

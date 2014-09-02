@@ -9,14 +9,16 @@ public class ConfLangProvider implements LangProviderInterface {
     return "ConfLangProvider (" + super.toString() + ')'; //$NON-NLS-1$
   }
   
+  private final Engine _engine;
+  
   private LangGatewayInterface _lang;
   
   public ConfLangProvider(Engine engine) {
-    
+    _engine = engine;
   }
   
   @Override public LangGatewayInterface lang() {
-    if(_lang == null) { _lang = new ConfLangGateway(); }
+    if(_lang == null) { _lang = new ConfLangGateway(_engine.config); }
     return null;
   }
 }
