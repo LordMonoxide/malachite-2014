@@ -10,6 +10,12 @@ public class ConfLang extends Lang {
   }
   
   @Override public String get(String key) {
-    return (String)_conf.get(key);
+    Object obj = _conf.get(key);
+    
+    if(obj == null) {
+      return key;
+    }
+    
+    return _conf.get(key).toString();
   }
 }
