@@ -5,6 +5,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import malachite.engine.lang.Lang;
@@ -20,7 +21,7 @@ public class Parser {
   Control<?> _root;
   GUIEvents  _events;
   
-  Map<String, ParserControl> _controls = new HashMap<>();
+  Map<String, ParserControl> _controls = new LinkedHashMap<>();
   
   public Parser(Lang lang) {
     _lang = lang;
