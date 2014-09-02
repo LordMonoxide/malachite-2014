@@ -19,6 +19,6 @@ public class ConfLangProvider implements LangProviderInterface {
   
   @Override public LangGatewayInterface lang() {
     if(_lang == null) { _lang = new ConfLangGateway(_engine.config); }
-    return null;
+    return _lang;
   }
 }
