@@ -13,6 +13,7 @@ import malachite.engine.models.Character;
 import malachite.engine.models.User;
 import malachite.gfx.gui.Control;
 import malachite.gfx.gui.ControlEvents;
+import malachite.gfx.gui.builtin.Tooltip;
 import malachite.gfx.gui.control.Button;
 import malachite.gfx.gui.control.List;
 import malachite.gfx.gui.control.Textbox;
@@ -88,23 +89,37 @@ public class MainMenuEvents implements GUIEvents {
       login.hide();
       showChars();
     } catch(AccountException.InvalidLoginCredentials e) {
-      System.err.println("Invalid email/password");
-    } catch(ValidatorException e) {
-      System.err.println(e.getMessage());
+      showValidationError("Invalid email or password", loginEmail);
+    } catch(ValidatorException.ValidationFailure e) {
+      Control<?> c = null;
+      
+      switch(e.name) {
+        case "email":    c = loginEmail;    break;
+        case "password": c = loginPassword; break;
+      }
+      
+      showValidationError(e.getMessage(), c);
     }
   }
   
   public void register(String email, String password, String passwordConfirm) throws Exception {
     if(!password.equals(passwordConfirm)) {
-      System.err.println("Passwords don't match");
+      showValidationError("Passwords don't match", registerPassword2);
     }
     
     try {
       _user = _gateway.register(email, password);
       register.hide();
       showChars();
-    } catch(ValidatorException e) {
-      System.err.println(e.getMessage());
+    } catch(ValidatorException.ValidationFailure e) {
+      Control<?> c = null;
+      
+      switch(e.name) {
+        case "email":    c = registerEmail;    break;
+        case "password": c = registerPassword; break;
+      }
+      
+      showValidationError(e.getMessage(), c);
     }
   }
   
@@ -119,5 +134,14 @@ public class MainMenuEvents implements GUIEvents {
     }
     
     chars.show();
+  }
+  
+  private void showValidationError(String error, Control<? extends ControlEvents> anchor) {
+    showTooltip(anchor, error);
+    anchor.setFocus(true);
+  }
+  
+  private void showTooltip(Control<? extends ControlEvents> anchor, String text) {
+    new Tooltip(anchor, text).push();
   }
 }
