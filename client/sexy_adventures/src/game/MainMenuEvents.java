@@ -66,8 +66,13 @@ public class MainMenuEvents implements GUIEvents {
     
     charsList = (List<Character>)controls.get("chars_list");
     
-    loginEmail.setFocus(true);
     loginEmail.setText((String)_conf.get("account.email"));
+    
+    if(loginEmail.hasText()) {
+      loginPassword.setFocus(true);
+    } else {
+      loginEmail.setFocus(true);
+    }
   }
   
   public void showRegisterClick(ControlEvents.ClickEventData e) {
