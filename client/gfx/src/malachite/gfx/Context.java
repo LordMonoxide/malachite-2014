@@ -1,6 +1,6 @@
 package malachite.gfx;
 
-import malachite.engine.Engine;
+import malachite.engine.lang.Lang;
 import malachite.gfx.fonts.FontBuilder;
 import malachite.gfx.gui.GUIManager;
 import malachite.gfx.util.Point;
@@ -91,7 +91,7 @@ public abstract class Context {
   
   private ContextListener _listener;
   
-  private Engine _engine;
+  private Lang _lang;
   GUIManager _gui;
   private Loader _loader = new Loader();
   private Logic  _logic  = new Logic(this);
@@ -158,9 +158,9 @@ public abstract class Context {
   protected abstract void updateSize();
   protected abstract void cleanup();
   
-  protected final boolean create(Engine engine) {
-    _engine = engine;
-    _gui = new GUIManager(_engine);
+  protected final boolean create(Lang lang) {
+    _lang = lang;
+    _gui = new GUIManager(_lang);
     
     if(!Display.isCreated()) {
       try {

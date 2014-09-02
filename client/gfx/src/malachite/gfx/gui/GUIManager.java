@@ -4,17 +4,17 @@ import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.concurrent.ConcurrentLinkedDeque;
 
-import malachite.engine.Engine;
+import malachite.engine.lang.Lang;
 import malachite.gfx.gui.parser.GUIEvents;
 import malachite.gfx.gui.parser.Parser;
 
 public class GUIManager {
-  private final Engine _engine;
+  private final Lang _lang;
   
   protected ConcurrentLinkedDeque<GUI> _gui = new ConcurrentLinkedDeque<>();
 
-  public GUIManager(Engine engine) {
-    _engine = engine;
+  public GUIManager(Lang lang) {
+    _lang = lang;
   }
   
   public void push(GUI gui) {
@@ -145,7 +145,7 @@ public class GUIManager {
   }
   
   public GUI loadFromFile(String file, GUIEvents events) throws IOException {
-    Parser parser = new Parser(_engine);
+    Parser parser = new Parser(_lang);
     return parser.loadFromFile(Paths.get("../data/gfx/guis/" + file + ".json"), events);
   }
 }

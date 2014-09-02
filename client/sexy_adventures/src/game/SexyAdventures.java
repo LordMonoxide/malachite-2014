@@ -21,7 +21,7 @@ public class SexyAdventures extends Game {
     loader.create("game.SexyAdventures");
   }
   
-  public SexyAdventures() {
+  public SexyAdventures() throws Exception {
     run();
   }
   

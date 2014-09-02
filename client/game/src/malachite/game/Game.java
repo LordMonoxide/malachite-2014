@@ -3,6 +3,7 @@ package malachite.game;
 import java.io.IOException;
 
 import malachite.engine.Engine;
+import malachite.engine.lang.Lang;
 import malachite.gfx.Context;
 import malachite.gfx.ContextListenerAdapter;
 import malachite.gfx.Manager;
@@ -14,15 +15,18 @@ public abstract class Game {
   private GUI     _menu;
   
   protected final Engine engine;
+  protected final Lang   lang;
   
-  public Game() {
+  public Game() throws Exception {
     engine = new Engine();
     
     System.out.println(engine);
     
+    lang = engine.providers.lang.lang().get();
+    
     Manager.registerContext(malachite.gfx.gl21.Context.class);
     
-    _context = Manager.create(engine, ctx -> {
+    _context = Manager.create(lang, ctx -> {
       ctx.setResizable(true);
       ctx.setWH(1280, 720);
       ctx.setFPSTarget(60);

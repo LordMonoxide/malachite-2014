@@ -3,7 +3,7 @@ package malachite.gfx;
 import java.util.ArrayList;
 import java.util.List;
 
-import malachite.engine.Engine;
+import malachite.engine.lang.Lang;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,7 +23,7 @@ public final class Manager {
     _contexts.add(context);
   }
   
-  public static Context create(Engine engine, ContextInitializer initializer) {
+  public static Context create(Lang lang, ContextInitializer initializer) {
     for(Class<? extends Context> c : _contexts) {
       try {
         _context = c.newInstance();
@@ -32,7 +32,7 @@ public final class Manager {
           initializer.initialize(_context);
         }
         
-        if(!_context.create(engine)) {
+        if(!_context.create(lang)) {
           continue;
         }
         

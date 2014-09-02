@@ -7,14 +7,14 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-import malachite.engine.Engine;
+import malachite.engine.lang.Lang;
 import malachite.gfx.gui.Control;
 import malachite.gfx.gui.GUI;
 
 import org.json.JSONObject;
 
 public class Parser {
-  final Engine _engine;
+  final Lang _lang;
   
   GUI        _gui;
   Control<?> _root;
@@ -22,8 +22,8 @@ public class Parser {
   
   Map<String, ParserControl> _controls = new HashMap<>();
   
-  public Parser(Engine engine) {
-    _engine = engine;
+  public Parser(Lang lang) {
+    _lang = lang;
   }
   
   public GUI loadFromFile(Path f) throws IOException { return loadFromFile(f, null); }
