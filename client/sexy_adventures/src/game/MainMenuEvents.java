@@ -98,7 +98,7 @@ public class MainMenuEvents implements GUIEvents {
         case "password": c = loginPassword; break;
       }
       
-      showValidationError(e.getMessage(), c);
+      showValidationError(e.message, c);
     }
   }
   
@@ -119,7 +119,7 @@ public class MainMenuEvents implements GUIEvents {
         case "password": c = registerPassword; break;
       }
       
-      showValidationError(e.getMessage(), c);
+      showValidationError(e.message, c);
     }
   }
   

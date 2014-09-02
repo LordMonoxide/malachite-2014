@@ -23,43 +23,37 @@ public class Validator {
         throw new ValidatorException.NoSuchRule(rule);
       }
       
-      if(!r.check(value)) {
-        throw new ValidatorException.ValidationFailure(r, name, value);
-      }
+      r.check(name, value);
     }
     
     return this;
   }
   
   public interface Rule {
-    public boolean check(Object value) throws ValidatorException;
+    public void check(String name, Object value) throws ValidatorException;
   }
   
   public static class Email implements Rule {
-    @Override public boolean check(Object value) throws ValidatorException {
+    @Override public void check(String name, Object value) throws ValidatorException {
       if(!(value instanceof String)) {
         throw new ValidatorException.UnsupportedDatatype(this, value); //$NON-NLS-1$
       }
       
       String s = (String)value;
-      if(!s.contains("@")) { return false; }
-      if(s.length() <   3) { return false; }
-      if(s.length() > 254) { return false; }
-      
-      return true;
+      if(s.length() <   3) { throw new ValidatorException.ValidationFailure(this, name, "Emails must be at least 3 characters long"); }
+      if(s.length() > 254) { throw new ValidatorException.ValidationFailure(this, name, "Emails must be less than 254 characters long"); }
+      if(!s.contains("@")) { throw new ValidatorException.ValidationFailure(this, name, "Please enter a valid email address"); }
     }
   }
   
   public static class Password implements Rule {
-    @Override public boolean check(Object value) throws ValidatorException {
+    @Override public void check(String name, Object value) throws ValidatorException {
       if(!(value instanceof String)) {
         throw new ValidatorException.UnsupportedDatatype(this, value); //$NON-NLS-1$
       }
       
       String s = (String)value;
-      if(s.length() < 6) { return false; }
-      
-      return true;
+      if(s.length() < 6) { throw new ValidatorException.ValidationFailure(this, name, "Passwords must be at least 6 characters long"); }
     }
   }
   
@@ -91,13 +85,13 @@ public class Validator {
       
       public final Rule   rule;
       public final String name;
-      public final Object value;
+      public final String message;
       
-      public ValidationFailure(Rule rule, String name, Object value) {
-        super("The validation of \"" + name + "\" failed on rule " + rule.getClass().getSimpleName() + " for value \"" + value + '\"'); //$NON-NLS-1$ //$NON-NLS-2$
-        this.rule  = rule;
-        this.name  = name;
-        this.value = value;
+      public ValidationFailure(Rule rule, String name, String message) {
+        super("The validation of \"" + name + "\" failed on rule " + rule.getClass().getSimpleName() + " (" + message + ')'); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+        this.rule    = rule;
+        this.name    = name;
+        this.message = message;
       }
     }
     
