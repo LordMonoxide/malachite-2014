@@ -126,6 +126,14 @@ public class Textbox extends Control<Textbox.Events> {
     return _textFull.getText();
   }
   
+  public boolean isEmpty() {
+    return _textFull.getText() != null && !_textFull.getText().isEmpty();
+  }
+  
+  public boolean hasText() {
+    return !isEmpty();
+  }
+  
   public void setPlaceholder(String text) {
     _placeholder.setText(text);
   }
