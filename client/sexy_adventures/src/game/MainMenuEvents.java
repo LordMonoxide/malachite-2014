@@ -11,6 +11,7 @@ import malachite.engine.exceptions.AccountException;
 import malachite.engine.gateways.AccountGatewayInterface;
 import malachite.engine.models.Character;
 import malachite.engine.models.User;
+import malachite.gfx.fonts.FontBuilder;
 import malachite.gfx.gui.Control;
 import malachite.gfx.gui.ControlEvents;
 import malachite.gfx.gui.builtin.Tooltip;
@@ -32,6 +33,7 @@ public class MainMenuEvents implements GUIEvents {
   private Textbox loginEmail;
   private Textbox loginPassword;
   private Button  loginSubmit;
+  private Button  loginRegister;
   
   private Textbox registerEmail;
   private Textbox registerPassword;
@@ -59,6 +61,7 @@ public class MainMenuEvents implements GUIEvents {
     loginEmail    = (Textbox)controls.get("login_email");
     loginPassword = (Textbox)controls.get("login_password");
     loginSubmit   = (Button) controls.get("login_submit");
+    loginRegister = (Button) controls.get("show_register");
     
     registerEmail     = (Textbox)controls.get("register_email");
     registerPassword  = (Textbox)controls.get("register_password");
@@ -76,6 +79,26 @@ public class MainMenuEvents implements GUIEvents {
     } else {
       loginEmail.setFocus(true);
     }
+  }
+  
+  @Override public void postLayout() {
+    //TODO: Not this hacky thing
+    FontBuilder.getInstance().getDefault().events().addLoadHandler(() -> {
+      loginSubmit  .bounds.setX(-loginSubmit  .bounds.getW());
+      loginRegister.bounds.setX(-loginRegister.bounds.getW() - 4);
+    });
+  }
+  
+  @Override public void resize() {
+    
+  }
+  
+  @Override public void draw() {
+    
+  }
+  
+  @Override public void destroy() {
+    
   }
   
   private void registerEvents() {
