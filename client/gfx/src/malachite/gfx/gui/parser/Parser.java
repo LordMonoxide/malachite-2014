@@ -55,21 +55,23 @@ public class Parser {
           
           parseAttribs();
           processLateAssignments();
+          
+          events.postLayout();
         } catch(ParserException e) {
           e.printStackTrace();
         }
       }
       
       @Override public void destroy() {
-        
+        events.destroy();
       }
       
       @Override protected void resize() {
-        
+        events.resize();
       }
       
       @Override protected void draw() {
-        
+        events.draw();
       }
       
       @Override protected boolean logic() {
