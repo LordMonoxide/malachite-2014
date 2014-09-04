@@ -30,6 +30,12 @@ public abstract class User {
       return _chars.get(index);
     }
     
+    public Character add(String name) throws AccountException, Exception {
+      Character c = _gateway.createCharacter(name);
+      _chars.add(c);
+      return c;
+    }
+    
     public void refresh() throws AccountException, Exception {
       _chars = new ArrayList<>(Arrays.asList(_gateway.getCharacters(_this)));
     }
