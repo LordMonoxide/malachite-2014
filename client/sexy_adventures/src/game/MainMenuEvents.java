@@ -29,7 +29,7 @@ public class MainMenuEvents implements GUIEvents {
   
   private User _user;
   
-  private Window<?> login, register, chars;
+  private Window<?> wndLogin, wndRegister, wndChars, wndNewChar;
   private Textbox loginEmail;
   private Textbox loginPassword;
   private Button  loginSubmit;
@@ -45,6 +45,9 @@ public class MainMenuEvents implements GUIEvents {
   private Button          charNew;
   private Button          charDel;
   
+  private Textbox newCharName;
+  private Button  newCharCreate;
+  
   public MainMenuEvents(AccountGatewayInterface gateway) {
     _gateway = Objects.requireNonNull(gateway, "Account gateway must not be null");
     
@@ -57,9 +60,10 @@ public class MainMenuEvents implements GUIEvents {
   }
   
   @Override public void registerControls(Map<String, Control<?>> controls) {
-    login    = (Window<?>)controls.get("login");
-    register = (Window<?>)controls.get("register");
-    chars    = (Window<?>)controls.get("chars");
+    wndLogin    = (Window<?>)controls.get("login");
+    wndRegister = (Window<?>)controls.get("register");
+    wndChars    = (Window<?>)controls.get("chars");
+    wndNewChar  = (Window<?>)controls.get("new_char");
     
     loginEmail    = (Textbox)controls.get("login_email");
     loginPassword = (Textbox)controls.get("login_password");
@@ -75,6 +79,9 @@ public class MainMenuEvents implements GUIEvents {
     charUse   = (Button)         controls.get("char_use");
     charNew   = (Button)         controls.get("char_new");
     charDel   = (Button)         controls.get("char_del");
+    
+    newCharName   = (Textbox)controls.get("new_char_name");
+    newCharCreate = (Button)controls.get("new_char_create");
     
     registerEvents();
     
@@ -97,6 +104,9 @@ public class MainMenuEvents implements GUIEvents {
       charUse.bounds.setY(-charUse.bounds.getH() - 4);
       charNew.bounds.setX(-charNew.bounds.getW() - 4);
       charDel.bounds.setX(-charDel.bounds.getW() - 4);
+      
+      newCharCreate.bounds.setX(-newCharCreate.bounds.getW() - 4);
+      newCharCreate.bounds.setY(-newCharCreate.bounds.getH() - 4);
     });
   }
   
@@ -133,9 +143,8 @@ public class MainMenuEvents implements GUIEvents {
     registerPassword2.events().onKeyDown(register);
   }
   
-  public void showRegisterClick(ControlEvents.ClickEventData e) {
-    showRegister();
-  }
+  public void showRegisterClick(ControlEvents.ClickEventData e) { showRegister(); }
+  public void newCharClick     (ControlEvents.ClickEventData e) { showNewChar (); }
   
   public void login(String email, String password) throws Exception {
     try {
@@ -143,7 +152,7 @@ public class MainMenuEvents implements GUIEvents {
       _conf.save();
       
       _user = _gateway.login(email, password);
-      login.hide();
+      wndLogin.hide();
       showChars();
     } catch(AccountException.InvalidLoginCredentials e) {
       showValidationError("Invalid email or password", loginEmail);
@@ -166,7 +175,7 @@ public class MainMenuEvents implements GUIEvents {
     
     try {
       _user = _gateway.register(email, password);
-      register.hide();
+      wndRegister.hide();
       showChars();
     } catch(ValidatorException.ValidationFailure e) {
       Control<?> c = null;
@@ -181,8 +190,8 @@ public class MainMenuEvents implements GUIEvents {
   }
   
   public void showRegister() {
-    login.hide();
-    register.show();
+    wndLogin.hide();
+    wndRegister.show();
   }
   
   public void showChars() throws AccountException, Exception {
@@ -190,7 +199,16 @@ public class MainMenuEvents implements GUIEvents {
       charsList.add(character.name, character);
     }
     
-    chars.show();
+    wndChars.show();
+  }
+  
+  public void showNewChar() {
+    wndChars.hide();
+    wndNewChar.show();
+  }
+  
+  public void createChar(String name) {
+    
   }
   
   private void showValidationError(String error, Control<? extends ControlEvents> anchor) {

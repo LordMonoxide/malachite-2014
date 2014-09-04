@@ -149,7 +149,7 @@
           bounds.x: -4,
           
           events: {
-            
+            on_click: "new_char_click"
           }
         },
         
@@ -162,6 +162,40 @@
           
           events: {
             
+          }
+        }
+      }
+    },
+    
+    new_char: {
+      type: window,
+      text: ~menu.new_char.title,
+      icon: "#gui.icons.hat",
+      visible: false,
+      bounds.x: 490,
+      bounds.y: 260,
+      bounds.w: 300,
+      bounds.h: 200,
+      
+      controls: {
+        new_char_name: {
+          type: textbox,
+          placeholder: ~menu.new_char.name,
+          bounds.wh.bind_x: @new_char.content_bounds.wh,
+          bounds.x: 4,
+          bounds.y: 4,
+          bounds.w: -8,
+          bounds.h: 20
+        },
+        
+        new_char_create: {
+          type: button,
+          auto_size: true,
+          text: ~menu.new_char.create,
+          bounds.xy.bind: @new_char.content_bounds.wh,
+          
+          events: {
+            on_click: "create_char(@new_char_name.text)"
           }
         }
       }
