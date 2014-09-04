@@ -207,8 +207,8 @@ public class MainMenuEvents implements GUIEvents {
     wndNewChar.show();
   }
   
-  public void createChar(String name) {
-    
+  public void createChar(String name) throws AccountException, Exception {
+    _user.characters.add(name);
   }
   
   private void showValidationError(String error, Control<? extends ControlEvents> anchor) {
