@@ -2,6 +2,7 @@ package malachite.validator;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 public class Validator {
   private static Map<String, Rule> _rules = new HashMap<>();
@@ -11,7 +12,8 @@ public class Validator {
   }
   
   static {
-    addRule("email",    new Email()); //$NON-NLS-1$
+    addRule("name",     new Name());     //$NON-NLS-1$
+    addRule("email",    new Email());    //$NON-NLS-1$
     addRule("password", new Password()); //$NON-NLS-1$
   }
   
@@ -31,6 +33,21 @@ public class Validator {
   
   public interface Rule {
     public void check(String name, Object value) throws ValidatorException;
+  }
+  
+  public static class Name implements Rule {
+    private Pattern _pattern = Pattern.compile("^[\\p{L}\\d`~!@#$%^&*()\\-_=+,\\.<>\\/?;:'\"\\[\\]{}\\\\| ]+$");
+    
+    @Override public void check(String name, Object value) throws ValidatorException {
+      if(!(value instanceof String)) {
+        throw new ValidatorException.UnsupportedDatatype(this, value); //$NON-NLS-1$
+      }
+      
+      String s = (String)value;
+      if(s.length() <  4)                { throw new ValidatorException.ValidationFailure(this, name, "Names must be at least 4 characters long"); }
+      if(s.length() > 20)                { throw new ValidatorException.ValidationFailure(this, name, "Names must be less than 20 characters long"); }
+      if(!_pattern.matcher(s).matches()) { throw new ValidatorException.ValidationFailure(this, name, "You have invalid characters in your name (how did you even do that?)"); }
+    }
   }
   
   public static class Email implements Rule {
