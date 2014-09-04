@@ -35,7 +35,7 @@ public class ConfLangGateway implements LangGatewayInterface {
     Lang lang = _lang.get(name);
     
     if(lang == null) {
-      Conf conf = new Conf("../data/lang/" + name + ".conf");
+      Conf conf = new Conf("../data/lang/" + name + ".lang");
       lang = new ConfLang(conf);
     }
     
