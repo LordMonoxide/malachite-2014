@@ -195,7 +195,7 @@ public class MainMenuEvents implements GUIEvents {
   }
   
   public void showChars() throws AccountException, Exception {
-    for(Character character : _user.characters()) {
+    for(Character character : _user.characters) {
       charsList.add(character.name, character);
     }
     
