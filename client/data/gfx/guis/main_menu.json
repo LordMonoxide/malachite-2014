@@ -123,11 +123,46 @@
         chars_list: {
           type: list,
           bounds.wh.bind_x: @chars.content_bounds.wh,
-          bounds.wh.bind_y: @chars.content_bounds.wh,
+          bounds.wh.bind_y: @char_use.bounds.xy,
           bounds.x: 4,
           bounds.y: 4,
           bounds.w: -8,
-          bounds.h: -8
+          bounds.h: -12
+        },
+        
+        char_use: {
+          type: button,
+          auto_size: true,
+          text: ~menu.chars.use,
+          bounds.xy.bind: @chars.content_bounds.wh,
+          
+          events: {
+            
+          }
+        },
+        
+        char_new: {
+          type: button,
+          auto_size: true,
+          text: ~menu.chars.new,
+          bounds.xy.bind: @char_use.bounds.xy,
+          bounds.x: -4,
+          
+          events: {
+            
+          }
+        },
+        
+        char_del: {
+          type: button,
+          auto_size: true,
+          text: ~menu.chars.del,
+          bounds.xy.bind: @char_new.bounds.xy,
+          bounds.x: -4,
+          
+          events: {
+            
+          }
         }
       }
     }

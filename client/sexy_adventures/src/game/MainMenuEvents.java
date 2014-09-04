@@ -41,6 +41,9 @@ public class MainMenuEvents implements GUIEvents {
   private Button  registerSubmit;
   
   private List<Character> charsList;
+  private Button          charUse;
+  private Button          charNew;
+  private Button          charDel;
   
   public MainMenuEvents(AccountGatewayInterface gateway) {
     _gateway = Objects.requireNonNull(gateway, "Account gateway must not be null");
@@ -69,6 +72,9 @@ public class MainMenuEvents implements GUIEvents {
     registerSubmit    = (Button) controls.get("register_submit");
     
     charsList = (List<Character>)controls.get("chars_list");
+    charUse   = (Button)         controls.get("char_use");
+    charNew   = (Button)         controls.get("char_new");
+    charDel   = (Button)         controls.get("char_del");
     
     registerEvents();
     
@@ -86,6 +92,11 @@ public class MainMenuEvents implements GUIEvents {
     FontBuilder.getInstance().getDefault().events().addLoadHandler(() -> {
       loginSubmit  .bounds.setX(-loginSubmit  .bounds.getW());
       loginRegister.bounds.setX(-loginRegister.bounds.getW() - 4);
+
+      charUse.bounds.setX(-charUse.bounds.getW() - 4);
+      charUse.bounds.setY(-charUse.bounds.getH() - 4);
+      charNew.bounds.setX(-charNew.bounds.getW() - 4);
+      charDel.bounds.setX(-charDel.bounds.getW() - 4);
     });
   }
   
