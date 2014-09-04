@@ -121,4 +121,10 @@ public class JDBCAccountGateway implements AccountGatewayInterface {
     Character[] c = new Character[chars.size()];
     return chars.toArray(c);
   }
+  
+  @Override public Character createCharacter(String name) throws AccountException, ValidatorException {
+    new Validator().check(name, "name", "name");
+    
+    return null;
+  }
 }
