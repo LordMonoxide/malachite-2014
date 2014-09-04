@@ -1,0 +1,25 @@
+{
+  menu: {
+    login: {
+      title: Login,
+      email: Email,
+      password: Password,
+      submit: Log in,
+    },
+    
+    register: {
+      title: New Account,
+      email: Email,
+      password: Password,
+      password_confirm: Repeat password,
+      submit: Create account
+    },
+    
+    chars: {
+      title: Character Selection,
+      use: Use,
+      del: Delete,
+      new: New
+    }
+  }
+}
