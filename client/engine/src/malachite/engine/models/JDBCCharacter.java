@@ -12,15 +12,13 @@ public class JDBCCharacter extends Character {
   public static final String DB_NAME    = "name";       //$NON-NLS-1$
   
   public final int  id;
-  public final User user;
   
   public JDBCCharacter(AccountGatewayInterface gateway, JDBCUser user, ResultSet r) throws SQLException {
     this(gateway, r.getInt(DB_ID), user, r.getString(DB_NAME));
   }
   
   public JDBCCharacter(AccountGatewayInterface gateway, int id, JDBCUser user, String name) {
-    super(gateway, name);
+    super(gateway, user, name);
     this.id   = id;
-    this.user = user;
   }
 }

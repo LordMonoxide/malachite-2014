@@ -36,6 +36,11 @@ public abstract class User {
       return c;
     }
     
+    public void remove(Character character) throws Exception {
+      _gateway.deleteCharacter(character);
+      _chars.remove(character);
+    }
+    
     public void refresh() throws AccountException, Exception {
       _chars = new ArrayList<>(Arrays.asList(_gateway.getCharacters(_this)));
     }

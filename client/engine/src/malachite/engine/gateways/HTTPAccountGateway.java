@@ -48,4 +48,8 @@ public class HTTPAccountGateway implements AccountGatewayInterface {
   @Override public Character createCharacter(User user, String name) throws AccountException, Exception {
     return null;
   }
+  
+  @Override public void deleteCharacter(Character character) throws Exception {
+    
+  }
 }

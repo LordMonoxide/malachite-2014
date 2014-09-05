@@ -9,4 +9,5 @@ public interface AccountGatewayInterface {
   public User register(String email, String password) throws AccountException, Exception;
   public Character[] getCharacters(User user) throws AccountException, Exception;
   public Character createCharacter(User user, String name) throws AccountException, Exception;
+  public void deleteCharacter(Character character) throws Exception;
 }

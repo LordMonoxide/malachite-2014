@@ -30,6 +30,7 @@ public class JDBCAccountGateway implements AccountGatewayInterface {
   private final PreparedStatement _register;
   private final PreparedStatement _chars;
   private final PreparedStatement _newChar;
+  private final PreparedStatement _delChar;
   
   public JDBCAccountGateway(GatewayProviderInterface provider, HasherInterface hasher) {
     _provider = provider;
@@ -49,6 +50,7 @@ public class JDBCAccountGateway implements AccountGatewayInterface {
     
     _chars    = prepareStatement(yes.table(JDBCCharacter.TABLE).select().where(JDBCCharacter.DB_USER_ID).equals().build());
     _newChar  = prepareStatement(yes.table(JDBCCharacter.TABLE).insert().value(JDBCCharacter.DB_USER_ID).value(JDBCCharacter.DB_NAME).build(), true);
+    _delChar  = prepareStatement(yes.table(JDBCCharacter.TABLE).delete().where(JDBCCharacter.DB_USER_ID).equals().build());
   }
   
   private PreparedStatement prepareStatement(String sql) {
@@ -138,5 +140,12 @@ public class JDBCAccountGateway implements AccountGatewayInterface {
       
       return new JDBCCharacter(this, r.getInt(1), user, name);
     }
+  }
+  
+  @Override public void deleteCharacter(Character c) throws SQLException {
+    JDBCCharacter character = (JDBCCharacter)c;
+    
+    _delChar.setInt(1, character.id);
+    _delChar.executeUpdate();
   }
 }
