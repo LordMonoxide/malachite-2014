@@ -195,6 +195,8 @@ public class MainMenuEvents implements GUIEvents {
   }
   
   public void showChars() throws AccountException, Exception {
+    charsList.clear();
+    
     for(Character character : _user.characters) {
       charsList.add(character.name, character);
     }
@@ -209,6 +211,8 @@ public class MainMenuEvents implements GUIEvents {
   
   public void createChar(String name) throws AccountException, Exception {
     _user.characters.add(name);
+    wndNewChar.hide();
+    showChars();
   }
   
   private void showValidationError(String error, Control<? extends ControlEvents> anchor) {
