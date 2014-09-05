@@ -1,5 +1,7 @@
 package malachite.gfx.gui.builtin;
 
+import malachite.gfx.Context;
+import malachite.gfx.Drawable;
 import malachite.gfx.gui.GUI;
 import malachite.gfx.gui.control.Label;
 import malachite.gfx.gui.control.Window;
@@ -14,6 +16,9 @@ public class Message extends GUI {
   private String _initText;
   private Window<Window.Events> _wndMessage;
   private Label  _lblText;
+  
+  private Drawable _background;
+  private float[]  _backgroundColour = new float[] {0, 0, 0, 0};
   
   private Message(String initTitle, String initText) {
     _initTitle = initTitle;
@@ -38,6 +43,11 @@ public class Message extends GUI {
     });
     
     controls().add(_wndMessage);
+    
+    _background = Context.newDrawable();
+    _background.setColour(_backgroundColour);
+    
+    resize();
   }
   
   public String getTitle() {
@@ -61,14 +71,23 @@ public class Message extends GUI {
   }
 
   @Override protected void resize() {
-    
+    _background.setWH(_context.getW(), _context.getH());
+    _background.createQuad();
   }
 
   @Override protected void draw() {
-    
+    _matrix.push(() -> {
+      _matrix.reset();
+      _background.draw();
+    });
   }
 
   @Override protected boolean logic() {
+    if(_backgroundColour[3] < 0.75f) {
+      _backgroundColour[3] += 0.02f;
+      _background.createQuad();
+    }
+    
     return false;
   }
   
