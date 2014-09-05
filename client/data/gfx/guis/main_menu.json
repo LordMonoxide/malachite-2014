@@ -161,7 +161,7 @@
           bounds.x: -4,
           
           events: {
-            
+            on_click: "del_char_click"
           }
         }
       }

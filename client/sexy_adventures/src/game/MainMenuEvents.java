@@ -14,6 +14,7 @@ import malachite.engine.models.User;
 import malachite.gfx.fonts.FontBuilder;
 import malachite.gfx.gui.Control;
 import malachite.gfx.gui.ControlEvents;
+import malachite.gfx.gui.builtin.Message;
 import malachite.gfx.gui.builtin.Tooltip;
 import malachite.gfx.gui.control.Button;
 import malachite.gfx.gui.control.List;
@@ -145,6 +146,10 @@ public class MainMenuEvents implements GUIEvents {
   
   public void showRegisterClick(ControlEvents.ClickEventData e) { showRegister(); }
   public void newCharClick     (ControlEvents.ClickEventData e) { showNewChar (); }
+  
+  public void delCharClick(ControlEvents.ClickEventData e) {
+    Message.wait("Test", "test").push();
+  }
   
   public void login(String email, String password) throws Exception {
     try {
