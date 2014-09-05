@@ -71,4 +71,12 @@ public class Message extends GUI {
   @Override protected boolean logic() {
     return false;
   }
+  
+  @Override protected boolean handleMouseDown (int x, int y, int button) { return true; }
+  @Override protected boolean handleMouseUp   (int x, int y, int button) { return true; }
+  @Override protected boolean handleMouseMove (int x, int y, int button) { return true; }
+  @Override protected boolean handleMouseWheel(int delta)                { return true; }
+  @Override protected boolean handleKeyDown   (int key, boolean repeat)  { return true; }
+  @Override protected boolean handleKeyUp     (int key)  { return true; }
+  @Override protected boolean handleCharDown  (char key) { return true; }
 }
