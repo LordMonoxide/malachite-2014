@@ -32,6 +32,10 @@ public class YeSQL {
       return new Select(true, "*");
     }
     
+    public Delete delete() {
+      return new Delete();
+    }
+    
     public abstract class Query {
       protected final String _type;
       protected final ArrayList<Where<?>> _where = new ArrayList<>();
@@ -148,6 +152,29 @@ public class YeSQL {
         
         if(_limit != 0) {
           sql.append(" LIMIT ").append(_limit);
+        }
+        
+        return sql.append(';').toString();
+      }
+    }
+    
+    public class Delete extends Query {
+      private Delete() {
+        super("DELETE");
+      }
+      
+      public Where<Delete> where(String column) {
+        Where<Delete> where = new Where<>(this, column);
+        _where.add(where);
+        return where;
+      }
+      
+      @Override public String build() {
+        StringBuilder sql = new StringBuilder();
+        sql.append(_type).append(" FROM ").append(_name);
+        
+        if(_where.size() != 0) {
+          sql.append(buildWheres());
         }
         
         return sql.append(';').toString();
