@@ -31,7 +31,7 @@ public abstract class User {
     }
     
     public Character add(String name) throws AccountException, Exception {
-      Character c = _gateway.createCharacter(name);
+      Character c = _gateway.createCharacter(_this, name);
       _chars.add(c);
       return c;
     }

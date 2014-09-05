@@ -29,6 +29,7 @@ public class JDBCAccountGateway implements AccountGatewayInterface {
   private final PreparedStatement _login;
   private final PreparedStatement _register;
   private final PreparedStatement _chars;
+  private final PreparedStatement _newChar;
   
   public JDBCAccountGateway(GatewayProviderInterface provider, HasherInterface hasher) {
     _provider = provider;
@@ -47,6 +48,7 @@ public class JDBCAccountGateway implements AccountGatewayInterface {
     _register = prepareStatement(yes.table(JDBCUser.TABLE).insert().value(JDBCUser.DB_EMAIL).value(JDBCUser.DB_PASSWORD).build(), true);
     
     _chars    = prepareStatement(yes.table(JDBCCharacter.TABLE).select().where(JDBCCharacter.DB_USER_ID).equals().build());
+    _newChar  = prepareStatement(yes.table(JDBCCharacter.TABLE).insert().value(JDBCCharacter.DB_USER_ID).value(JDBCCharacter.DB_NAME).build(), true);
   }
   
   private PreparedStatement prepareStatement(String sql) {
@@ -122,9 +124,19 @@ public class JDBCAccountGateway implements AccountGatewayInterface {
     return chars.toArray(c);
   }
   
-  @Override public Character createCharacter(String name) throws AccountException, ValidatorException {
+  @Override public Character createCharacter(User u, String name) throws AccountException, ValidatorException, SQLException {
     new Validator().check(name, "name", "name");
     
-    return null;
+    JDBCUser user = (JDBCUser)u;
+    
+    _newChar.setInt(1, user.id);
+    _newChar.setString(2, name);
+    _newChar.executeUpdate();
+    
+    try(ResultSet r = _newChar.getGeneratedKeys()) {
+      r.next();
+      
+      return new JDBCCharacter(this, r.getInt(1), user, name);
+    }
   }
 }

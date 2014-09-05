@@ -45,7 +45,7 @@ public class HTTPAccountGateway implements AccountGatewayInterface {
     return null;
   }
   
-  @Override public Character createCharacter(String name) throws AccountException, Exception {
+  @Override public Character createCharacter(User user, String name) throws AccountException, Exception {
     return null;
   }
 }
