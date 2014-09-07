@@ -20,8 +20,9 @@ public abstract class GUI {
   protected Matrix _matrix = Context.getMatrix();
   protected TextureBuilder _textures = TextureBuilder.getInstance();
 
-  protected Events  _events;
-  protected boolean _loaded;
+  protected GUIManager _guis;
+  protected Events     _events;
+  protected boolean    _loaded;
 
   private boolean _visible = true;
 
@@ -130,12 +131,13 @@ public abstract class GUI {
     }
   }
 
-  public void push() {
-    _context.GUIs().push(this);
+  public void push(GUIManager guis) {
+    _guis = guis;
+    _guis.push(this);
   }
 
   public void pop() {
-    _context.GUIs().pop(this);
+    _guis.pop(this);
   }
 
   private Control<? extends ControlEvents> getSelectControl(int[] colour) {
