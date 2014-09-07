@@ -69,7 +69,13 @@ public class Scrollbar extends Control<Scrollbar.Events> {
     
     public void onChange(int val) {
       for(ChangeEvent e : _change) {
-        e.event(new ChangeEventData(_control, val));
+        ChangeEventData data = new ChangeEventData(_control, val);
+        
+        try {
+          e.event(data);
+        } catch(Exception ex) {
+          throw new ControlEvents.CallbackException(e, data, ex);
+        }
       }
     }
     

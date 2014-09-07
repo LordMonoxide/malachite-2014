@@ -48,108 +48,209 @@ public class ControlEvents {
   
   protected void onDraw() {
     for(DrawEvent e : _draw) {
-      e.event(new DrawEventData(_control));
+      DrawEventData data = new DrawEventData(_control);
+      
+      try {
+        e.event(data);
+      } catch(Exception ex) {
+        throw new CallbackException(e, data, ex);
+      }
     }
   }
   
   public void onMouseMove(int x, int y, int button) {
     for(MouseEvent e : _mouseMove) {
-      e.event(new MouseEventData(_control, x, y, button));
+      MouseEventData data = new MouseEventData(_control, x, y, button);
+      
+      try {
+        e.event(data);
+      } catch(Exception ex) {
+        throw new CallbackException(e, data, ex);
+      }
     }
   }
   
   public void onMouseDown(int x, int y, int button) {
     for(MouseEvent e : _mouseDown) {
-      e.event(new MouseEventData(_control, x, y, button));
+      MouseEventData data = new MouseEventData(_control, x, y, button);
+      
+      try {
+        e.event(data);
+      } catch(Exception ex) {
+        throw new CallbackException(e, data, ex);
+      }
     }
   }
   
   public void onMouseUp(int x, int y, int button) {
     for(MouseEvent e : _mouseUp) {
-      e.event(new MouseEventData(_control, x, y, button));
+      MouseEventData data = new MouseEventData(_control, x, y, button);
+      
+      try {
+        e.event(data);
+      } catch(Exception ex) {
+        throw new CallbackException(e, data, ex);
+      }
     }
   }
   
   public void onScroll(int delta) {
     for(ScrollEvent e : _scroll) {
-      e.event(new ScrollEventData(_control, delta));
+      ScrollEventData data = new ScrollEventData(_control, delta);
+      
+      try {
+        e.event(data);
+      } catch(Exception ex) {
+        throw new CallbackException(e, data, ex);
+      }
     }
   }
   
   public void onHoverIn() {
     for(HoverEvent e : _hoverIn) {
-      e.event(new HoverEventData(_control));
+      HoverEventData data = new HoverEventData(_control);
+      
+      try {
+        e.event(data);
+      } catch(Exception ex) {
+        throw new CallbackException(e, data, ex);
+      }
     }
   }
   
   public void onHoverOut() {
     for(HoverEvent e : _hoverOut) {
-      e.event(new HoverEventData(_control));
+      HoverEventData data = new HoverEventData(_control);
+      
+      try {
+        e.event(data);
+      } catch(Exception ex) {
+        throw new CallbackException(e, data, ex);
+      }
     }
   }
   
   public void onClick() {
     for(ClickEvent e : _click) {
-      e.event(new ClickEventData(_control));
+      ClickEventData data = new ClickEventData(_control);
+      
+      try {
+        e.event(data);
+      } catch(Exception ex) {
+        throw new CallbackException(e, data, ex);
+      }
     }
   }
   
   public void onKeyDown(int key) {
     for(KeyEvent e : _keyDown) {
-      e.event(new KeyEventData(_control, key));
+      KeyEventData data = new KeyEventData(_control, key);
+      
+      try {
+        e.event(data);
+      } catch(Exception ex) {
+        throw new CallbackException(e, data, ex);
+      }
     }
   }
   
   public void onKeyRepeat(int key) {
     for(KeyEvent e : _keyRepeat) {
-      e.event(new KeyEventData(_control, key));
+      KeyEventData data = new KeyEventData(_control, key);
+      
+      try {
+        e.event(data);
+      } catch(Exception ex) {
+        throw new CallbackException(e, data, ex);
+      }
     }
   }
   
   public void onKeyUp(int key) {
     for(KeyEvent e : _keyUp) {
-      e.event(new KeyEventData(_control, key));
+      KeyEventData data = new KeyEventData(_control, key);
+      
+      try {
+        e.event(data);
+      } catch(Exception ex) {
+        throw new CallbackException(e, data, ex);
+      }
     }
   }
   
   public void onText(char key) {
     for(TextEvent e : _text) {
-      e.event(new TextEventData(_control, key));
+      TextEventData data = new TextEventData(_control, key);
+      
+      try {
+        e.event(data);
+      } catch(Exception ex) {
+        throw new CallbackException(e, data, ex);
+      }
     }
   }
   
   public void onFocusGot() {
     for(FocusEvent e : _focusGot) {
-      e.event(new FocusEventData(_control));
+      FocusEventData data = new FocusEventData(_control);
+      
+      try {
+        e.event(data);
+      } catch(Exception ex) {
+        throw new CallbackException(e, data, ex);
+      }
     }
   }
   
   public void onFocusLost() {
     for(FocusEvent e : _focusLost) {
-      e.event(new FocusEventData(_control));
+      FocusEventData data = new FocusEventData(_control);
+      
+      try {
+        e.event(data);
+      } catch(Exception ex) {
+        throw new CallbackException(e, data, ex);
+      }
     }
   }
   
   public void onResize() {
     for(ResizeEvent e : _resize) {
-      e.event(new ResizeEventData(_control));
+      ResizeEventData data = new ResizeEventData(_control);
+      
+      try {
+        e.event(data);
+      } catch(Exception ex) {
+        throw new CallbackException(e, data, ex);
+      }
     }
   }
   
   public void onShow() {
     for(VisibleEvent e : _show) {
-      e.event(new VisibleEventData(_control));
+      VisibleEventData data = new VisibleEventData(_control);
+      
+      try {
+        e.event(data);
+      } catch(Exception ex) {
+      }
     }
   }
   
   public void onHide() {
     for(VisibleEvent e : _hide) {
-      e.event(new VisibleEventData(_control));
+      VisibleEventData data = new VisibleEventData(_control);
+      
+      try {
+        e.event(data);
+      } catch(Exception ex) {
+        throw new CallbackException(e, data, ex);
+      }
     }
   }
   
   public interface Event <T extends EventData> {
-    public void event(T data);
+    public void event(T data) throws Exception;
   }
   
   public interface DrawEvent    extends Event<DrawEventData>    { }
@@ -242,6 +343,14 @@ public class ControlEvents {
   public class VisibleEventData extends EventData {
     private VisibleEventData(Control<? extends ControlEvents> control) {
       super(control);
+    }
+  }
+  
+  public static class CallbackException extends RuntimeException {
+    private static final long serialVersionUID = 1L;
+    
+    public CallbackException(Event<?> event, EventData data, Throwable cause) {
+      super("An unhandled exception was thrown in event " + event + " with data " + data, cause); //$NON-NLS-1$ //$NON-NLS-2$
     }
   }
 }

@@ -495,7 +495,13 @@ public class Textbox extends Control<Textbox.Events> {
     
     public void onChange() {
       for(ChangeEvent e : _change) {
-        e.event(new ChangeEventData(_control));
+        ChangeEventData data = new ChangeEventData(_control);
+        
+        try {
+          e.event(data);
+        } catch(Exception ex) {
+          throw new ControlEvents.CallbackException(e, data, ex);
+        }
       }
     }
     

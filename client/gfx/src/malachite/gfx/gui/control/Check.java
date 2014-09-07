@@ -190,7 +190,13 @@ public class Check extends Control<Check.Events> {
     
     public void onChange(boolean checked) {
       for(ChangeEvent e : _change) {
-        e.event(new ChangeEventData(_control, checked));
+        ChangeEventData data = new ChangeEventData(_control, checked);
+        
+        try {
+          e.event(data);
+        } catch(Exception ex) {
+          throw new ControlEvents.CallbackException(e, data, ex);
+        }
       }
     }
     

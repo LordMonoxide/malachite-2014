@@ -172,7 +172,13 @@ public class Window<T extends Window.Events> extends Control<T> {
     
     public void onClose() {
       for(CloseEvent e : _close) {
-        e.event(new CloseEventData(_control));
+        CloseEventData data = new CloseEventData(_control);
+        
+        try {
+          e.event(data);
+        } catch(Exception ex) {
+          throw new ControlEvents.CallbackException(e, data, ex);
+        }
       }
     }
     
