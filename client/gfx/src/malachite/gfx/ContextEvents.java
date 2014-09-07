@@ -1,0 +1,44 @@
+package malachite.gfx;
+
+import java.util.Deque;
+import java.util.concurrent.ConcurrentLinkedDeque;
+
+public class ContextEvents {
+  private Deque<DrawEvent> _draw = new ConcurrentLinkedDeque<>();
+  
+  void raiseDraw(Matrix matrix) {
+    for(DrawEvent event : _draw) {
+      DrawEventData data = new DrawEventData(matrix);
+      
+      try {
+        event.event(data);
+      } catch(Exception ex) {
+        throw new CallbackException(event, data, ex);
+      }
+    }
+  }
+  
+  public interface Event<T extends EventData> {
+    public void event(T data) throws Exception;
+  }
+  
+  public interface EventData { }
+  
+  public interface DrawEvent extends Event<DrawEventData> { }
+  
+  public class DrawEventData implements EventData {
+    public final Matrix matrix;
+    
+    public DrawEventData(Matrix matrix) {
+      this.matrix = matrix;
+    }
+  }
+  
+  public static class CallbackException extends RuntimeException {
+    private static final long serialVersionUID = 1L;
+    
+    public CallbackException(Event<?> event, EventData data, Throwable cause) {
+      super("An unhandled exception was thrown in event " + event + " with data " + data, cause); //$NON-NLS-1$ //$NON-NLS-2$
+    }
+  }
+}

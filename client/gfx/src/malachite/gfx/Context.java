@@ -1,8 +1,5 @@
 package malachite.gfx;
 
-import malachite.engine.lang.Lang;
-import malachite.gfx.fonts.FontBuilder;
-import malachite.gfx.gui.GUIManager;
 import malachite.gfx.util.Point;
 import malachite.gfx.util.Time;
 
@@ -18,159 +15,68 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.nio.ByteBuffer;
-import java.util.concurrent.ConcurrentLinkedDeque;
+import java.util.Objects;
 
 public abstract class Context {
   private static final Logger logger = LoggerFactory.getLogger(Context.class);
   
-  protected static Context _context;
-  protected static Matrix  _matrix;
-  protected static Class<? extends Vertex>   _vertex;
-  protected static Class<? extends Drawable> _drawable;
-  protected static Class<? extends Scalable> _scalable;
-  protected static Class<? extends Shader>   _shader;
-  protected static Class<? extends Program>  _program;
+  public final ContextEvents events = new ContextEvents();
+  public final Camera        camera = new Camera();
   
-  public static Context getContext()  { return _context;  }
-  public static Matrix  getMatrix()   { return _matrix;   }
+  private Matrix _matrix;
   
-  public static Vertex newVertex() {
-    try {
-      logger.trace("Creating new vertex"); //$NON-NLS-1$
-      return _vertex.newInstance();
-    } catch(Exception e) {
-      logger.error("Error creating vertex", e); //$NON-NLS-1$
-    }
-    
-    return null;
-  }
-  
-  public static Drawable newDrawable() {
-    try {
-      logger.trace("Creating new drawable"); //$NON-NLS-1$
-      return _drawable.newInstance();
-    } catch(Exception e) {
-      logger.error("Error creating drawable", e); //$NON-NLS-1$
-    }
-    
-    return null;
-  }
-  
-  public static Scalable newScalable() {
-    try {
-      logger.trace("Creating new scalable"); //$NON-NLS-1$
-      return _scalable.newInstance();
-    } catch(Exception e) {
-      logger.error("Error creating scalable", e); //$NON-NLS-1$
-    }
-    
-    return null;
-  }
-  
-  public static Shader newShader() {
-    try {
-      logger.trace("Creating new shader"); //$NON-NLS-1$
-      return _shader.newInstance();
-    } catch(Exception e) {
-      logger.error("Error creating shader", e); //$NON-NLS-1$
-    }
-    
-    return null;
-  }
-  
-  public static Program newProgram() {
-    try {
-      logger.trace("Creating new program"); //$NON-NLS-1$
-      return _program.newInstance();
-    } catch(Exception e) {
-      logger.error("Error creating program", e); //$NON-NLS-1$
-    }
-    
-    return null;
-  }
-  
-  private ContextListener _listener;
-  
-  private Lang _lang;
-  GUIManager _gui;
-  private Loader _loader = new Loader();
-  private Logic  _logic  = new Logic(this);
-  private ConcurrentLinkedDeque<Loader.Callback> _loaderCallbacks = new ConcurrentLinkedDeque<>();
-  
-  private Thread _renderThread;
-  private Thread _loaderThread;
-  
-  private int _w, _h;
-  private float[] _backColour = {1.0f, 1.0f, 1.0f, 1.0f};
-  private int[] _selectColour = {1, 0, 0, 255};
-  
-  public final Camera camera = new Camera();
+  private final int[] _selectColour = {1, 0, 0, 255};
   
   private int _mouseX = 0;
   private int _mouseY = 0;
   private int _mouseButton = -1;
   
-  private int _fpsTarget;
+  private int      _fpsLimit;
   private double   _lastSPF;
-  private double[] _spf = new double[10];
   private double   _spfAvg;
   private int      _spfs;
   
   private boolean _running;
   
-  public GUIManager GUIs() { return _gui; }
+  private final double[] _spf = new double[10];
+  
   public String  getTitle()     { return Display.getTitle(); }
   public boolean getResizable() { return Display.isResizable(); }
-  public int     getW()         { return _w; }
-  public int     getH()         { return _h; }
-  public int     getFPSTarget() { return _fpsTarget; }
-  public double  getSPF      () { return _spfAvg; }
-  public double  getFPS      () { return 1000 / _spfAvg; }
+  public int     getW()         { return Display.getWidth(); }
+  public int     getH()         { return Display.getHeight(); }
+  public int     getFPSLimit()  { return _fpsLimit; }
+  public double  getFPS()       { return 1000 / _spfAvg; }
+  public double  getSPF()       { return _spfAvg; }
   
   public int getMouseX() { return Mouse.getX(); }
-  public int getMouseY() { return _h - Mouse.getY(); }
+  public int getMouseY() { return getH() - Mouse.getY(); }
   
-  public void setTitle    (String title)      { Display.setTitle(title); }
-  public void setResizable(boolean resizable) { Display.setResizable(resizable); }
-  public void setBackColour(float r, float g, float b, float a) {
-    _backColour[0] = r;
-    _backColour[1] = g;
-    _backColour[2] = b;
-    _backColour[3] = a;
+  public void resize(int w, int h) throws LWJGLException {
+    Display.setDisplayMode(new DisplayMode(w, h));
+    updateSize();
   }
-  
-  public void setWH(int w, int h) {
-    _w = w;
-    _h = h;
-    
-    if(Display.isCreated()) {
-      updateSize();
-      _gui.resize();
-    }
-  }
-  
-  public void setFPSTarget(int fpsTarget) { _fpsTarget = fpsTarget; }
-  public void setContextListener(ContextListener listener) { _listener = listener; }
   
   protected abstract void createDisplay() throws LWJGLException;
-  protected abstract void createInstances();
   protected abstract void updateSize();
   protected abstract void cleanup();
   
-  protected final boolean create(Lang lang) {
-    _lang = lang;
-    _gui = new GUIManager(_lang);
-    
+  protected abstract Matrix createMatrix();
+  
+  final boolean create(String title, boolean resizable, float[] clearColour, int w, int h, int fps) {
     if(!Display.isCreated()) {
       try {
-        Display.setInitialBackground(_backColour[0], _backColour[1], _backColour[2]);
-        Display.setDisplayMode(new DisplayMode(_w, _h));
+        Display.setTitle(title);
+        Display.setResizable(resizable);
+        Display.setInitialBackground(clearColour[0], clearColour[1], clearColour[2]);
+        Display.setDisplayMode(new DisplayMode(w, h));
         createDisplay();
       } catch(LWJGLException e) {
         logger.error("Error creating context", e); //$NON-NLS-1$
         return false;
       }
     }
+    
+    _fpsLimit = fps;
     
     logger.info("Creating context {}", Display.getTitle()); //$NON-NLS-1$
     logger.info("Display adapter: {}", Display.getAdapter()); //$NON-NLS-1$
@@ -182,23 +88,9 @@ public abstract class Context {
     
     Keyboard.enableRepeatEvents(true);
     
-    _context = this;
-    createInstances();
-    
-    if(_matrix   == null) { logger.error("!! Matrix is null !!"); } //$NON-NLS-1$
-    if(_vertex   == null) { logger.error("!! Vertex is null !!"); } //$NON-NLS-1$
-    if(_drawable == null) { logger.error("!! Drawable is null !!"); } //$NON-NLS-1$
-    if(_scalable == null) { logger.error("!! Scalable is null !!"); } //$NON-NLS-1$
-    if(_shader   == null) { logger.error("!! Shader is null !!"); } //$NON-NLS-1$
-    if(_program  == null) { logger.error("!! Program is null !!"); } //$NON-NLS-1$
+    _matrix = Objects.requireNonNull(createMatrix());
     
     updateSize();
-    
-    FontBuilder.getInstance().getDefault().events().addLoadHandler(() -> {
-      if(_listener != null) {
-        _listener.onCreate();
-      }
-    });
     
     return true;
   }
@@ -206,50 +98,20 @@ public abstract class Context {
   public void destroy() {
     if(_running) {
       _running = false;
-      
-      _logic.stop();
-      _loader.stop();
     } else {
       cleanup();
       
       Display.destroy();
-      
-      while(!_loader.isFinished()) {
-        try {
-          synchronized(_loaderThread) {
-            _loaderThread.wait(100);
-          }
-        } catch(InterruptedException e) {
-          logger.error("Loader was interrupted", e); //$NON-NLS-1$
-        }
-      }
-      
-      _gui.destroy();
-      
-      if(_listener != null) {
-        _listener.onClosed();
-      }
     }
   }
   
   public void run() {
     _running = true;
     
-    _renderThread = Thread.currentThread();
-    _loaderThread = _loader._thread;
-    
-    _logic.start();
-    _loader.start();
-    
-    if(_listener != null) {
-      _listener.onRun();
-    }
-    
     _lastSPF = Time.get();
     
     while(_running) {
       checkContext();
-      checkLoader();
       clearContext();
       drawScene();
       updateContext();
@@ -263,33 +125,16 @@ public abstract class Context {
   
   private void checkContext() {
     if(Display.isCloseRequested()) {
-      if(_listener == null || _listener.onClosing() == ContextListener.ShouldClose.SHOULD_CLOSE) {
-        destroy();
-      }
+      destroy();
     }
     
     if(Display.wasResized()) {
-      setWH(Display.getWidth(), Display.getHeight());
-      
-      if(_listener != null) {
-        _listener.onResize();
-      }
+      updateSize();
     }
-  }
-  
-  private void checkLoader() {
-    Loader.Callback cb = _loaderCallbacks.poll();
-    if(cb != null) { cb.load(); }
   }
   
   private void clearContext() {
     GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
-  }
-  
-  public void clear(float[] c) {
-    GL11.glClearColor(c[0], c[1], c[2], c[3]);
-    clearContext();
-    GL11.glClearColor(_backColour[0], _backColour[1], _backColour[2], _backColour[3]);
   }
   
   private void updateContext() {
@@ -297,13 +142,13 @@ public abstract class Context {
   }
   
   private void syncContext() {
-    Display.sync(_fpsTarget);
+    Display.sync(_fpsLimit);
   }
   
   private void drawScene() {
     _matrix.push(() -> {
       _matrix.translate(camera);
-      _gui.draw();
+      events.raiseDraw(_matrix);
     });
   }
   
@@ -328,32 +173,32 @@ public abstract class Context {
   }
   
   private void mouse() {
-    if(_mouseX != Mouse.getX() || _mouseY != _h - Mouse.getY()) {
-      _mouseX = Mouse.getX();
-      _mouseY = _h - Mouse.getY();
-      _gui.mouseMove(_mouseX, _mouseY);
+    if(_mouseX != getMouseX() || _mouseY != getMouseY()) {
+      _mouseX = getMouseX();
+      _mouseY = getMouseY();
+      //_gui.mouseMove(_mouseX, _mouseY);
     }
     
     if(Mouse.next()) {
       if(Mouse.getEventButton() != -1) {
         if(Mouse.getEventButtonState()) {
           _mouseButton = Mouse.getEventButton();
-          _gui.mouseDown(_mouseX, _mouseY, _mouseButton);
+          //_gui.mouseDown(_mouseX, _mouseY, _mouseButton);
         } else {
           _mouseButton = -1;
-          _gui.mouseUp(_mouseX, _mouseY, Mouse.getEventButton());
+          //_gui.mouseUp(_mouseX, _mouseY, Mouse.getEventButton());
         }
       }
       
       if(Mouse.getEventDWheel() != 0) {
-        _gui.mouseWheel(Mouse.getEventDWheel());
+        //_gui.mouseWheel(Mouse.getEventDWheel());
       }
     }
   }
   
   public int[] getPixel(int x, int y) {
     ByteBuffer pixels = BufferUtils.createByteBuffer(3);
-    GL11.glReadPixels(x, _h - y, 1, 1, GL11.GL_RGB, GL11.GL_UNSIGNED_BYTE, pixels);
+    GL11.glReadPixels(x, getH() - y, 1, 1, GL11.GL_RGB, GL11.GL_UNSIGNED_BYTE, pixels);
     byte[] b = {pixels.get(0), pixels.get(1), pixels.get(2)};
     return new int[] {b[0] >= 0 ? b[0] : 256 + b[0], b[1] >= 0 ? b[1] : 256 + b[1], b[2] >= 0 ? b[2] : 256 + b[2]};
   }
@@ -372,26 +217,6 @@ public abstract class Context {
     }
     
     return colour;
-  }
-  
-  public void addLoadCallback(Loader.LoaderThread thread, Loader.Callback callback) {
-    switch(thread) {
-      case GRAPHICS:
-        if(Thread.currentThread() == _renderThread) {
-          callback.load();
-        } else {
-          _loaderCallbacks.add(callback);
-        }
-        
-        break;
-        
-      case OFFLOAD:
-        if(Thread.currentThread() == _loaderThread) {
-          callback.load();
-        } else {
-          _loader.add(callback);
-        }
-    }
   }
   
   public class Camera extends Point {

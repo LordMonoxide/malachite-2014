@@ -249,7 +249,7 @@ public class ControlEvents {
     }
   }
   
-  public interface Event <T extends EventData> {
+  public interface Event<T extends EventData> {
     public void event(T data) throws Exception;
   }
   

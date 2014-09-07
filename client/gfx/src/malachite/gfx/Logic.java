@@ -53,7 +53,7 @@ class Logic {
 
         if(logicTimer <= Time.get()) {
           logicTimer += logicTimeout;
-          _context._gui.logic();
+          //_context._gui.logic();
           
           _fps = 1000 / (Time.get() - fpsTimer);
           fpsTimer = Time.get();
@@ -79,7 +79,7 @@ class Logic {
   protected void keyboard() {
     if(Keyboard.next()) {
       if(Keyboard.getEventKeyState()) {
-        _context._gui.keyDown(Keyboard.getEventKey(), _keyDown[Keyboard.getEventKey()]);
+        //_context._gui.keyDown(Keyboard.getEventKey(), _keyDown[Keyboard.getEventKey()]);
         _keyDown[Keyboard.getEventKey()] = true;
 
         if(Keyboard.getEventCharacter() != 0) {
@@ -89,12 +89,12 @@ class Logic {
               break;
 
             default:
-              _context._gui.charDown(Keyboard.getEventCharacter());
+              //_context._gui.charDown(Keyboard.getEventCharacter());
           }
         }
       } else {
         _keyDown[Keyboard.getEventKey()] = false;
-        _context._gui.keyUp(Keyboard.getEventKey());
+        //_context._gui.keyUp(Keyboard.getEventKey());
       }
     }
   }

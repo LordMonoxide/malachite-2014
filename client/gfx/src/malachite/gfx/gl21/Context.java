@@ -12,16 +12,11 @@ public class Context extends malachite.gfx.Context {
     PixelFormat format = new PixelFormat();
     Display.create(format, attribs);
   }
-
-  @Override protected void createInstances() {
-    _matrix = new Matrix();
-    _vertex = Vertex.class;
-    _drawable = Drawable.class;
-    _scalable = Scalable.class;
-    _shader = Shader.class;
-    _program = Program.class;
+  
+  @Override protected Matrix createMatrix() {
+    return new Matrix();
   }
-
+  
   @Override protected void updateSize() {
     GL11.glViewport(0, 0, getW(), getH());
     GL11.glMatrixMode(GL11.GL_PROJECTION);

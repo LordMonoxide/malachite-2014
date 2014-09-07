@@ -6,7 +6,7 @@ import malachite.engine.Engine;
 import malachite.engine.lang.Lang;
 import malachite.gfx.Context;
 import malachite.gfx.ContextListenerAdapter;
-import malachite.gfx.Manager;
+import malachite.gfx.ContextBuilder;
 import malachite.gfx.gui.GUI;
 import malachite.gfx.gui.GUIManager;
 
@@ -24,9 +24,9 @@ public abstract class Game {
     
     lang = engine.providers.lang.lang().get();
     
-    Manager.registerContext(malachite.gfx.gl21.Context.class);
+    ContextBuilder.registerContext(malachite.gfx.gl21.Context.class);
     
-    _context = Manager.create(lang, ctx -> {
+    _context = ContextBuilder.create(lang, ctx -> {
       ctx.setResizable(true);
       ctx.setWH(1280, 720);
       ctx.setFPSTarget(60);
