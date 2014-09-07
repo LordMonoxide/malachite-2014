@@ -126,13 +126,13 @@ public class MainMenuEvents implements GUIEvents {
   private void registerEvents() {
     ControlEvents.KeyEvent login = ev -> {
       if(ev.key == 28) {
-        
+        login(loginEmail.getText(), loginPassword.getText());
       }
     };
     
     ControlEvents.KeyEvent register = ev -> {
       if(ev.key == 28) {
-        
+        register(registerEmail.getText(), registerPassword.getText(), registerPassword2.getText());
       }
     };
     
