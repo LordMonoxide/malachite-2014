@@ -1,4 +1,4 @@
 malachite
 =========
 
-A Java MUD Engine
+A highly-compartmentalised Java MUD Engine
