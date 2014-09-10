@@ -17,6 +17,18 @@ public class Context extends malachite.gfx.Context {
     return new Matrix();
   }
   
+  @Override public Drawable newDrawable() {
+    return new Drawable(vertices, _matrix);
+  }
+  
+  @Override public Scalable newScalable() {
+    return new Scalable(vertices, _matrix);
+  }
+  
+  @Override protected Vertex newVertex() {
+    return new Vertex();
+  }
+  
   @Override protected void updateSize() {
     GL11.glViewport(0, 0, getW(), getH());
     GL11.glMatrixMode(GL11.GL_PROJECTION);

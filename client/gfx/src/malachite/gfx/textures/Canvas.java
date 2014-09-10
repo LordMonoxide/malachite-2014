@@ -13,13 +13,16 @@ import org.lwjgl.opengl.EXTFramebufferObject;
 import org.lwjgl.opengl.GL11;
 
 public class Canvas {
-  private Context _context = Context.getContext();
-  private Matrix  _matrix  = Context.getMatrix();
-  private Texture _texture;
+  private final Context _context;
+  private final Matrix  _matrix;
+  private final Texture _texture;
   
-  private int _id;
+  private final int _id;
   
-  public Canvas(String name, int w, int h) {
+  public Canvas(Context context, Matrix matrix, String name, int w, int h) {
+    _context = context;
+    _matrix  = matrix;
+    
     IntBuffer buffer = ByteBuffer.allocateDirect(4).order(ByteOrder.nativeOrder()).asIntBuffer();
     EXTFramebufferObject.glGenFramebuffersEXT(buffer);
     

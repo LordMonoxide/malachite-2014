@@ -15,15 +15,17 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.nio.ByteBuffer;
+import java.util.Arrays;
 import java.util.Objects;
 
 public abstract class Context {
   private static final Logger logger = LoggerFactory.getLogger(Context.class);
   
-  public final ContextEvents events = new ContextEvents();
-  public final Camera        camera = new Camera();
+  public final VertexManager vertices = new VertexManager();
+  public final ContextEvents events   = new ContextEvents();
+  public final Camera        camera   = new Camera();
   
-  private Matrix _matrix;
+  protected Matrix _matrix;
   
   private final int[] _selectColour = {1, 0, 0, 255};
   
@@ -31,12 +33,12 @@ public abstract class Context {
   private int _mouseY = 0;
   private int _mouseButton = -1;
   
-  private int      _fpsLimit;
-  private double   _lastSPF;
-  private double   _spfAvg;
-  private int      _spfs;
-  
   private boolean _running;
+  
+  private int    _fpsLimit;
+  private double _lastSPF;
+  private double _spfAvg;
+  private int    _spfs;
   
   private final double[] _spf = new double[10];
   
@@ -61,6 +63,10 @@ public abstract class Context {
   protected abstract void cleanup();
   
   protected abstract Matrix createMatrix();
+  protected abstract Vertex newVertex();
+  
+  public abstract Drawable newDrawable();
+  public abstract Scalable newScalable();
   
   final boolean create(String title, boolean resizable, float[] clearColour, int w, int h, int fps) {
     if(!Display.isCreated()) {
@@ -226,6 +232,48 @@ public abstract class Context {
     
     @Override public float getY() {
       return _y + (_bindY != null ? -_bindY.getY() : 0) + getH() / 2;
+    }
+  }
+  
+  public final class VertexManager {
+    private static final float TEXEL_OFFSET = 0.5f;
+    
+    private VertexManager() { }
+    
+    public Vertex[] newVertices(int count) {
+      Vertex[] vertices = new Vertex[count];
+      
+      for(int i = 0; i < count; i++) {
+        vertices[i] = newVertex();
+      }
+      
+      return vertices;
+    }
+    
+    public Vertex[] createQuad(float[] loc, float[] tex, float[] col) {
+      Vertex[] v = newVertices(4);
+      v[0].set(new float[] {loc[0]         , loc[1]         }, new float[] {tex[0]         , tex[1]         }, col);
+      v[1].set(new float[] {loc[0]         , loc[1] + loc[3]}, new float[] {tex[0]         , tex[1] + tex[3]}, col);
+      v[2].set(new float[] {loc[0] + loc[2], loc[1]         }, new float[] {tex[0] + tex[2], tex[1]         }, col);
+      v[3].set(new float[] {loc[0] + loc[2], loc[1] + loc[3]}, new float[] {tex[0] + tex[2], tex[1] + tex[3]}, col);
+      return v;
+    }
+    
+    public Vertex[] createBorder(float[] loc, float[] col) {
+      Vertex[] v = newVertices(5);
+      v[0].set(new float[] {loc[0]          + TEXEL_OFFSET, loc[1]          + TEXEL_OFFSET}, new float[] {0, 0}, col);
+      v[1].set(new float[] {loc[0] + loc[2] - TEXEL_OFFSET, loc[1]          + TEXEL_OFFSET}, new float[] {0, 0}, col);
+      v[2].set(new float[] {loc[0] + loc[2] - TEXEL_OFFSET, loc[1] + loc[3] - TEXEL_OFFSET}, new float[] {0, 0}, col);
+      v[3].set(new float[] {loc[0]          + TEXEL_OFFSET, loc[1] + loc[3] - TEXEL_OFFSET}, new float[] {0, 0}, col);
+      v[4].set(new float[] {loc[0]          + TEXEL_OFFSET, loc[1]          + TEXEL_OFFSET}, new float[] {0, 0}, col);
+      return v;
+    }
+    
+    public Vertex[] createLine(float[] loc1, float[] loc2, float[] col) {
+      Vertex[] v = newVertices(2);
+      v[0].set(loc1, new float[] {0, 0}, col);
+      v[1].set(loc2, new float[] {0, 0}, col);
+      return v;
     }
   }
 }
