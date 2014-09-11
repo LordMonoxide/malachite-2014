@@ -6,6 +6,11 @@ import java.util.concurrent.ConcurrentLinkedDeque;
 public class ContextEvents {
   private Deque<DrawEvent> _draw = new ConcurrentLinkedDeque<>();
   
+  public ContextEvents onDraw(DrawEvent event) {
+    _draw.push(event);
+    return this;
+  }
+  
   void raiseDraw(Matrix matrix) {
     for(DrawEvent event : _draw) {
       DrawEventData data = new DrawEventData(matrix);
