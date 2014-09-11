@@ -13,6 +13,15 @@ public final class ContextBuilder {
       .registerContext(malachite.gfx.gl21.Context.class)
       .setTitle("Malachite").build();
     
+    Drawable d = ctx.newDrawable();
+    d.setXYWH(100, 100, 100, 100);
+    d.setColour(1, 0, 1, 1);
+    d.createQuad();
+    
+    ctx.events.onDraw(ev -> {
+      d.draw();
+    });
+    
     ctx.run();
   }
   
