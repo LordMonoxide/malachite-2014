@@ -15,7 +15,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.nio.ByteBuffer;
+import java.util.Deque;
 import java.util.Objects;
+import java.util.concurrent.ConcurrentLinkedDeque;
 
 public abstract class Context {
   private static final Logger logger = LoggerFactory.getLogger(Context.class);
@@ -23,6 +25,8 @@ public abstract class Context {
   public final VertexManager vertices = new VertexManager();
   public final ContextEvents events   = new ContextEvents();
   public final Camera        camera   = new Camera();
+  
+  private Deque<Loader.Callback> _loaderCallbacks = new ConcurrentLinkedDeque<>();
   
   protected Matrix _matrix;
   
@@ -117,6 +121,7 @@ public abstract class Context {
     
     while(_running) {
       checkContext();
+      checkLoader();
       clearContext();
       drawScene();
       updateContext();
@@ -136,6 +141,11 @@ public abstract class Context {
     if(Display.wasResized()) {
       updateSize();
     }
+  }
+  
+  private void checkLoader() {
+    Loader.Callback cb = _loaderCallbacks.poll();
+    if(cb != null) { cb.load(); }
   }
   
   private void clearContext() {
