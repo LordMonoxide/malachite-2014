@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import malachite.gfx.fonts.Font;
+import malachite.gfx.fonts.TextStream;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,8 +21,13 @@ public final class ContextBuilder {
     d.setColour(1, 0, 1, 1);
     d.createQuad();
     
+    Font font = ctx.fonts.ui;
+    TextStream text = new TextStream("This is a test");
+    
     ctx.events.onDraw(ev -> {
       d.draw();
+      
+      font.draw(10, 10, text);
     });
     
     ctx.run();

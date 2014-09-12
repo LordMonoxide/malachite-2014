@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,14 +25,14 @@ public class FontBuilder {
   
   private final Context _ctx;
   
-  private TextureBuilder _textures = TextureBuilder.getInstance();
-  private Map<String, Font> _fonts = new HashMap<>();
+  private final TextureBuilder _textures = TextureBuilder.getInstance();
+  private final Map<String, Font> _fonts = new HashMap<>();
   
-  private Font _default = getFont("Verdana");
-  public Font getDefault() { return _default; }
+  public final Font ui;
   
   public FontBuilder(Context ctx) {
-    _ctx = ctx;
+    _ctx = Objects.requireNonNull(ctx);
+    ui = getFont("Verdana");
   }
   
   public Font getFont(String name) {
@@ -50,16 +51,12 @@ public class FontBuilder {
     }
     
     Font f = new Font(_ctx);
-    Font.Face regular = getFace(f, name, java.awt.Font.PLAIN , size, startGlyph, endGlyph, extraGlyphs);
-    Font.Face bold    = getFace(f, name, java.awt.Font.BOLD  , size, startGlyph, endGlyph, extraGlyphs);
-    Font.Face italic  = getFace(f, name, java.awt.Font.ITALIC, size, startGlyph, endGlyph, extraGlyphs);
-    
-    regular._font = f;
-    bold   ._font = f;
-    italic ._font = f;
     
     _ctx.threads.gfx(() -> {
-      f.load(regular, bold, italic);
+      getFace(f.regular, name, java.awt.Font.PLAIN , size, startGlyph, endGlyph, extraGlyphs);
+      getFace(f.bold   , name, java.awt.Font.BOLD  , size, startGlyph, endGlyph, extraGlyphs);
+      getFace(f.italic , name, java.awt.Font.ITALIC, size, startGlyph, endGlyph, extraGlyphs);
+      
       _fonts.put(fullName, f);
       
       logger.info("Font \"{}\" created.", fullName); //$NON-NLS-1$
@@ -68,7 +65,7 @@ public class FontBuilder {
     return f;
   }
   
-  public Font.Face getFace(Font fn, String name, int style, int size, int startGlyph, int endGlyph, int... extraGlyphs) {
+  public void getFace(Font.Face face, String name, int style, int size, int startGlyph, int endGlyph, int... extraGlyphs) {
     java.awt.Font font = new java.awt.Font(name, style, size);
     FontRenderContext rendCont = new FontRenderContext(null, true, true);
     FontMetrics fm = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB_PRE).getGraphics().getFontMetrics(font);
@@ -112,7 +109,7 @@ public class FontBuilder {
         i2 += m.w * 4;
       }
       
-      Font.Glyph g = fn.new Glyph();
+      Font.Glyph g = new Font.Glyph();
       g.code = m.code;
       g.w = fm.charWidth(m.code);
       g.h = m.h;
@@ -129,12 +126,9 @@ public class FontBuilder {
     buffer.put(data);
     buffer.position(0);
     
-    Font.Face f = fn.new Face();
-    f._glyph = glyph;
-    f._texture = _textures.getTexture("Font." + font.getFontName() + '.' + font.getSize(), w, h, buffer); //$NON-NLS-1
-    f._h = metrics.get(0).h;
-    
-    return f;
+    face._glyph = glyph;
+    face._texture = _textures.getTexture("Font." + font.getFontName() + '.' + font.getSize(), w, h, buffer); //$NON-NLS-1
+    face._h = metrics.get(0).h;
   }
   
   private int addGlyph(int i, java.awt.Font font, FontRenderContext rendCont, List<Metrics> metrics, int high) {

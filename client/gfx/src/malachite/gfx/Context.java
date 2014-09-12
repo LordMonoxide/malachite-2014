@@ -1,5 +1,6 @@
 package malachite.gfx;
 
+import malachite.gfx.fonts.FontBuilder;
 import malachite.gfx.util.Point;
 import malachite.gfx.util.Time;
 
@@ -26,6 +27,7 @@ public abstract class Context {
   public final ContextEvents events   = new ContextEvents();
   public final Camera        camera   = new Camera();
   public final Threads       threads  = new Threads();
+  public final FontBuilder   fonts;
   public final Matrix        matrix;
   
   private Deque<Runnable> _loaderCallbacks = new ConcurrentLinkedDeque<>();
@@ -46,6 +48,7 @@ public abstract class Context {
   private final double[] _spf = new double[10];
   
   protected Context() {
+    fonts  = new FontBuilder(this);
     matrix = Objects.requireNonNull(createMatrix());
   }
   

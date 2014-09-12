@@ -12,30 +12,26 @@ public class Font {
   private static Colour white = new Colour(new float[] {1, 1, 1, 1});
   
   private final Context _ctx;
-  private Face _regular, _bold, _italic;
   
-  private Events _events = new Events(this);
   private boolean _loaded;
+  
+  public final Events _events = new Events(this);
+  public final Face regular, bold, italic;
   
   Font(Context ctx) {
     _ctx = ctx;
+    
+    this.regular = new Face(ctx);
+    this.bold    = new Face(ctx);
+    this.italic  = new Face(ctx);
   }
   
-  public Face regular() { return _regular; }
-  public Face bold   () { return _bold;    }
-  public Face italic () { return _italic;  }
-  
-  public Events events() { return _events; }
   public boolean loaded() { return _loaded; }
   
-  void load(Face regular, Face bold, Face italic) {
-    _regular = regular;
-    _bold    = bold;
-    _italic  = italic;
-    
-    _regular.load();
-    _bold   .load();
-    _italic .load();
+  void load() {
+    regular.load();
+    bold   .load();
+    italic .load();
     
     _loaded = true;
     _events.raiseLoad();
@@ -54,14 +50,14 @@ public class Font {
   }
   
   public void draw(float x, float y, int w, int h, TextStream text, int mask) {
-    if(text == null)     { return; }
-    if(_regular == null) { return; }
+    if(text == null)    { return; }
+    if(regular == null) { return; }
     
     _ctx.matrix.push(() -> {
       _ctx.matrix.translate(x, y);
       
       _ctx.matrix.push(() -> {
-        FontRenderState state = new FontRenderState(_regular, 0, 0, w, h, mask, _ctx.matrix);
+        FontRenderState state = new FontRenderState(regular, 0, 0, w, h, mask, _ctx.matrix);
         
         white.render(state);
         
@@ -72,18 +68,21 @@ public class Font {
     });
   }
   
-  public class Face {
-    Font    _font;
+  public static class Face {
+    private final Context _ctx;
+    
     Texture _texture;
     Glyph[] _glyph;
     int     _h;
     
-    Face() { }
+    Face(Context ctx) {
+      _ctx = ctx;
+    }
     
     void load() {
       for(Glyph glyph : _glyph) {
         if(glyph != null) {
-          glyph.create(_texture);
+          glyph.create(_ctx.newDrawable(), _texture);
         }
       }
     }
@@ -140,15 +139,15 @@ public class Font {
     }
   }
   
-  protected class Glyph {
+  protected static class Glyph {
     protected Drawable sprite;
     protected int code;
     protected int  w,  h;
     protected int tx, ty;
     protected int tw, th;
     
-    protected void create(Texture texture) {
-      sprite = _ctx.newDrawable();
+    protected void create(Drawable d, Texture texture) {
+      sprite = d;
       sprite.setTexture(texture);
       sprite.setWH(tw, th);
       sprite.setTXYWH(tx, ty, tw, th);
