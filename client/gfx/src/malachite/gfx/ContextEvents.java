@@ -43,7 +43,10 @@ public class ContextEvents {
     private static final long serialVersionUID = 1L;
     
     public CallbackException(Event<?> event, EventData data, Throwable cause) {
-      super("An unhandled exception was thrown in event " + event + " with data " + data, cause); //$NON-NLS-1$ //$NON-NLS-2$
+      super("An unhandled exception was thrown in an event!\n" + 
+        "Event: " + event + '\n' +
+        "Data:  " + data  + '\n' +
+        "Stacktrace:", cause); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
     }
   }
 }
