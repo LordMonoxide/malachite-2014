@@ -5,20 +5,21 @@ import java.util.concurrent.ConcurrentLinkedDeque;
 
 import malachite.gfx.Context;
 import malachite.gfx.Drawable;
-import malachite.gfx.Matrix;
 import malachite.gfx.fonts.TextStream.Colour;
 import malachite.gfx.textures.Texture;
 
 public class Font {
   private static Colour white = new Colour(new float[] {1, 1, 1, 1});
   
-  private Matrix _matrix = Context.getMatrix();
+  private final Context _ctx;
   private Face _regular, _bold, _italic;
   
   private Events _events = new Events(this);
   private boolean _loaded;
   
-  Font() { }
+  Font(Context ctx) {
+    _ctx = ctx;
+  }
   
   public Face regular() { return _regular; }
   public Face bold   () { return _bold;    }
@@ -56,23 +57,22 @@ public class Font {
     if(text == null)     { return; }
     if(_regular == null) { return; }
     
-    _matrix.push();
-    _matrix.translate(x, y);
-    _matrix.push();
-    
-    FontRenderState state = new FontRenderState(_regular, 0, 0, w, h, mask, _matrix);
-    
-    white.render(state);
-    
-    for(TextStreamable s : text) {
-      s.render(state);
-    }
-    
-    _matrix.pop();
-    _matrix.pop();
+    _ctx.matrix.push(() -> {
+      _ctx.matrix.translate(x, y);
+      
+      _ctx.matrix.push(() -> {
+        FontRenderState state = new FontRenderState(_regular, 0, 0, w, h, mask, _ctx.matrix);
+        
+        white.render(state);
+        
+        for(TextStreamable s : text) {
+          s.render(state);
+        }
+      });
+    });
   }
   
-  public static class Face {
+  public class Face {
     Font    _font;
     Texture _texture;
     Glyph[] _glyph;
@@ -140,7 +140,7 @@ public class Font {
     }
   }
   
-  protected static class Glyph {
+  protected class Glyph {
     protected Drawable sprite;
     protected int code;
     protected int  w,  h;
@@ -148,7 +148,7 @@ public class Font {
     protected int tw, th;
     
     protected void create(Texture texture) {
-      sprite = Context.newDrawable();
+      sprite = _ctx.newDrawable();
       sprite.setTexture(texture);
       sprite.setWH(tw, th);
       sprite.setTXYWH(tx, ty, tw, th);

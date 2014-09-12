@@ -25,10 +25,10 @@ public abstract class Context {
   public final VertexManager vertices = new VertexManager();
   public final ContextEvents events   = new ContextEvents();
   public final Camera        camera   = new Camera();
+  public final Threads       threads  = new Threads();
+  public final Matrix        matrix;
   
-  private Deque<Loader.Callback> _loaderCallbacks = new ConcurrentLinkedDeque<>();
-  
-  protected Matrix _matrix;
+  private Deque<Runnable> _loaderCallbacks = new ConcurrentLinkedDeque<>();
   
   private final int[] _selectColour = {1, 0, 0, 255};
   
@@ -44,6 +44,10 @@ public abstract class Context {
   private int    _spfs;
   
   private final double[] _spf = new double[10];
+  
+  protected Context() {
+    matrix = Objects.requireNonNull(createMatrix());
+  }
   
   public String  getTitle()     { return Display.getTitle(); }
   public boolean getResizable() { return Display.isResizable(); }
@@ -97,8 +101,6 @@ public abstract class Context {
     
     Keyboard.enableRepeatEvents(true);
     
-    _matrix = Objects.requireNonNull(createMatrix());
-    
     updateSize();
     
     return true;
@@ -144,8 +146,8 @@ public abstract class Context {
   }
   
   private void checkLoader() {
-    Loader.Callback cb = _loaderCallbacks.poll();
-    if(cb != null) { cb.load(); }
+    Runnable cb = _loaderCallbacks.poll();
+    if(cb != null) { cb.run(); }
   }
   
   private void clearContext() {
@@ -161,9 +163,9 @@ public abstract class Context {
   }
   
   private void drawScene() {
-    _matrix.push(() -> {
-      _matrix.translate(camera);
-      events.raiseDraw(_matrix);
+    matrix.push(() -> {
+      matrix.translate(camera);
+      events.raiseDraw(matrix);
     });
   }
   
@@ -232,6 +234,13 @@ public abstract class Context {
     }
     
     return colour;
+  }
+  
+  public class Threads {
+    public Threads gfx(Runnable callback) {
+      _loaderCallbacks.push(callback);
+      return this;
+    }
   }
   
   public class Camera extends Point {
