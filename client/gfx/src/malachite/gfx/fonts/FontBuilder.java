@@ -56,6 +56,7 @@ public class FontBuilder {
       getFace(f.regular, name, java.awt.Font.PLAIN , size, startGlyph, endGlyph, extraGlyphs);
       getFace(f.bold   , name, java.awt.Font.BOLD  , size, startGlyph, endGlyph, extraGlyphs);
       getFace(f.italic , name, java.awt.Font.ITALIC, size, startGlyph, endGlyph, extraGlyphs);
+      f.load();
       
       _fonts.put(fullName, f);
       
