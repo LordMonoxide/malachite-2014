@@ -21,9 +21,9 @@ public class Font {
   Font(Context ctx) {
     _ctx = ctx;
     
-    this.regular = new Face(ctx);
-    this.bold    = new Face(ctx);
-    this.italic  = new Face(ctx);
+    this.regular = new Face(this);
+    this.bold    = new Face(this);
+    this.italic  = new Face(this);
   }
   
   public boolean loaded() { return _loaded; }
@@ -68,15 +68,15 @@ public class Font {
     });
   }
   
-  public static class Face {
-    private final Context _ctx;
+  public class Face {
+    public final Font font;
     
     Texture _texture;
     Glyph[] _glyph;
     int     _h;
     
-    Face(Context ctx) {
-      _ctx = ctx;
+    private Face(Font font) {
+      this.font = font;
     }
     
     void load() {

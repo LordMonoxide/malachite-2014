@@ -138,15 +138,15 @@ public class TextStream implements Iterable<TextStreamable> {
     @Override public void render(FontRenderState state) {
       switch(_face) {
         case REGULAR:
-          state.face = state.face._font.regular();
+          state.face = state.face.font.regular;
           break;
           
         case BOLD:
-          state.face = state.face._font.bold();
+          state.face = state.face.font.bold;
           break;
           
         case ITALIC:
-          state.face = state.face._font.italic();
+          state.face = state.face.font.italic;
           break;
       }
     }
