@@ -17,7 +17,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import malachite.gfx.Context;
-import malachite.gfx.textures.TextureBuilder;
 import malachite.gfx.util.Math;
 
 public class FontBuilder {
@@ -25,7 +24,6 @@ public class FontBuilder {
   
   private final Context _ctx;
   
-  private final TextureBuilder _textures = TextureBuilder.getInstance();
   private final Map<String, Font> _fonts = new HashMap<>();
   
   public final Font ui;
@@ -128,7 +126,7 @@ public class FontBuilder {
     buffer.position(0);
     
     face._glyph = glyph;
-    face._texture = _textures.getTexture("Font." + font.getFontName() + '.' + font.getSize(), w, h, buffer); //$NON-NLS-1
+    face._texture = _ctx.textures.getTexture("Font." + font.getFontName() + '.' + font.getSize(), w, h, buffer); //$NON-NLS-1
     face._h = metrics.get(0).h;
   }
   

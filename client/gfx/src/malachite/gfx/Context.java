@@ -1,6 +1,7 @@
 package malachite.gfx;
 
 import malachite.gfx.fonts.FontBuilder;
+import malachite.gfx.textures.TextureBuilder;
 import malachite.gfx.util.Point;
 import malachite.gfx.util.Time;
 
@@ -23,12 +24,13 @@ import java.util.concurrent.ConcurrentLinkedDeque;
 public abstract class Context {
   private static final Logger logger = LoggerFactory.getLogger(Context.class);
   
-  public final VertexManager vertices = new VertexManager();
-  public final ContextEvents events   = new ContextEvents();
-  public final Camera        camera   = new Camera();
-  public final Threads       threads  = new Threads();
-  public final FontBuilder   fonts;
-  public final Matrix        matrix;
+  public final VertexManager  vertices = new VertexManager();
+  public final ContextEvents  events   = new ContextEvents();
+  public final Camera         camera   = new Camera();
+  public final Threads        threads  = new Threads();
+  public final TextureBuilder textures;
+  public final FontBuilder    fonts;
+  public final Matrix         matrix;
   
   private final Deque<Runnable> _loaderCallbacks = new ConcurrentLinkedDeque<>();
   
@@ -48,8 +50,9 @@ public abstract class Context {
   private final double[] _spf = new double[10];
   
   protected Context() {
-    fonts  = new FontBuilder(this);
-    matrix = Objects.requireNonNull(createMatrix());
+    textures = new TextureBuilder();
+    fonts    = new FontBuilder(this);
+    matrix   = Objects.requireNonNull(createMatrix());
   }
   
   public String  getTitle()     { return Display.getTitle(); }

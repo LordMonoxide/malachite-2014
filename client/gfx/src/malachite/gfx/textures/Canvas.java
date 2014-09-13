@@ -27,7 +27,7 @@ public class Canvas {
     EXTFramebufferObject.glGenFramebuffersEXT(buffer);
     
     _id = buffer.get();
-    _texture = TextureBuilder.getInstance().getTexture(name, w, h, null);
+    _texture = _context.textures.getTexture(name, w, h, null);
     
     bind();
     EXTFramebufferObject.glFramebufferTexture2DEXT(EXTFramebufferObject.GL_FRAMEBUFFER_EXT, EXTFramebufferObject.GL_COLOR_ATTACHMENT0_EXT, GL11.GL_TEXTURE_2D, _texture.getID(), 0);
