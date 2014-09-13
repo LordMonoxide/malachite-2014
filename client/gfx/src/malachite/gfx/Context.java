@@ -30,7 +30,7 @@ public abstract class Context {
   public final FontBuilder   fonts;
   public final Matrix        matrix;
   
-  private Deque<Runnable> _loaderCallbacks = new ConcurrentLinkedDeque<>();
+  private final Deque<Runnable> _loaderCallbacks = new ConcurrentLinkedDeque<>();
   
   private final int[] _selectColour = {1, 0, 0, 255};
   

@@ -9,9 +9,9 @@ public class Texture {
     return "Texture " + _id + ' ' + _name + " (" + _w + 'x' + _h + ')'; //$NON-NLS-1$ //$NON-NLS-2$
   }
   
-  private int _id;
-  private String _name;
-  private int _w, _h;
+  private final int _id;
+  private final String _name;
+  private final int _w, _h;
 
   protected Texture(String name, int w, int h, ByteBuffer data) {
     _name = name;

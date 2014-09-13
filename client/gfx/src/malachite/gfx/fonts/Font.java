@@ -15,7 +15,7 @@ public class Font {
   
   private boolean _loaded;
   
-  public final Events _events = new Events(this);
+  public final Events events = new Events(this);
   public final Face regular, bold, italic;
   
   Font(Context ctx) {
@@ -34,7 +34,7 @@ public class Font {
     italic .load();
     
     _loaded = true;
-    _events.raiseLoad();
+    events.raiseLoad();
   }
   
   public void draw(float x, float y, TextStream text) {

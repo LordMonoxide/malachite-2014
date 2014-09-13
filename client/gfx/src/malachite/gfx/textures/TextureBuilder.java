@@ -24,7 +24,7 @@ public class TextureBuilder {
   
   private static final String TEXTURES_DIR = "../data/gfx/textures/"; //$NON-NLS-1$
 
-  private Map<String, Texture> _textures = new HashMap<>();
+  private final Map<String, Texture> _textures = new HashMap<>();
   
   public synchronized Texture getTexture(String name, int w, int h, ByteBuffer data) {
     double t = Time.get();

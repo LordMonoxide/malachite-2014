@@ -4,7 +4,7 @@ import java.util.Deque;
 import java.util.concurrent.ConcurrentLinkedDeque;
 
 public class ContextEvents {
-  private Deque<DrawEvent> _draw = new ConcurrentLinkedDeque<>();
+  private final Deque<DrawEvent> _draw = new ConcurrentLinkedDeque<>();
   
   public ContextEvents onDraw(DrawEvent event) {
     _draw.push(event);

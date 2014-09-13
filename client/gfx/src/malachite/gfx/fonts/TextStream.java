@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 public class TextStream implements Iterable<TextStreamable> {
-  private ArrayList<TextStreamable> _stream = new ArrayList<>();
+  private final ArrayList<TextStreamable> _stream = new ArrayList<>();
   
   public TextStream() { }
   
