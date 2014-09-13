@@ -6,11 +6,14 @@ import java.util.Map;
 import org.lwjgl.opengl.GL20;
 
 public class ShaderBuilder {
-  private static ShaderBuilder _instance = new ShaderBuilder();
-  public static ShaderBuilder getInstance() { return _instance; }
+  /* ----------------------------
+   * -- TODO: Shader fragments --
+   * ----------------------------
+   * Allow shaders to be chained together via inputs/outputs
+   */
   
-  private Map<String, Shader > _shader  = new HashMap<>();
-  private Map<String, Program> _program = new HashMap<>();
+  private final Map<String, Shader > _shader  = new HashMap<>();
+  private final Map<String, Program> _program = new HashMap<>();
   
   private Shader getShader(String file, int type) {
     Shader s = _shader.get(file);
