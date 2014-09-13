@@ -1,11 +1,10 @@
 package malachite.gfx;
 
-import malachite.gfx.Context.VertexManager;
 import malachite.gfx.textures.Texture;
 
 public abstract class Drawable {
-  protected final VertexManager _vm;
-  protected final Matrix _matrix;
+  protected final Context _ctx;
+  protected final Matrix  _matrix;
   
   protected Texture _texture;
   protected Program _program;
@@ -18,8 +17,8 @@ public abstract class Drawable {
   protected int _renderMode;
   protected Vertex[] _vertex;
   
-  protected Drawable(VertexManager vm, Matrix matrix) {
-    _vm     = vm;
+  protected Drawable(Context ctx, Matrix matrix) {
+    _ctx    = ctx;
     _matrix = matrix;
   }
   

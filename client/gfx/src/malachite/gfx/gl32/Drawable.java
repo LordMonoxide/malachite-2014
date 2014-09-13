@@ -2,8 +2,6 @@ package malachite.gfx.gl32;
 
 import java.nio.FloatBuffer;
 
-import malachite.gfx.Loader;
-
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL15;
@@ -20,8 +18,10 @@ public class Drawable extends malachite.gfx.Drawable {
   private Matrix4f _trans;
   private Shader _shader;
   
-  public Drawable() {
-    malachite.gfx.Context.getContext().addLoadCallback(Loader.LoaderThread.GRAPHICS, () -> {
+  public Drawable(Context ctx, malachite.gfx.Matrix matrix) {
+    super(ctx, matrix);
+    
+    _ctx.threads.gfx(() -> {
       // Generate vertex array and buffers
       _vaID = GL30.glGenVertexArrays();
       _vbID = GL15.glGenBuffers();
@@ -38,19 +38,19 @@ public class Drawable extends malachite.gfx.Drawable {
   
   @Override public void createQuad() {
     _renderMode = GL11.GL_TRIANGLE_STRIP;
-    _vertex = malachite.gfx.Vertex.createQuad(new float[] {0, 0, _loc[2], _loc[3]}, _tex, _col);
+    _vertex = _ctx.vertices.createQuad(new float[] {0, 0, _loc[2], _loc[3]}, _tex, _col);
     updateBuffer();
   }
   
   @Override public void createBorder() {
     _renderMode = GL11.GL_LINE_STRIP;
-    _vertex = malachite.gfx.Vertex.createBorder(new float[] {0, 0, _loc[2], _loc[3]}, _col);
+    _vertex = _ctx.vertices.createBorder(new float[] {0, 0, _loc[2], _loc[3]}, _col);
     updateBuffer();
   }
   
   @Override public void createLine() {
     _renderMode = GL11.GL_LINE;
-    _vertex = malachite.gfx.Vertex.createLine(new float[] {_loc[0], _loc[1]}, new float[] {_loc[2], _loc[3]}, _col);
+    _vertex = _ctx.vertices.createLine(new float[] {_loc[0], _loc[1]}, new float[] {_loc[2], _loc[3]}, _col);
     updateBuffer();
   }
   
@@ -97,7 +97,7 @@ public class Drawable extends malachite.gfx.Drawable {
     
     buffer.flip();
     
-    malachite.gfx.Context.getContext().addLoadCallback(Loader.LoaderThread.GRAPHICS, () -> {
+    _ctx.threads.gfx(() -> {
       _shader = _texture == null ? ShaderBuilder.getBox() : ShaderBuilder.getDefault();
       
       GL30.glBindVertexArray(_vaID);

@@ -1,29 +1,27 @@
 package malachite.gfx.gl21;
 
-import malachite.gfx.Context.VertexManager;
-import malachite.gfx.Matrix;
 import malachite.gfx.Vertex;
 
 import org.lwjgl.opengl.GL11;
 
 public class Drawable extends malachite.gfx.Drawable {
-  protected Drawable(VertexManager vm, Matrix matrix) {
-    super(vm, matrix);
+  protected Drawable(Context ctx, malachite.gfx.Matrix matrix) {
+    super(ctx, matrix);
   }
 
   @Override public void createQuad() {
     _renderMode = GL11.GL_TRIANGLE_STRIP;
-    _vertex = _vm.createQuad(new float[] {0, 0, _loc[2], _loc[3]}, _tex, _col);
+    _vertex = _ctx.vertices.createQuad(new float[] {0, 0, _loc[2], _loc[3]}, _tex, _col);
   }
 
   @Override public void createBorder() {
     _renderMode = GL11.GL_LINE_STRIP;
-    _vertex = _vm.createBorder(new float[] {0, 0, _loc[2], _loc[3]}, _col);
+    _vertex = _ctx.vertices.createBorder(new float[] {0, 0, _loc[2], _loc[3]}, _col);
   }
 
   @Override public void createLine() {
     _renderMode = GL11.GL_LINE;
-    _vertex = _vm.createLine(new float[] {_loc[0], _loc[1]}, new float[] {_loc[2], _loc[3]}, _col);
+    _vertex = _ctx.vertices.createLine(new float[] {_loc[0], _loc[1]}, new float[] {_loc[2], _loc[3]}, _col);
   }
 
   @Override public void draw() {

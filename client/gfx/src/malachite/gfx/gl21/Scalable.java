@@ -1,7 +1,5 @@
 package malachite.gfx.gl21;
 
-import malachite.gfx.Context.VertexManager;
-import malachite.gfx.Matrix;
 import malachite.gfx.Vertex;
 import malachite.gfx.textures.Texture;
 
@@ -20,8 +18,8 @@ public class Scalable extends malachite.gfx.Scalable {
   private float _borderV2;
   private float _tw, _th, _ts;
 
-  public Scalable(VertexManager vm, Matrix matrix) {
-    super(vm, matrix);
+  public Scalable(Context ctx, malachite.gfx.Matrix matrix) {
+    super(ctx, matrix);
     _renderMode = GL11.GL_TRIANGLE_STRIP;
   }
 
@@ -81,7 +79,7 @@ public class Scalable extends malachite.gfx.Scalable {
 
     int i = 0;
     for(int n = 0; n < border.length; n++) {
-      Vertex[] v = _vm.createQuad(border[n], borderS[n], _col);
+      Vertex[] v = _ctx.vertices.createQuad(border[n], borderS[n], _col);
       _vertex[i++] = v[0];
       _vertex[i++] = v[2];
       _vertex[i++] = v[1];

@@ -1,5 +1,7 @@
 package malachite.gfx.gl32;
 
+import malachite.gfx.Scalable;
+
 import org.lwjgl.LWJGLException;
 import org.lwjgl.opengl.ContextAttribs;
 import org.lwjgl.opengl.Display;
@@ -14,11 +16,21 @@ public class Context extends malachite.gfx.Context {
     Display.create(pixelFormat, contextAttribs);
   }
   
-  @Override protected void createInstances() {
-    malachite.gfx.Context._matrix = new Matrix();
-    _matrix   = (Matrix)malachite.gfx.Context._matrix;
-    _vertex   = Vertex.class;
-    _drawable = Drawable.class;
+  @Override protected Matrix createMatrix() {
+    return new Matrix();
+  }
+  
+  @Override public Drawable newDrawable() {
+    return new Drawable(this, matrix);
+  }
+  
+  @Override public Scalable newScalable() {
+    //TODO return new Scalable(this, matrix);
+    return null;
+  }
+  
+  @Override protected Vertex newVertex() {
+    return new Vertex();
   }
   
   @Override protected void updateSize() {
