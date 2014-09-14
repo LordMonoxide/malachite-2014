@@ -68,18 +68,18 @@ public class Matrix extends malachite.gfx.Matrix {
   }
   
   @Override public void translate(float x, float y) {
-    _matrix.peek().translate(new Vector2f(x, y));
+    _top.translate(new Vector2f(x, y));
   }
   
   @Override public void rotate(float angle, float x, float y) {
-    _matrix.peek().rotate(angle, new Vector3f(x, y, 0));
+    _top.rotate(angle, new Vector3f(x, y, 0));
   }
   
   @Override public void scale(float x, float y) {
-    _matrix.peek().scale(new Vector3f(x, y, 0f));
+    _top.scale(new Vector3f(x, y, 0f));
   }
   
   @Override public void reset() {
-    _matrix.peek().load(getIdentity());
+    _top.load(getIdentity());
   }
 }
