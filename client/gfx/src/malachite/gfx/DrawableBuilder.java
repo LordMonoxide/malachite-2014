@@ -8,9 +8,10 @@ public final class DrawableBuilder {
   private Texture _texture;
   private Program _program;
   
-  private final float[] _loc = {0, 0, 0, 0};
-  private final float[] _tex = {0, 0, 0, 0};
-  private final float[] _col = {1, 1, 1, 1};
+  private final float[] _loc =  {0, 0};
+  private final float[] _size = {0, 0};
+  private final float[] _tex =  {0, 0, 0, 0};
+  private final float[] _col =  {1, 1, 1, 1};
   
   private boolean _visible = true;
   
@@ -34,7 +35,7 @@ public final class DrawableBuilder {
   }
   
   public DrawableBuilder wh(float w, float h) {
-    _loc[2] = w; _loc[3] = h;
+    _size[0] = w; _size[1] = h;
     return this;
   }
   
@@ -44,7 +45,7 @@ public final class DrawableBuilder {
   }
   
   public DrawableBuilder uv(float u, float v) {
-    _loc[2] = u; _loc[3] = v;
+    _tex[2] = u; _tex[3] = v;
     return this;
   }
   
@@ -59,18 +60,18 @@ public final class DrawableBuilder {
   }
   
   private Drawable build() {
-    return _ctx.newDrawable(_texture, _program, _loc, _tex, _col, _visible);
+    return _ctx.newDrawable(_texture, _program, _loc, _visible);
   }
   
   public Drawable buildQuad() {
     Drawable d = build();
-    d.createQuad();
+    d.createQuad(_size, _tex, _col);
     return d;
   }
   
   public Drawable buildBorder() {
     Drawable d = build();
-    d.createBorder();
+    d.createBorder(_size, _tex, _col);
     return d;
   }
 }

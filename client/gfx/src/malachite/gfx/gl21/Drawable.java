@@ -7,18 +7,21 @@ import malachite.gfx.textures.Texture;
 import org.lwjgl.opengl.GL11;
 
 public class Drawable extends malachite.gfx.Drawable {
-  protected Drawable(Context ctx, Texture texture, Program program, float[] loc, float[] tex, float[] col, boolean visible) {
-    super(ctx, texture, program, loc, tex, col, visible);
+  protected int _renderMode;
+  protected Vertex[] _vertex;
+  
+  protected Drawable(Context ctx, Texture texture, Program program, float[] loc, boolean visible) {
+    super(ctx, texture, program, loc, visible);
   }
   
-  @Override protected void createQuad() {
+  @Override protected void createQuad(float[] size, float[] tex, float[] col) {
     _renderMode = GL11.GL_TRIANGLE_STRIP;
-    _vertex = _ctx.vertices.createQuad(new float[] {0, 0, _loc[2], _loc[3]}, _tex, _col);
+    _vertex = _ctx.vertices.createQuad(new float[] {0, 0, size[0], size[1]}, tex, col);
   }
   
-  @Override protected void createBorder() {
+  @Override protected void createBorder(float[] size, float[] tex, float[] col) {
     _renderMode = GL11.GL_LINE_STRIP;
-    _vertex = _ctx.vertices.createBorder(new float[] {0, 0, _loc[2], _loc[3]}, _col);
+    _vertex = _ctx.vertices.createBorder(new float[] {0, 0, size[0], size[1]}, col);
   }
   
   @Override public void draw() {

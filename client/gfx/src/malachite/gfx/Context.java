@@ -79,7 +79,7 @@ public abstract class Context {
   protected abstract Matrix createMatrix();
   protected abstract Vertex newVertex();
   
-  protected abstract Drawable newDrawable(Texture texture, Program program, float[] loc, float[] tex, float[] col, boolean visible);
+  protected abstract Drawable newDrawable(Texture texture, Program program, float[] loc, boolean visible);
   protected abstract Scalable newScalable();
   
   public DrawableBuilder drawable() {

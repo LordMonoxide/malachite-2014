@@ -9,15 +9,10 @@ public abstract class Drawable {
   protected final Texture _texture;
   protected final Program _program;
   
-  protected final float[] _loc = {0, 0, 0, 0};
-  protected final float[] _tex = {0, 0, 1, 1};
-  protected final float[] _col = {1, 1, 1, 1};
+  protected final float[] _loc = {0, 0};
   protected boolean _visible = true;
   
-  protected int _renderMode;
-  protected Vertex[] _vertex;
-  
-  protected Drawable(Context ctx, Texture texture, Program program, float[] loc, float[] tex, float[] col, boolean visible) {
+  protected Drawable(Context ctx, Texture texture, Program program, float[] loc, boolean visible) {
     _ctx     = ctx;
     _matrix  = _ctx.matrix;
     _texture = texture;
@@ -25,8 +20,6 @@ public abstract class Drawable {
     _visible = visible;
     
     for(int i = 0; i < _loc.length; i++) { _loc[i] = loc[i]; }
-    for(int i = 0; i < _tex.length; i++) { _tex[i] = tex[i]; }
-    for(int i = 0; i < _col.length; i++) { _col[i] = col[i]; }
   }
   
   public boolean isVisible() {
@@ -40,8 +33,8 @@ public abstract class Drawable {
   public void show() { setVisible(true ); }
   public void hide() { setVisible(false); }
   
-  protected abstract void createQuad();
-  protected abstract void createBorder();
+  protected abstract void createQuad  (float[] size, float[] tex, float[] col);
+  protected abstract void createBorder(float[] size, float[] tex, float[] col);
   
   public abstract void draw();
 }
