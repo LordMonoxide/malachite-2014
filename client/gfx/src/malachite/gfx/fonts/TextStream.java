@@ -100,7 +100,8 @@ public class TextStream implements Iterable<TextStreamable> {
             }
             
             //TODO: This is just a hack to temporarily get font colour working
-            glyph.setColour(state.c);
+            //XXX
+            //glyph.setColour(state.c);
             glyph.draw();
             state.matrix.translate(glyph.w, 0);
         }

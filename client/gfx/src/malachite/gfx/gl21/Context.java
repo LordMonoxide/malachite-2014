@@ -1,5 +1,8 @@
 package malachite.gfx.gl21;
 
+import malachite.gfx.Program;
+import malachite.gfx.textures.Texture;
+
 import org.lwjgl.LWJGLException;
 import org.lwjgl.opengl.ContextAttribs;
 import org.lwjgl.opengl.Display;
@@ -17,8 +20,8 @@ public class Context extends malachite.gfx.Context {
     return new Matrix();
   }
   
-  @Override public Drawable newDrawable() {
-    return new Drawable(this, matrix);
+  @Override public Drawable newDrawable(Texture texture, Program program, float[] loc, float[] tex, float[] col, boolean visible) {
+    return new Drawable(this, texture, program, loc, tex, col, visible);
   }
   
   @Override public Scalable newScalable() {

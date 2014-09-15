@@ -1,12 +1,14 @@
 package malachite.gfx.gl21;
 
+import malachite.gfx.Program;
 import malachite.gfx.Vertex;
+import malachite.gfx.textures.Texture;
 
 import org.lwjgl.opengl.GL11;
 
 public class Drawable extends malachite.gfx.Drawable {
-  protected Drawable(Context ctx, malachite.gfx.Matrix matrix) {
-    super(ctx, matrix);
+  protected Drawable(Context ctx, Texture texture, Program program, float[] loc, float[] tex, float[] col, boolean visible) {
+    super(ctx, texture, program, loc, tex, col, visible);
   }
 
   @Override public void createQuad() {

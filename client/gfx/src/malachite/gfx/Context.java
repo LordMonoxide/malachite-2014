@@ -1,6 +1,7 @@
 package malachite.gfx;
 
 import malachite.gfx.fonts.FontBuilder;
+import malachite.gfx.textures.Texture;
 import malachite.gfx.textures.TextureBuilder;
 import malachite.gfx.util.Point;
 import malachite.gfx.util.Time;
@@ -78,8 +79,12 @@ public abstract class Context {
   protected abstract Matrix createMatrix();
   protected abstract Vertex newVertex();
   
-  public abstract Drawable newDrawable();
-  public abstract Scalable newScalable();
+  protected abstract Drawable newDrawable(Texture texture, Program program, float[] loc, float[] tex, float[] col, boolean visible);
+  protected abstract Scalable newScalable();
+  
+  public DrawableBuilder drawable() {
+    return new DrawableBuilder(this);
+  }
   
   final boolean create(String title, boolean resizable, float[] clearColour, int w, int h, int fps) {
     if(!Display.isCreated()) {

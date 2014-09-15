@@ -82,7 +82,7 @@ public class Font {
     void load() {
       for(Glyph glyph : _glyph) {
         if(glyph != null) {
-          glyph.create(_ctx.newDrawable(), _texture);
+          glyph.create(_ctx, _texture);
         }
       }
     }
@@ -146,22 +146,13 @@ public class Font {
     protected int tx, ty;
     protected int tw, th;
     
-    protected void create(Drawable d, Texture texture) {
-      sprite = d;
-      sprite.setTexture(texture);
-      sprite.setWH(tw, th);
-      sprite.setTXYWH(tx, ty, tw, th);
-      sprite.createQuad();
-    }
-    
-    protected void setColour(float[] c) {
-      sprite.setColour(c);
-      sprite.createQuad();
-    }
-    
-    protected void setColour(float r, float g, float b, float a) {
-      sprite.setColour(r, g, b, a);
-      sprite.createQuad();
+    protected void create(Context ctx, Texture texture) {
+      sprite = ctx.drawable()
+        .texture(texture)
+        .wh(tw, th)
+        .st(tx, ty)
+        .uv(tw, th)
+        .buildQuad();
     }
     
     public void draw() {

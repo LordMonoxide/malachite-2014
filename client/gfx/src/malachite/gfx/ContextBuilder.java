@@ -16,10 +16,10 @@ public final class ContextBuilder {
       .registerContext(malachite.gfx.gl21.Context.class)
       .setTitle("Malachite").build();
     
-    Drawable d = ctx.newDrawable();
-    d.setXYWH(100, 100, 100, 100);
-    d.setColour(1, 0, 1, 1);
-    d.createQuad();
+    Drawable d = ctx.drawable()
+      .xy(100, 100).wh(100, 100)
+      .colour(1, 0, 1, 1)
+      .buildQuad();
     
     Font font = ctx.fonts.ui;
     TextStream text = new TextStream("This is a test");
