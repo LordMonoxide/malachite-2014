@@ -58,9 +58,25 @@ public final class DrawableBuilder {
     return this;
   }
   
+  private Drawable build() {
+    return _ctx.newDrawable(_texture, _program, _loc, _tex, _col, _visible);
+  }
+  
   public Drawable buildQuad() {
-    Drawable d = _ctx.newDrawable(_texture, _program, _loc, _tex, _col, _visible);
+    Drawable d = build();
     d.createQuad();
+    return d;
+  }
+  
+  public Drawable buildBorder() {
+    Drawable d = build();
+    d.createBorder();
+    return d;
+  }
+  
+  public Drawable buildLine() {
+    Drawable d = build();
+    d.createLine();
     return d;
   }
 }
