@@ -17,13 +17,9 @@ public abstract class Matrix {
     translate(p.getX(), p.getY());
   }
   
-  public void push(Event e) {
+  public void push(Runnable e) {
     push();
     e.run();
     pop();
-  }
-  
-  public interface Event {
-    public void run();
   }
 }
