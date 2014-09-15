@@ -297,12 +297,5 @@ public abstract class Context {
       v[4].set(new float[] {loc[0]          + TEXEL_OFFSET, loc[1]          + TEXEL_OFFSET}, new float[] {0, 0}, col);
       return v;
     }
-    
-    public Vertex[] createLine(float[] loc1, float[] loc2, float[] col) {
-      Vertex[] v = newVertices(2);
-      v[0].set(loc1, new float[] {0, 0}, col);
-      v[1].set(loc2, new float[] {0, 0}, col);
-      return v;
-    }
   }
 }

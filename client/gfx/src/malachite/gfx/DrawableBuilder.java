@@ -73,10 +73,4 @@ public final class DrawableBuilder {
     d.createBorder();
     return d;
   }
-  
-  public Drawable buildLine() {
-    Drawable d = build();
-    d.createLine();
-    return d;
-  }
 }

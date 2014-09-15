@@ -40,8 +40,8 @@ public abstract class Drawable {
   public void show() { setVisible(true ); }
   public void hide() { setVisible(false); }
   
-  public abstract void createQuad();
-  public abstract void createBorder();
-  public abstract void createLine();
+  protected abstract void createQuad();
+  protected abstract void createBorder();
+  
   public abstract void draw();
 }
