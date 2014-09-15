@@ -161,7 +161,7 @@ public class Font {
   }
   
   public static class Events {
-    private Deque<Event> _load = new ConcurrentLinkedDeque<>();
+    private Deque<Runnable> _load = new ConcurrentLinkedDeque<>();
     
     private Font _this;
     
@@ -169,7 +169,7 @@ public class Font {
       _this = font;
     }
     
-    public void addLoadHandler(Event e) {
+    public void addLoadHandler(Runnable e) {
       _load.add(e);
       
       if(_this._loaded) {
@@ -178,14 +178,10 @@ public class Font {
     }
     
     public void raiseLoad() {
-      Event e = null;
+      Runnable e = null;
       while((e = _load.poll()) != null) {
         e.run();
       }
-    }
-    
-    public interface Event {
-      void run();
     }
   }
   
