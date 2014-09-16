@@ -7,6 +7,7 @@ import malachite.gfx.shaders.Uniform;
 
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL20;
+import org.lwjgl.util.vector.Vector4f;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,13 +38,18 @@ public abstract class Program {
     return GL20.glGetUniformLocation(id, name);
   }
   
-  public void setUniform4f(int location, float v0, float v1, float v2, float v3) {
-    GL20.glUniform4f(location, v0, v1, v2, v3);
-  }
-  
   public void addUniform(Uniform uniform) {
     _uniforms.put(uniform.name, uniform);
     uniform.bind(this);
+  }
+  
+  public <T> void setUniform(int id, T value) {
+    if(value instanceof Float) {
+      GL20.glUniform1f(id, (float)value);
+    } else if(value instanceof Vector4f) {
+      Vector4f vec = (Vector4f)value;
+      GL20.glUniform4f(id, vec.x, vec.y, vec.z, vec.w);
+    }
   }
   
   public void use() {

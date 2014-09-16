@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.lwjgl.opengl.GL20;
 
+import malachite.gfx.shaders.DesaturateFragment;
 import malachite.gfx.shaders.Fragment;
 import malachite.gfx.shaders.RecolourFragment;
 import malachite.gfx.shaders.Uniform;
@@ -20,6 +21,11 @@ public final class ShaderBuilder {
   
   public ShaderBuilder recolour() {
     _fragments.add(new RecolourFragment());
+    return this;
+  }
+  
+  public ShaderBuilder desaturate() {
+    _fragments.add(new DesaturateFragment());
     return this;
   }
   
@@ -46,7 +52,7 @@ public final class ShaderBuilder {
     
     for(Fragment frag : _fragments) {
       for(String out : frag.outputModifiers()) {
-        fsh.append("gl_FragColor = gl_FragColor ").append(out).append(";\n");
+        fsh.append(out).append(";\n");
       }
     }
     

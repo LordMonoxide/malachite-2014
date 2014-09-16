@@ -20,12 +20,15 @@ public final class ContextBuilder {
     
     Program shader = ctx.shaders
       .recolour()
+      .desaturate()
       .build();
     
-    Uniform recolour = shader.getUniform("recolour");
+    Uniform recolour   = shader.getUniform("recolour");
+    Uniform desaturate = shader.getUniform("desat_amount");
     
     shader.use();
-    recolour.set(new Vector4f(1, 1, 1, 0.5f));
+    recolour.set(new Vector4f(1, 1, 1, 0.8f));
+    desaturate.set(0.75f);
     
     Drawable d = ctx.drawable()
       .program(shader)
