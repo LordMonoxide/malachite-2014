@@ -1,49 +1,57 @@
 package malachite.gfx;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
-import org.lwjgl.opengl.GL20;
+import malachite.gfx.shaders.Fragment;
+import malachite.gfx.shaders.RecolourFragment;
 
-public class ShaderBuilder {
-  /* ----------------------------
-   * -- TODO: Shader fragments --
-   * ----------------------------
-   * Allow shaders to be chained together via inputs/outputs
-   */
+public final class ShaderBuilder {
+  private final Context _ctx;
   
-  private final Map<String, Shader > _shader  = new HashMap<>();
-  private final Map<String, Program> _program = new HashMap<>();
+  private final List<Fragment> _fragments = new ArrayList<>();
   
-  private Shader getShader(String file, int type) {
-    Shader s = _shader.get(file);
-    if(s == null) {
-      s = Context.newShader();
-      if(!s.load(file, type)) {
-        return null;
+  protected ShaderBuilder(Context ctx) {
+    _ctx = ctx;
+  }
+  
+  public ShaderBuilder recolour() {
+    _fragments.add(new RecolourFragment());
+    return this;
+  }
+  
+  public Shader build() {
+    StringBuilder vsh = new StringBuilder()
+      .append("#version 120\n")
+      .append("void main(void) {\n")
+        .append("gl_TexCoord[0] = gl_MultiTexCoord0;\n")
+        .append("gl_Position = gl_ProjectionMatrix * gl_ModelViewMatrix * gl_Vertex;\n")
+      .append('}');
+    
+    StringBuilder fsh = new StringBuilder()
+      .append("#version 120\n")
+      .append("uniform sampler2D texture;\n");
+    
+    for(Fragment frag : _fragments) {
+      for(String uniform : frag.getUniforms()) {
+        fsh.append("uniform ").append(uniform).append(";\n");
       }
     }
     
-    return s;
-  }
-  
-  public Program getProgram(String vertex, String fragment) {
-    String file = vertex + '|' + fragment;
+    fsh.append("void main(void) {\n")
+      .append("gl_FragColor = texture2D(texture, gl_TexCoord[0].st);\n");
     
-    Program prog = _program.get(file);
-    
-    if(prog == null) {
-      Program p = Context.newProgram();
-      
-      Context.getContext().addLoadCallback(Loader.LoaderThread.GRAPHICS, () -> {
-        Shader vsh = getShader(vertex,   GL20.GL_VERTEX_SHADER);
-        Shader fsh = getShader(fragment, GL20.GL_FRAGMENT_SHADER);
-        p.load(vsh, fsh);
-      });
-      
-      return p;
+    for(Fragment frag : _fragments) {
+      for(String out : frag.outputModifiers()) {
+        fsh.append("gl_FragColor = gl_FragColor ").append(out).append(";\n");
+      }
     }
     
-    return prog;
+    fsh.append('}');
+    
+    System.out.println(vsh);
+    System.out.println(fsh);
+    
+    return null;
   }
 }

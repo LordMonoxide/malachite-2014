@@ -16,6 +16,10 @@ public final class ContextBuilder {
       .registerContext(malachite.gfx.gl21.Context.class)
       .setTitle("Malachite").build();
     
+    Shader s = ctx.shaders
+      .recolour()
+      .build();
+    
     Drawable d = ctx.drawable()
       .texture(ctx.textures.getTexture("mal.png"))
       .autosize()

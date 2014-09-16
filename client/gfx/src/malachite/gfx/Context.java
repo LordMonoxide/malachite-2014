@@ -29,6 +29,7 @@ public abstract class Context {
   public final ContextEvents  events   = new ContextEvents();
   public final Camera         camera   = new Camera();
   public final Threads        threads  = new Threads();
+  public final ShaderBuilder  shaders;
   public final TextureBuilder textures;
   public final FontBuilder    fonts;
   public final Matrix         matrix;
@@ -51,6 +52,7 @@ public abstract class Context {
   private final double[] _spf = new double[10];
   
   protected Context() {
+    shaders  = new ShaderBuilder(this);
     textures = new TextureBuilder();
     fonts    = new FontBuilder(this);
     matrix   = Objects.requireNonNull(createMatrix());
@@ -78,6 +80,9 @@ public abstract class Context {
   
   protected abstract Matrix createMatrix();
   protected abstract Vertex newVertex();
+  
+  protected abstract Shader  newShader (String source, int type);
+  protected abstract Program newProgram(Shader vsh, Shader fsh);
   
   protected abstract Drawable newDrawable(Texture texture, Program program, float[] loc, boolean visible);
   protected abstract Scalable newScalable(Texture texture, Program program, float[] loc, boolean visible);
