@@ -1,6 +1,5 @@
 package malachite.gfx.gl21;
 
-import malachite.gfx.Program;
 import malachite.gfx.textures.Texture;
 
 import org.lwjgl.LWJGLException;
@@ -20,11 +19,19 @@ public class Context extends malachite.gfx.Context {
     return new Matrix();
   }
   
-  @Override protected Drawable newDrawable(Texture texture, Program program, float[] loc, boolean visible) {
+  @Override protected Shader newShader(String source, int type) {
+    return new Shader(source, type);
+  }
+  
+  @Override protected Program newProgram(malachite.gfx.Shader vsh, malachite.gfx.Shader fsh) {
+    return new Program(vsh, fsh);
+  }
+  
+  @Override protected Drawable newDrawable(Texture texture, malachite.gfx.Program program, float[] loc, boolean visible) {
     return new Drawable(this, texture, program, loc, visible);
   }
   
-  @Override protected Scalable newScalable(Texture texture, Program program, float[] loc, boolean visible) {
+  @Override protected Scalable newScalable(Texture texture, malachite.gfx.Program program, float[] loc, boolean visible) {
     return new Scalable(this, texture, program, loc, visible);
   }
   

@@ -16,16 +16,16 @@ public abstract class Program {
     }
   }
   
-  protected int _id;
+  public final int id;
   
-  public int id() { return _id; }
-  
-  public abstract boolean load(Shader vsh, Shader fsh);
+  protected Program(int id) {
+    this.id = id;
+  }
   
   public void use() {
-    if(_current != _id) {
-      _current = _id;
-      GL20.glUseProgram(_id);
+    if(_current != id) {
+      _current = id;
+      GL20.glUseProgram(id);
       
       int error = GL11.glGetError();
       if(error != GL11.GL_NO_ERROR) {
@@ -35,8 +35,7 @@ public abstract class Program {
   }
   
   public String getError() {
-    int size = GL20.glGetProgrami(_id, GL20.GL_INFO_LOG_LENGTH);
-    return GL20.glGetProgramInfoLog(_id, size);
-
+    int size = GL20.glGetProgrami(id, GL20.GL_INFO_LOG_LENGTH);
+    return GL20.glGetProgramInfoLog(id, size);
   }
 }

@@ -10,18 +10,15 @@ import org.slf4j.LoggerFactory;
 public class Program extends malachite.gfx.Program {
   private static final Logger logger = LoggerFactory.getLogger(Program.class);
   
-  @Override public boolean load(Shader vsh, Shader fsh) {
-    _id = GL20.glCreateProgram();
+  protected Program(Shader vsh, Shader fsh) {
+    super(GL20.glCreateProgram());
     
-    GL20.glAttachShader(_id, vsh.id());
-    GL20.glAttachShader(_id, fsh.id());
-    GL20.glLinkProgram(_id);
+    GL20.glAttachShader(id, vsh.id);
+    GL20.glAttachShader(id, fsh.id);
+    GL20.glLinkProgram(id);
     
-    if(GL20.glGetProgrami(_id, GL20.GL_LINK_STATUS) == GL11.GL_FALSE) {
+    if(GL20.glGetProgrami(id, GL20.GL_LINK_STATUS) == GL11.GL_FALSE) {
       logger.error("Error linking shader:\n{}", getError()); //$NON-NLS-1$
-      return false;
     }
-    
-    return true;
   }
 }
