@@ -22,6 +22,14 @@ public abstract class Program {
     this.id = id;
   }
   
+  public int getUniformLocation(String name) {
+    return GL20.glGetUniformLocation(id, name);
+  }
+  
+  public void setUniform(int location, float v0, float v1, float v2, float v3) {
+    GL20.glUniform4f(location, v0, v1, v2, v3);
+  }
+  
   public void use() {
     if(_current != id) {
       _current = id;

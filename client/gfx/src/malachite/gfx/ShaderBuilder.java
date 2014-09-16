@@ -3,6 +3,8 @@ package malachite.gfx;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.lwjgl.opengl.GL20;
+
 import malachite.gfx.shaders.Fragment;
 import malachite.gfx.shaders.RecolourFragment;
 
@@ -20,7 +22,7 @@ public final class ShaderBuilder {
     return this;
   }
   
-  public Shader build() {
+  public Program build() {
     StringBuilder vsh = new StringBuilder()
       .append("#version 120\n")
       .append("void main(void) {\n")
@@ -49,9 +51,8 @@ public final class ShaderBuilder {
     
     fsh.append('}');
     
-    System.out.println(vsh);
     System.out.println(fsh);
     
-    return null;
+    return _ctx.newProgram(_ctx.newShader(vsh.toString(), GL20.GL_VERTEX_SHADER), _ctx.newShader(fsh.toString(), GL20.GL_FRAGMENT_SHADER));
   }
 }
