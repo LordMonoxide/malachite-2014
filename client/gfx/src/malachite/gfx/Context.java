@@ -80,7 +80,7 @@ public abstract class Context {
   protected abstract Vertex newVertex();
   
   protected abstract Drawable newDrawable(Texture texture, Program program, float[] loc, boolean visible);
-  protected abstract Scalable newScalable();
+  protected abstract Scalable newScalable(Texture texture, Program program, float[] loc, boolean visible);
   
   public DrawableBuilder drawable() {
     return new DrawableBuilder(this);

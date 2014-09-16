@@ -1,11 +1,14 @@
 package malachite.gfx.gl21;
 
+import malachite.gfx.Program;
 import malachite.gfx.Vertex;
 import malachite.gfx.textures.Texture;
 
 import org.lwjgl.opengl.GL11;
 
 public class Scalable extends malachite.gfx.Scalable {
+  private final Vertex[] _vertex = new Vertex[36];
+  
   private float _borderL;
   private float _borderT;
   private float _borderR;
@@ -18,17 +21,8 @@ public class Scalable extends malachite.gfx.Scalable {
   private float _borderV2;
   private float _tw, _th, _ts;
 
-  public Scalable(Context ctx, malachite.gfx.Matrix matrix) {
-    super(ctx, matrix);
-    _renderMode = GL11.GL_TRIANGLE_STRIP;
-  }
-
-  @Override public void setTexture(Texture texture) {
-    _texture = texture;
-
-    if(_texture != null) {
-      setWH(texture.getW(), texture.getH());
-    }
+  public Scalable(Context ctx, Texture texture, Program program, float[] loc, boolean visible) {
+    super(ctx, texture, program, loc, visible);
   }
 
   @Override public void setSize(float[] s1, float[] s2, float tw, float th, float ts) {
@@ -47,10 +41,8 @@ public class Scalable extends malachite.gfx.Scalable {
     _ts = ts;
   }
 
-  @Override public void createQuad() {
+  @Override protected void createQuad(float[] size, float[] tex, float[] col) {
     if(_texture == null) { return; }
-
-    _vertex = new Vertex[36];
 
     float[][] border = {
       {0, 0, _borderL, _borderT},
@@ -79,20 +71,16 @@ public class Scalable extends malachite.gfx.Scalable {
 
     int i = 0;
     for(int n = 0; n < border.length; n++) {
-      Vertex[] v = _ctx.vertices.createQuad(border[n], borderS[n], _col);
+      Vertex[] v = _ctx.vertices.createQuad(border[n], borderS[n], col);
       _vertex[i++] = v[0];
       _vertex[i++] = v[2];
       _vertex[i++] = v[1];
       _vertex[i++] = v[3];
     }
   }
-
-  @Override public void createBorder() {
-
-  }
-
-  @Override public void createLine() {
-
+  
+  @Override protected void createBorder(float[] size, float[] tex, float[] col) {
+    
   }
 
   @Override public void draw() {
@@ -108,7 +96,7 @@ public class Scalable extends malachite.gfx.Scalable {
       GL11.glDisable(GL11.GL_TEXTURE_2D);
     }
 
-    GL11.glBegin(_renderMode);
+    GL11.glBegin(GL11.GL_TRIANGLE_STRIP);
 
     for(Vertex vertex : _vertex) {
       if(vertex == null) { continue; }

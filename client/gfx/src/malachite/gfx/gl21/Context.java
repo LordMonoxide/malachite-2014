@@ -20,12 +20,12 @@ public class Context extends malachite.gfx.Context {
     return new Matrix();
   }
   
-  @Override public Drawable newDrawable(Texture texture, Program program, float[] loc, boolean visible) {
+  @Override protected Drawable newDrawable(Texture texture, Program program, float[] loc, boolean visible) {
     return new Drawable(this, texture, program, loc, visible);
   }
   
-  @Override public Scalable newScalable() {
-    return new Scalable(this, matrix);
+  @Override protected Scalable newScalable(Texture texture, Program program, float[] loc, boolean visible) {
+    return new Scalable(this, texture, program, loc, visible);
   }
   
   @Override protected Vertex newVertex() {
