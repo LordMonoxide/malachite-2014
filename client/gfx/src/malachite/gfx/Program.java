@@ -1,5 +1,10 @@
 package malachite.gfx;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import malachite.gfx.shaders.Uniform;
+
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL20;
 import org.slf4j.Logger;
@@ -18,16 +23,27 @@ public abstract class Program {
   
   public final int id;
   
+  private final Map<String, Uniform> _uniforms = new HashMap<>();
+  
   protected Program(int id) {
     this.id = id;
+  }
+  
+  public Uniform getUniform(String name) {
+    return _uniforms.get(name);
   }
   
   public int getUniformLocation(String name) {
     return GL20.glGetUniformLocation(id, name);
   }
   
-  public void setUniform(int location, float v0, float v1, float v2, float v3) {
+  public void setUniform4f(int location, float v0, float v1, float v2, float v3) {
     GL20.glUniform4f(location, v0, v1, v2, v3);
+  }
+  
+  public void addUniform(Uniform uniform) {
+    _uniforms.put(uniform.name, uniform);
+    uniform.bind(this);
   }
   
   public void use() {

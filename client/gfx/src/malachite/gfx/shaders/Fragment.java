@@ -1,6 +1,6 @@
 package malachite.gfx.shaders;
 
 public interface Fragment {
-  public String[] getUniforms();
-  public String[] outputModifiers();
+  public Uniform[] getUniforms();
+  public String [] outputModifiers();
 }

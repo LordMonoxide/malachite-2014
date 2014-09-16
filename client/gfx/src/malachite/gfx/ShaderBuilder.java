@@ -7,6 +7,7 @@ import org.lwjgl.opengl.GL20;
 
 import malachite.gfx.shaders.Fragment;
 import malachite.gfx.shaders.RecolourFragment;
+import malachite.gfx.shaders.Uniform;
 
 public final class ShaderBuilder {
   private final Context _ctx;
@@ -35,8 +36,8 @@ public final class ShaderBuilder {
       .append("uniform sampler2D texture;\n");
     
     for(Fragment frag : _fragments) {
-      for(String uniform : frag.getUniforms()) {
-        fsh.append("uniform ").append(uniform).append(";\n");
+      for(Uniform uniform : frag.getUniforms()) {
+        fsh.append(uniform).append('\n');
       }
     }
     
@@ -53,6 +54,14 @@ public final class ShaderBuilder {
     
     System.out.println(fsh);
     
-    return _ctx.newProgram(_ctx.newShader(vsh.toString(), GL20.GL_VERTEX_SHADER), _ctx.newShader(fsh.toString(), GL20.GL_FRAGMENT_SHADER));
+    Program program = _ctx.newProgram(_ctx.newShader(vsh.toString(), GL20.GL_VERTEX_SHADER), _ctx.newShader(fsh.toString(), GL20.GL_FRAGMENT_SHADER));
+    
+    for(Fragment frag : _fragments) {
+      for(Uniform uniform : frag.getUniforms()) {
+        program.addUniform(uniform);
+      }
+    }
+    
+    return program;
   }
 }
