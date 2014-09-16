@@ -1,7 +1,5 @@
 package malachite.gfx.shaders;
 
-import org.lwjgl.util.vector.Vector4f;
-
 import malachite.gfx.Program;
 
 public class Uniform {
