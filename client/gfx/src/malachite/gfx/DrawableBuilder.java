@@ -1,5 +1,7 @@
 package malachite.gfx;
 
+import java.util.Objects;
+
 import malachite.gfx.textures.Texture;
 
 public final class DrawableBuilder {
@@ -8,10 +10,10 @@ public final class DrawableBuilder {
   private Texture _texture;
   private Program _program;
   
-  private final float[] _loc =  {0, 0};
+  private final float[] _loc  = {0, 0};
   private final float[] _size = {0, 0};
-  private final float[] _tex =  {0, 0, 0, 0};
-  private final float[] _col =  {1, 1, 1, 1};
+  private final float[] _tex  = {0, 0, 1, 1};
+  private final float[] _col  = {1, 1, 1, 1};
   
   private boolean _visible = true;
   
@@ -20,12 +22,12 @@ public final class DrawableBuilder {
   }
   
   public DrawableBuilder texture(Texture texture) {
-    _texture = texture;
+    _texture = Objects.requireNonNull(texture);
     return this;
   }
   
   public DrawableBuilder program(Program program) {
-    _program = program;
+    _program = Objects.requireNonNull(program);
     return this;
   }
   
@@ -51,6 +53,11 @@ public final class DrawableBuilder {
   
   public DrawableBuilder colour(float r, float g, float b, float a) {
     _col[0] = r; _col[1] = g; _col[2] = b; _col[3] = a;
+    return this;
+  }
+  
+  public DrawableBuilder autosize() {
+    wh(_texture.getW(), _texture.getH());
     return this;
   }
   

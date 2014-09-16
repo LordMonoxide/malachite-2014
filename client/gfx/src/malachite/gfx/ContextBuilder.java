@@ -17,7 +17,9 @@ public final class ContextBuilder {
       .setTitle("Malachite").build();
     
     Drawable d = ctx.drawable()
-      .xy(100, 100).wh(100, 100)
+      .texture(ctx.textures.getTexture("mal.png"))
+      .autosize()
+      .xy(-300, -300)
       .colour(1, 0, 1, 1)
       .buildQuad();
     
