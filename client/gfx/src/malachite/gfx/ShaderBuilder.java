@@ -15,7 +15,7 @@ public final class ShaderBuilder {
   
   private final List<Fragment> _fragments = new ArrayList<>();
   
-  protected ShaderBuilder(Context ctx) {
+  ShaderBuilder(Context ctx) {
     _ctx = ctx;
   }
   

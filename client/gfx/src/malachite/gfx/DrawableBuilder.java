@@ -17,7 +17,7 @@ public final class DrawableBuilder {
   
   private boolean _visible = true;
   
-  protected DrawableBuilder(Context ctx) {
+  DrawableBuilder(Context ctx) {
     _ctx = ctx;
   }
   
