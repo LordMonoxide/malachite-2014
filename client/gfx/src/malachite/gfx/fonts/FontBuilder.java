@@ -13,10 +13,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+
 import malachite.gfx.Context;
+import malachite.gfx.Program;
 import malachite.gfx.util.Math;
 
 public class FontBuilder {
@@ -51,10 +54,12 @@ public class FontBuilder {
     Font f = new Font(_ctx);
     
     _ctx.threads.gfx(() -> {
+      Program program = _ctx.shader().recolour().build();
+      
       getFace(f.regular, name, java.awt.Font.PLAIN , size, startGlyph, endGlyph, extraGlyphs);
       getFace(f.bold   , name, java.awt.Font.BOLD  , size, startGlyph, endGlyph, extraGlyphs);
       getFace(f.italic , name, java.awt.Font.ITALIC, size, startGlyph, endGlyph, extraGlyphs);
-      f.load();
+      f.load(program);
       
       _fonts.put(fullName, f);
       

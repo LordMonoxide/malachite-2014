@@ -8,7 +8,6 @@ import malachite.gfx.fonts.Font;
 import malachite.gfx.fonts.TextStream;
 import malachite.gfx.shaders.Uniform;
 
-import org.lwjgl.util.vector.Vector4f;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,16 +17,13 @@ public final class ContextBuilder {
       .registerContext(malachite.gfx.gl21.Context.class)
       .setTitle("Malachite").build();
     
-    Program shader = ctx.shaders
-      .recolour()
+    Program shader = ctx.shader()
       .desaturate()
       .build();
     
-    Uniform recolour   = shader.getUniform("recolour");
     Uniform desaturate = shader.getUniform("desat_amount");
     
     shader.use();
-    recolour.set(new Vector4f(1, 1, 1, 0.8f));
     desaturate.set(0.75f);
     
     Drawable d = ctx.drawable()
@@ -35,7 +31,7 @@ public final class ContextBuilder {
       .texture(ctx.textures.getTexture("tiles/0.png"))
       .autosize()
       .xy(-300, -300)
-      .colour(1, 0, 1, 1)
+      //.colour(1, 0, 1, 1)
       .buildQuad();
     
     Font font = ctx.fonts.ui;

@@ -3,6 +3,8 @@ package malachite.gfx.fonts;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import org.lwjgl.util.vector.Vector4f;
+
 public class TextStream implements Iterable<TextStreamable> {
   private final ArrayList<TextStreamable> _stream = new ArrayList<>();
   
@@ -52,7 +54,7 @@ public class TextStream implements Iterable<TextStreamable> {
     return new Colour(r, g, b, a);
   }
   
-  public Colour colour(float[] c) {
+  public Colour colour(Vector4f c) {
     return new Colour(c);
   }
   
@@ -154,9 +156,9 @@ public class TextStream implements Iterable<TextStreamable> {
   }
   
   public static class Colour implements TextStreamable {
-    private float[] _c = new float[] {1, 1, 1, 1};
+    private Vector4f _c = new Vector4f(1, 1, 1, 1);
     
-    public Colour(float[] c) {
+    public Colour(Vector4f c) {
       setColour(c);
     }
     
@@ -164,23 +166,23 @@ public class TextStream implements Iterable<TextStreamable> {
       setColour(r, g, b, a);
     }
     
-    public float[] getColour() {
+    public Vector4f getColour() {
       return _c;
     }
     
-    public void setColour(float[] c) {
+    public void setColour(Vector4f c) {
       _c = c;
     }
     
     public void setColour(float r, float g, float b, float a) {
-      _c[0] = r;
-      _c[1] = g;
-      _c[2] = b;
-      _c[3] = a;
+      _c.x = r;
+      _c.y = g;
+      _c.z = b;
+      _c.w = a;
     }
     
     @Override public void render(FontRenderState state) {
-      state.c = _c;
+      state.recolour.set(_c);
     }
   }
   

@@ -29,7 +29,6 @@ public abstract class Context {
   public final ContextEvents  events   = new ContextEvents();
   public final Camera         camera   = new Camera();
   public final Threads        threads  = new Threads();
-  public final ShaderBuilder  shaders;
   public final TextureBuilder textures;
   public final FontBuilder    fonts;
   public final Matrix         matrix;
@@ -52,7 +51,6 @@ public abstract class Context {
   private final double[] _spf = new double[10];
   
   protected Context() {
-    shaders  = new ShaderBuilder(this);
     textures = new TextureBuilder();
     fonts    = new FontBuilder(this);
     matrix   = Objects.requireNonNull(createMatrix());
@@ -89,6 +87,10 @@ public abstract class Context {
   
   public DrawableBuilder drawable() {
     return new DrawableBuilder(this);
+  }
+  
+  public ShaderBuilder shader() {
+    return new ShaderBuilder(this);
   }
   
   final boolean create(String title, boolean resizable, float[] clearColour, int w, int h, int fps) {
@@ -133,6 +135,8 @@ public abstract class Context {
   }
   
   public void run() {
+    events.raiseLoad();
+    
     _running = true;
     
     _lastSPF = Time.get();

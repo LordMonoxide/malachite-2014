@@ -4,11 +4,29 @@ import java.util.Deque;
 import java.util.concurrent.ConcurrentLinkedDeque;
 
 public class ContextEvents {
+  private final Deque<LoadEvent> _load = new ConcurrentLinkedDeque<>();
   private final Deque<DrawEvent> _draw = new ConcurrentLinkedDeque<>();
+  
+  public ContextEvents onLoad(LoadEvent event) {
+    _load.push(event);
+    return this;
+  }
   
   public ContextEvents onDraw(DrawEvent event) {
     _draw.push(event);
     return this;
+  }
+  
+  void raiseLoad() {
+    for(LoadEvent event : _load) {
+      LoadEventData data = new LoadEventData();
+      
+      try {
+        event.event(data);
+      } catch(Exception ex) {
+        throw new CallbackException(event, data, ex);
+      }
+    }
   }
   
   void raiseDraw(Matrix matrix) {
@@ -29,7 +47,12 @@ public class ContextEvents {
   
   public interface EventData { }
   
+  public interface LoadEvent extends Event<LoadEventData> { }
   public interface DrawEvent extends Event<DrawEventData> { }
+  
+  public class LoadEventData implements EventData {
+    
+  }
   
   public class DrawEventData implements EventData {
     public final Matrix matrix;

@@ -36,6 +36,7 @@ public class Uniform {
   
   //TODO package-protect
   public <T> void set(T value) {
+    _program.use();
     _program.setUniform(_id, value);
   }
   

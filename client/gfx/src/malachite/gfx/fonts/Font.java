@@ -5,13 +5,17 @@ import java.util.concurrent.ConcurrentLinkedDeque;
 
 import malachite.gfx.Context;
 import malachite.gfx.Drawable;
+import malachite.gfx.Program;
 import malachite.gfx.fonts.TextStream.Colour;
+import malachite.gfx.shaders.Uniform;
 import malachite.gfx.textures.Texture;
 
 public class Font {
-  private static Colour white = new Colour(new float[] {1, 1, 1, 1});
+  private static Colour white = new Colour(1, 1, 1, 1);
   
   private final Context _ctx;
+  
+  private Uniform _recolour;
   
   private boolean _loaded;
   
@@ -28,12 +32,14 @@ public class Font {
   
   public boolean loaded() { return _loaded; }
   
-  void load() {
-    regular.load();
-    bold   .load();
-    italic .load();
+  void load(Program program) {
+    regular.load(program);
+    bold   .load(program);
+    italic .load(program);
     
-    _loaded = true;
+    _recolour = program.getUniform("recolour");
+    
+    _loaded  = true;
     events.raiseLoad();
   }
   
@@ -57,7 +63,7 @@ public class Font {
       _ctx.matrix.translate(x, y);
       
       _ctx.matrix.push(() -> {
-        FontRenderState state = new FontRenderState(regular, 0, 0, w, h, mask, _ctx.matrix);
+        FontRenderState state = new FontRenderState(regular, 0, 0, w, h, mask, _ctx.matrix, _recolour);
         
         white.render(state);
         
@@ -79,10 +85,10 @@ public class Font {
       this.font = font;
     }
     
-    void load() {
+    void load(Program program) {
       for(Glyph glyph : _glyph) {
         if(glyph != null) {
-          glyph.create(_ctx, _texture);
+          glyph.create(_ctx, program, _texture);
         }
       }
     }
@@ -146,12 +152,13 @@ public class Font {
     protected int tx, ty;
     protected int tw, th;
     
-    protected void create(Context ctx, Texture texture) {
+    protected void create(Context ctx, Program program, Texture texture) {
       sprite = ctx.drawable()
+        .program(program)
         .texture(texture)
         .wh(tw, th)
-        .st(tx, ty)
-        .uv(tw, th)
+        .st((float)tx / texture.getW(), (float)ty / texture.getH())
+        .uv((float)tw / texture.getW(), (float)th / texture.getH())
         .buildQuad();
     }
     

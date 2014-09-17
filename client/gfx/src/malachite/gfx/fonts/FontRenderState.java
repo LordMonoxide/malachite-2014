@@ -1,16 +1,17 @@
 package malachite.gfx.fonts;
 
 import malachite.gfx.Matrix;
+import malachite.gfx.shaders.Uniform;
 
 class FontRenderState {
   Font.Face face;
   int x, y, w, h;
   int mask;
-  float[] c;
+  Uniform recolour;
   
   Matrix matrix;
   
-  FontRenderState(Font.Face face, int x, int y, int w, int h, int mask, Matrix matrix) {
+  FontRenderState(Font.Face face, int x, int y, int w, int h, int mask, Matrix matrix, Uniform recolour) {
     this.face = face;
     this.x = x;
     this.y = y;
@@ -18,6 +19,7 @@ class FontRenderState {
     this.h = h;
     this.mask = mask;
     this.matrix = matrix;
+    this.recolour = recolour;
   }
   
   void newLine() {

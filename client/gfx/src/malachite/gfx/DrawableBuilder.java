@@ -42,7 +42,7 @@ public final class DrawableBuilder {
   }
   
   public DrawableBuilder st(float s, float t) {
-    _tex[0] = s; _loc[1] = t;
+    _tex[0] = s; _tex[1] = t;
     return this;
   }
   
