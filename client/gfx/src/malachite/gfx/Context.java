@@ -84,13 +84,9 @@ public abstract class Context {
   protected abstract Drawable newDrawable(Texture texture, Program program, float[] loc, boolean visible);
   protected abstract Scalable newScalable(Texture texture, Program program, float[] loc, boolean visible);
   
-  public DrawableBuilder drawable() {
-    return new DrawableBuilder(this);
-  }
-  
-  public ShaderBuilder shader() {
-    return new ShaderBuilder(this);
-  }
+  public DrawableBuilder drawable() { return new DrawableBuilder(this); }
+  public ShaderBuilder   shader  () { return new ShaderBuilder  (this); }
+  public CanvasBuilder   canvas  () { return new CanvasBuilder  (this); }
   
   final boolean create(String title, boolean resizable, float[] clearColour, int w, int h, int fps) {
     if(!Display.isCreated()) {
