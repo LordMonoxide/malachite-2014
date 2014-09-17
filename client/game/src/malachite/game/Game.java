@@ -18,13 +18,13 @@ public abstract class Game {
     
     lang = engine.providers.lang.lang().get();
     
-    _context = new ContextBuilder().registerContext(malachite.gfx.gl21.Context.class).build();
-    _context.events.onDraw(ev -> {
+    context = new ContextBuilder().registerContext(malachite.gfx.gl21.Context.class).build();
+    context.events.onDraw(ev -> {
       
     });
   }
   
   public void run() {
-    _context.run();
+    context.run();
   }
 }
