@@ -70,7 +70,7 @@ public class ControlList {
     _size--;
   }
 
-  public void killFocus() {
+  void killFocus() {
     Control<? extends ControlEvents> c = _last;
 
     while(c != null) {
@@ -80,7 +80,7 @@ public class ControlList {
     }
   }
   
-  public void enable() {
+  void enable() {
     Control<? extends ControlEvents> c = _last;
     
     while(c != null) {
@@ -89,7 +89,7 @@ public class ControlList {
     }
   }
   
-  public void disable() {
+  void disable() {
     Control<? extends ControlEvents> c = _last;
     
     while(c != null) {
@@ -98,33 +98,33 @@ public class ControlList {
     }
   }
 
-  public Control<? extends ControlEvents> first() {
+  Control<? extends ControlEvents> first() {
     return _first;
   }
 
-  public Control<? extends ControlEvents> last() {
+  Control<? extends ControlEvents> last() {
     return _last;
   }
 
-  public void draw() {
+  void draw() {
     if(_last != null) {
       _last.draw();
     }
   }
 
-  public void logic() {
+  void logic() {
     if(_last != null) {
       _last.logicControl();
     }
   }
 
-  public void drawSelect() {
+  void drawSelect() {
     if(_last != null) {
       _last.drawSelect();
     }
   }
 
-  public Control<? extends ControlEvents> getSelectControl(int[] colour) {
+  Control<? extends ControlEvents> getSelectControl(int[] colour) {
     if(_last != null) {
       return _last.getSelectControl(colour);
     }

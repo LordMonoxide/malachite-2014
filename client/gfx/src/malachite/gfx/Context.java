@@ -169,7 +169,7 @@ public abstract class Context {
     if(cb != null) { cb.run(); }
   }
   
-  private void clearContext() {
+  public void clearContext() {
     GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
   }
   

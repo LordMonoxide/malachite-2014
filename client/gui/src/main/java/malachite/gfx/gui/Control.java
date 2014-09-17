@@ -1,5 +1,7 @@
 package malachite.gfx.gui;
 
+import java.util.Objects;
+
 import malachite.gfx.Context;
 import malachite.gfx.Drawable;
 import malachite.gfx.Matrix;
@@ -14,8 +16,8 @@ import org.slf4j.LoggerFactory;
 public abstract class Control<T extends ControlEvents> {
   private static final Logger logger = LoggerFactory.getLogger(Control.class);
   
-  protected Matrix _matrix = Context.getMatrix();
-
+  protected final Matrix _matrix;
+  
   protected Drawable _background;
   protected Drawable _border;
   
@@ -23,66 +25,46 @@ public abstract class Control<T extends ControlEvents> {
   
   protected HAlign _hAlign = HAlign.ALIGN_LEFT;
   protected VAlign _vAlign = VAlign.ALIGN_MIDDLE;
-
+  
   protected int _padW = 2;
   protected int _padH = 2;
-
+  
   protected boolean _needsUpdate;
   protected int _disabled;
   protected boolean _visible = true;
   protected boolean _focus;
-
+  
   GUI _gui;
-
+  
   ControlList _controlList = new ControlList(this);
   Control<? extends ControlEvents> _controlParent;
   Control<? extends ControlEvents> _controlNext;
   Control<? extends ControlEvents> _controlPrev;
-
+  
   private boolean _acceptsFocus;
-
+  
   protected Drawable _selBox;
   protected int[] _selColour;
-
+  
   protected ControlEvents _events;
-
-  protected Control(InitFlags... flags) {
-    for(InitFlags flag : flags) {
-      switch(flag) {
-        case WITH_BACKGROUND:
-          _background = Context.newDrawable();
-          _background.setColour(new float[] {0.5f, 0.5f, 0.5f, 1});
-
-        case WITH_BORDER:
-          _border = Context.newDrawable();
-          _border.setColour(new float[] {0, 0, 0, 1});
-          _border.setXY(-1, -1);
-          break;
-
-        case WITH_DEFAULT_EVENTS:
-          _events = new ControlEvents(this);
-          break;
-
-        case ACCEPTS_FOCUS:
-          _acceptsFocus = true;
-          break;
-
-        case REGISTER:
-          _selBox = Context.newDrawable();
-          _selColour = Context.getContext().getNextSelectColour();
-
-          float[] floatColour = new float[4];
-
-          for(int i = 0; i < floatColour.length; i++) {
-            floatColour[i] = _selColour[i] / 255f;
-          }
-
-          _selBox.setColour(floatColour);
-          break;
-      }
+  
+  private <O> O opt(O o1, O o2) { return o1 != null ? o1 : o2; }
+  
+  protected Control(Context ctx, Drawable background, Drawable border, ControlEvents events, boolean acceptsFocus, boolean register) {
+    _matrix = Objects.requireNonNull(ctx.matrix);
+    
+    _background   = opt(background, ctx.drawable().colour(0.5f, 0.5f, 0.5f, 1).buildQuad());
+    _border       = ctx.drawable().colour(0, 0, 0, 1).xy(-1, -1).buildBorder();
+    _events       = new ControlEvents(this);
+    
+    _acceptsFocus = acceptsFocus;
+    
+    if(register) {
+      _selColour = ctx.getNextSelectColour();
+      _selBox    = ctx.drawable().colour(_selColour[0] / 255f, _selColour[1] / 255f, _selColour[2] / 255f, _selColour[3] / 255f).buildQuad();
     }
   }
-
+  
   protected void setGUI(GUI gui) {
     _gui = gui;
     
@@ -141,26 +123,6 @@ public abstract class Control<T extends ControlEvents> {
 
   public Drawable getBackground() {
     return _background;
-  }
-
-  public void setBorderColour(float[] c) {
-    _border.setColour(c);
-    _needsUpdate = true;
-  }
-
-  public void setBorderColour(float r, float g, float b, float a) {
-    _border.setColour(r, g, b, a);
-    _needsUpdate = true;
-  }
-
-  public void setBackgroundColour(float[] c) {
-    _background.setColour(c);
-    _needsUpdate = true;
-  }
-
-  public void setBackgroundColour(float r, float g, float b, float a) {
-    _background.setColour(r, g, b, a);
-    _needsUpdate = true;
   }
 
   public final boolean acceptsFocus() {
@@ -262,6 +224,9 @@ public abstract class Control<T extends ControlEvents> {
       }
     }
   }
+  
+  public void focus  () { setFocus(true);  }
+  public void unfocus() { setFocus(false); }
 
   public void handleKeyDown(int key, boolean repeat) {
     if(key == Keyboard.KEY_TAB) {
@@ -276,7 +241,7 @@ public abstract class Control<T extends ControlEvents> {
         if(c == this) { break; }
 
         if(c.acceptsFocus()) {
-          c.setFocus(true);
+          c.focus();
           break;
         }
         

@@ -1,151 +1,151 @@
 package malachite.gfx.gui;
 
-import java.io.IOException;
-import java.nio.file.Paths;
 import java.util.concurrent.ConcurrentLinkedDeque;
 
-import malachite.engine.lang.Lang;
-import malachite.gfx.gui.parser.GUIEvents;
-import malachite.gfx.gui.parser.Parser;
+import malachite.gfx.Context;
+import malachite.gfx.ContextEvents.DrawEventData;
+import malachite.gfx.ContextEvents.MouseButtonEventData;
+import malachite.gfx.ContextEvents.MouseMoveEventData;
+import malachite.gfx.ContextEvents.MouseWheelEventData;
 
 public class GUIManager {
-  private final Lang _lang;
-  
   protected ConcurrentLinkedDeque<GUI> _gui = new ConcurrentLinkedDeque<>();
-
-  public GUIManager(Lang lang) {
-    _lang = lang;
+  
+  public GUIManager(Context ctx) {
+    ctx.events
+      .onDraw      (ev -> { draw(ev);       })
+      .onMouseMove (ev -> { mouseMove(ev);  })
+      .onMouseDown (ev -> { mouseDown(ev);  })
+      .onMouseUp   (ev -> { mouseUp(ev);    })
+      .onMouseWheel(ev -> { mouseWheel(ev); });
   }
   
   public void push(GUI gui) {
     _gui.push(gui);
   }
-
+  
   public void pop() {
     _gui.pop();
   }
-
+  
   public void pop(GUI gui) {
     _gui.remove(gui);
   }
-
+  
   public void clear() {
     _gui.clear();
   }
-
+  
+  //TODO
   public void destroy() {
     for(GUI gui : _gui) {
       gui.destroy();
     }
-
+    
     clear();
   }
-
-  public void draw() {
+  
+  private void draw(DrawEventData ev) {
     GUI[] g = new GUI[_gui.size()];
     g = _gui.toArray(g);
-
+    
     for(int i = _gui.size(); --i >= 0;) {
-      if(g[i]._loaded) {
-        g[i].drawGUI();
+      if(g[i].isLoaded()) {
+        g[i].drawGUI(ev);
       }
     }
   }
-
-  public void logic() {
+  
+  //TODO
+  private void logic() {
     for(GUI gui : _gui) {
-      if(gui._loaded) {
+      if(gui.isLoaded()) {
         if(gui.logicGUI()) {
           break;
         }
       }
     }
   }
-
-  public void resize() {
+  
+  //TODO
+  private void resize() {
     for(GUI gui : _gui) {
-      if(gui._loaded) {
+      if(gui.isLoaded()) {
         gui.resize();
       }
     }
   }
-
-  public void mouseMove(int x, int y) {
+  
+  private void mouseMove(MouseMoveEventData ev) {
     for(GUI gui : _gui) {
-      if(gui._loaded) {
-        if(gui.mouseMove(x, y)) {
+      if(gui.isLoaded()) {
+        if(gui.mouseMove(ev)) {
           break;
         }
       }
     }
   }
-
-  public void mouseDown(int x, int y, int button) {
+  
+  private void mouseDown(MouseButtonEventData ev) {
     for(GUI gui : _gui) {
-      if(gui._loaded) {
-        if(gui.mouseDown(x, y, button)) {
+      if(gui.isLoaded()) {
+        if(gui.mouseDown(ev)) {
           break;
         }
       }
     }
   }
-
-  public void mouseUp(int x, int y, int button) {
+  
+  private void mouseUp(MouseButtonEventData ev) {
     for(GUI gui : _gui) {
-      if(gui._loaded) {
-        if(gui.mouseUp(x, y, button)) {
+      if(gui.isLoaded()) {
+        if(gui.mouseUp(ev)) {
           break;
         }
       }
     }
   }
-
-  public void mouseWheel(int delta) {
+  
+  private void mouseWheel(MouseWheelEventData ev) {
     for(GUI gui : _gui) {
-      if(gui._loaded) {
-        if(gui.mouseWheel(delta)) {
+      if(gui.isLoaded()) {
+        if(gui.mouseWheel(ev)) {
           break;
         }
       }
     }
   }
-
-  public void keyDown(int key, boolean repeat) {
+  
+  //TODO
+  private void keyDown(int key, boolean repeat) {
     for(GUI gui : _gui) {
-      if(gui._loaded) {
+      if(gui.isLoaded()) {
         if(gui.keyDown(key, repeat)) {
           break;
         }
       }
     }
   }
-
-  public void keyUp(int key) {
+  
+  //TODO
+  private void keyUp(int key) {
     for(GUI gui : _gui) {
-      if(gui._loaded) {
+      if(gui.isLoaded()) {
         if(gui.keyUp(key)) {
           break;
         }
       }
     }
   }
-
-  public void charDown(char c) {
+  
+  //TODO
+  private void charDown(char c) {
     for(GUI gui : _gui) {
-      if(gui._loaded) {
+      if(gui.isLoaded()) {
         if(gui.charDown(c)) {
           break;
         }
       }
     }
-  }
-  
-  public GUI loadFromFile(String file) throws IOException {
-    return loadFromFile(file, null);
-  }
-  
-  public GUI loadFromFile(String file, GUIEvents events) throws IOException {
-    Parser parser = new Parser(_lang);
-    return parser.loadFromFile(Paths.get("../data/gfx/guis/" + file + ".json"), events);
   }
 }

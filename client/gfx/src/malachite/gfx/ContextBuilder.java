@@ -4,48 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import malachite.gfx.fonts.Font;
-import malachite.gfx.fonts.TextStream;
-import malachite.gfx.shaders.Uniform;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public final class ContextBuilder {
-  public static void main(String[] args) {
-    Context ctx = new ContextBuilder()
-      .registerContext(malachite.gfx.gl21.Context.class)
-      .setTitle("Malachite").build();
-    
-    Program shader = ctx.shader()
-      .desaturate()
-      .build();
-    
-    Uniform desaturate = shader.getUniform("desat_amount");
-    
-    shader.use();
-    desaturate.set(0.75f);
-    
-    Drawable d = ctx.drawable()
-      .program(shader)
-      .texture(ctx.textures.getTexture("tiles/0.png"))
-      .autosize()
-      .xy(-300, -300)
-      //.colour(1, 0, 1, 1)
-      .buildQuad();
-    
-    Font font = ctx.fonts.ui;
-    TextStream text = new TextStream("This is a test");
-    
-    ctx.events.onDraw(ev -> {
-      d.draw();
-      
-      font.draw(10, 10, text);
-    });
-    
-    ctx.run();
-  }
-  
   private static final Logger logger = LoggerFactory.getLogger(ContextBuilder.class);
   
   private final List<Class<? extends Context>> _contexts = new ArrayList<>();
