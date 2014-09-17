@@ -24,4 +24,10 @@ public final class Config {
       public final String password = "malachite";
     }
   }
+  
+  public final class Net {
+    private Net() { }
+    
+    public final int port = 4000;
+  }
 }
