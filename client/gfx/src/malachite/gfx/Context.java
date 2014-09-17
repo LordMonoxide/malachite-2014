@@ -39,7 +39,6 @@ public abstract class Context {
   
   private int _mouseX = 0;
   private int _mouseY = 0;
-  private int _mouseButton = -1;
   
   private boolean _running;
   
@@ -213,22 +212,20 @@ public abstract class Context {
     if(_mouseX != getMouseX() || _mouseY != getMouseY()) {
       _mouseX = getMouseX();
       _mouseY = getMouseY();
-      //_gui.mouseMove(_mouseX, _mouseY);
+      events.raiseMouseMove(_mouseX, _mouseY);
     }
     
     if(Mouse.next()) {
       if(Mouse.getEventButton() != -1) {
         if(Mouse.getEventButtonState()) {
-          _mouseButton = Mouse.getEventButton();
-          //_gui.mouseDown(_mouseX, _mouseY, _mouseButton);
+          events.raiseMouseDown(_mouseX, _mouseY, Mouse.getEventButton());
         } else {
-          _mouseButton = -1;
-          //_gui.mouseUp(_mouseX, _mouseY, Mouse.getEventButton());
+          events.raiseMouseUp(_mouseX, _mouseY, Mouse.getEventButton());
         }
       }
       
       if(Mouse.getEventDWheel() != 0) {
-        //_gui.mouseWheel(Mouse.getEventDWheel());
+        events.raiseMouseWheel(Mouse.getEventDWheel());
       }
     }
   }
