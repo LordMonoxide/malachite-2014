@@ -6,10 +6,10 @@ import malachite.gfx.Context;
 import malachite.gfx.ContextBuilder;
 
 public abstract class Game {
-  private Context _context;
+  public final Context context;
   
-  protected final Engine engine;
-  protected final Lang   lang;
+  public final Engine engine;
+  public final Lang   lang;
   
   public Game() throws Exception {
     engine = new Engine();
