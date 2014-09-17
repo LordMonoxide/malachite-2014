@@ -6,34 +6,30 @@ import java.nio.ByteBuffer;
 
 public class Texture {
   @Override public String toString() {
-    return "Texture " + _id + ' ' + _name + " (" + _w + 'x' + _h + ')'; //$NON-NLS-1$ //$NON-NLS-2$
+    return "Texture " + id + ' ' + name + " (" + w + 'x' + h + ')'; //$NON-NLS-1$ //$NON-NLS-2$
   }
   
-  private final int _id;
-  private final String _name;
-  private final int _w, _h;
-
+  public final int id;
+  public final String name;
+  public final int w, h;
+  
   protected Texture(String name, int w, int h, ByteBuffer data) {
-    _name = name;
-    _w = w;
-    _h = h;
-
-    _id = GL11.glGenTextures();
-    GL11.glBindTexture(GL11.GL_TEXTURE_2D, _id);
-    GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGBA, _w, _h, 0, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, data);
+    this.name = name;
+    this.w = w;
+    this.h = h;
+    
+    this.id = GL11.glGenTextures();
+    GL11.glBindTexture(GL11.GL_TEXTURE_2D, this.id);
+    GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGBA, this.w, this.h, 0, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, data);
     GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST);
     GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_NEAREST);
   }
-
-  public int getID() { return _id; }
-  public int getW()  { return _w; }
-  public int getH()  { return _h; }
-
+  
   public void use() {
-    GL11.glBindTexture(GL11.GL_TEXTURE_2D, _id);
+    GL11.glBindTexture(GL11.GL_TEXTURE_2D, this.id);
   }
-
+  
   public void destroy() {
-    GL11.glDeleteTextures(_id);
+    GL11.glDeleteTextures(this.id);
   }
 }

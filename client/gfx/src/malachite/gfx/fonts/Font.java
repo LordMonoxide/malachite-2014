@@ -157,8 +157,8 @@ public class Font {
         .program(program)
         .texture(texture)
         .wh(tw, th)
-        .st((float)tx / texture.getW(), (float)ty / texture.getH())
-        .uv((float)tw / texture.getW(), (float)th / texture.getH())
+        .st((float)tx / texture.w, (float)ty / texture.h)
+        .uv((float)tw / texture.w, (float)th / texture.h)
         .buildQuad();
     }
     

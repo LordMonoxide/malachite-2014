@@ -63,10 +63,10 @@ public class Scalable extends malachite.gfx.Scalable {
     };
 
     for(int i = 0; i < borderS.length; i++) {
-      borderS[i][0] /= _texture.getW();
-      borderS[i][2] /= _texture.getW();
-      borderS[i][1] /= _texture.getH();
-      borderS[i][3] /= _texture.getH();
+      borderS[i][0] /= _texture.w;
+      borderS[i][2] /= _texture.w;
+      borderS[i][1] /= _texture.h;
+      borderS[i][3] /= _texture.h;
     }
 
     int i = 0;

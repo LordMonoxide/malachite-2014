@@ -57,7 +57,7 @@ public final class DrawableBuilder {
   }
   
   public DrawableBuilder autosize() {
-    wh(_texture.getW(), _texture.getH());
+    wh(_texture.w, _texture.h);
     return this;
   }
   
