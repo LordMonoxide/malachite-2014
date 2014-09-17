@@ -35,9 +35,9 @@ public abstract class Control<T extends ControlEvents> {
   GUI _gui;
 
   ControlList _controlList = new ControlList(this);
-  Control<? extends ControlEvents>  _controlParent;
-  Control<? extends ControlEvents>  _controlNext;
-  Control<? extends ControlEvents>  _controlPrev;
+  Control<? extends ControlEvents> _controlParent;
+  Control<? extends ControlEvents> _controlNext;
+  Control<? extends ControlEvents> _controlPrev;
 
   private boolean _acceptsFocus;
 
