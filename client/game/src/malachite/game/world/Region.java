@@ -7,26 +7,35 @@ import malachite.gfx.textures.Canvas;
 import malachite.gfx.textures.Texture;
 
 public class Region {
-  private final Texture[] _layer = new Texture[5];
+  private final Game _game;
+  private final Map  _map;
+  
+  private final Drawable[] _layer = new Drawable[5];
   
   public Region(Game game, Map map) {
-    for(int i = 0; i < map.layer.length; i++) {
-      Map.Layer layer = map.layer[i];
+    _game = game;
+    _map  = map;
+  }
+  
+  public void calculate() {
+    for(int i = 0; i < _map.layer.length; i++) {
+      Map.Layer layer = _map.layer[i];
       
-      Canvas canvas = game.context.canvas()
-        .name("test").wh(512, 512).build();
+      Canvas canvas = _game.context.canvas()
+        .name("test" + i).wh(512, 512).build();
       
       canvas.bind(() -> {
         for(int x = 0; x < layer.tile.length; x++) {
           for(int y = 0; y < layer.tile[x].length; y++) {
             Map.Tile tile = layer.tile[x][y];
             
-            Texture t = game.context.textures.getTexture("tiles/" + tile.set + ".png");
+            Texture t = _game.context.textures.getTexture("tiles/" + tile.set + ".png");
             
-            Drawable d = game.context.drawable()
+            Drawable d = _game.context.drawable()
               .texture(t)
               .xy(x * 32, y * 32).wh(32, 32)
               .st(tile.x * 32 / t.w, tile.y * 32 / t.h)
+              .uv(32f / t.w, 32f / t.h)
               .buildQuad();
             
             d.draw();
@@ -34,7 +43,18 @@ public class Region {
         }
       });
       
-      _layer[i] = canvas.texture;
+      _layer[i] = _game.context.drawable()
+        .texture(canvas.texture)
+        .autosize()
+        .buildQuad();
+    }
+  }
+  
+  public void draw() {
+    for(Drawable d : _layer) {
+      if(d != null) {
+        d.draw();
+      }
     }
   }
 }

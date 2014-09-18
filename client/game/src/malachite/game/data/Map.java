@@ -1,9 +1,16 @@
 package malachite.game.data;
 
-public class Map {
+public class Map implements LoadableInterface<String> {
+  public final String id;
+  public final int x, y;
+  
   public final Layer[] layer = new Layer[5];
   
-  public Map() {
+  public Map(int regionX, int regionY) {
+    id = regionX + "," + regionY;
+    x  = regionX;
+    y  = regionY;
+    
     for(int i = 0; i < layer.length; i++) {
       layer[i] = new Layer();
     }
@@ -14,6 +21,14 @@ public class Map {
         tile.alpha = (byte)255;
       }
     }
+  }
+  
+  public String type() {
+    return "map";
+  }
+  
+  public String id() {
+    return id;
   }
   
   public class Layer {
