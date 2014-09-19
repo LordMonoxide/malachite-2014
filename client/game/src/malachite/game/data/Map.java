@@ -1,6 +1,6 @@
 package malachite.game.data;
 
-public class Map implements LoadableInterface<String> {
+public class Map implements LoadableInterface {
   public final String id;
   public final int x, y;
   

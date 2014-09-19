@@ -1,16 +1,20 @@
 package malachite.game.data;
 
-import io.netty.buffer.ByteBuf;
-
 public interface LoaderInterface {
-  public void request(LoadableInterface<?> loadable, Callback callback);
+  public <T extends LoadableInterface> void request(TYPE type, String id, RequestResponse<T> callback);
+  public <T extends LoadableInterface> void store  (T loadable, StoreResponse callback);
   
   public enum TYPE {
     MAP;
   }
   
-  public interface Callback {
-    public void success(ByteBuf data);
+  public interface RequestResponse<T> {
+    public void success(T data);
+    public void failure();
+  }
+  
+  public interface StoreResponse {
+    public void success();
     public void failure();
   }
 }
